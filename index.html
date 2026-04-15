@@ -636,9 +636,7 @@ function draw(targetCanvas,skipBg){
 
         ctx.save();
         if(booked){
-          // 已約：淡底色 + 刪除線
-          rr(ctx,px,py,pw,ph,6);ctx.fillStyle=ha(S.strikeColor,0.13);ctx.fill();
-          // 文字（偏淡）
+          // 已約：只有文字 + 刪除線，無底色
           ctx.font=gf(slotFontSz,'500');ctx.fillStyle=ha(S.strikeColor,0.55);ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,px+pw/2,py+ph/2);
           // 刪除線
           const tw=ctx.measureText(t).width;
