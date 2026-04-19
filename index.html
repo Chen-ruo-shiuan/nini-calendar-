@@ -204,6 +204,10 @@ body.readonly .cv-frame{box-shadow:0 4px 20px rgba(0,0,0,0.15)}
       <span class="sync-dot"></span>
       <span id="sync-txt">連線中…</span>
     </div>
+    <div style="display:flex;gap:5px;margin-bottom:6px">
+      <button class="share-btn" style="margin-bottom:0;flex:1" onclick="forcePush()" title="把目前電腦的設定強制上傳覆蓋雲端">☁️ 強制上傳</button>
+      <button class="share-btn" style="margin-bottom:0;flex:1" onclick="forcePull()" title="從雲端重新載入，覆蓋目前畫面">⬇ 從雲端載入</button>
+    </div>
     <button class="share-btn" id="sync-btn" onclick="syncToOtherDevice()">📱 QR Code（離線備用）</button>
     <button class="exp-btn" onclick="exportPng()">匯出 IG 限時動態圖片</button>
     <div class="hint" style="margin-top:5px">1080 × 1920 px</div>
@@ -315,6 +319,31 @@ async function doSave(){
   }catch(e){
     setSyncUI('offline','📴 離線中（已本機儲存）');
   }
+}
+
+// ── 強制上傳 / 強制下載 ──────────────────────────────────────────────────────
+async function forcePush(){
+  if(!confirm('把目前畫面的設定上傳到雲端，覆蓋其他裝置的版本？'))return;
+  setSyncUI('saving','上傳中…');
+  try{
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(getStateObj())});
+    if(res.ok){setSyncUI('ok','✓ 上傳成功！');setTimeout(()=>setSyncUI('idle','☁️ 雲端同步已連線'),2500);}
+    else{setSyncUI('offline','⚠ 上傳失敗');}
+  }catch(e){setSyncUI('offline','📴 無法連線到雲端');}
+}
+async function forcePull(){
+  if(!confirm('從雲端重新載入，會覆蓋目前畫面的設定，確定嗎？'))return;
+  setSyncUI('saving','載入中…');
+  try{
+    const res=await fetch(API,{signal:AbortSignal.timeout(6000)});
+    if(res.ok){
+      const p=await res.json();
+      if(p&&p.bname){
+        applyState(p);updateUIFromState();rCal();rSP();draw();
+        setSyncUI('ok','✓ 已從雲端載入');setTimeout(()=>setSyncUI('idle','☁️ 雲端同步已連線'),2000);
+      }else{setSyncUI('offline','⚠ 雲端目前沒有資料');}
+    }else{setSyncUI('offline','⚠ 載入失敗');}
+  }catch(e){setSyncUI('offline','📴 無法連線到雲端');}
 }
 
 // ── 載入（優先從雲端，fallback localStorage，再 fallback URL hash）──────
