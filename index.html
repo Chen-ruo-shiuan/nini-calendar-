@@ -110,11 +110,11 @@ input:checked+.tsl:before{transform:translateX(12px)}
 .exp-btn:hover{background:#4a4642}
 .preview-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;gap:8px;overflow-y:auto}
 .cv-frame{border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);flex-shrink:0}
-/* 桌機編輯模式：填滿寬度，允許捲動 */
-canvas{display:block;width:calc(100vw - 380px);aspect-ratio:9/16;height:auto}
-/* 手機唯讀模式：填滿螢幕高度，不捲動 */
-body.readonly .preview-area{justify-content:center;overflow:hidden;padding:10px}
-body.readonly canvas{width:auto;height:calc(100vh - 40px);max-width:100vw;aspect-ratio:9/16}
+/* 桌機編輯模式：右側寬度的 70%，允許捲動 */
+canvas{display:block;width:calc((100vw - 380px) * 0.7);aspect-ratio:9/16;height:auto}
+/* 手機唯讀模式：填滿螢幕寬度，高度自動 */
+body.readonly .preview-area{justify-content:flex-start;overflow-y:auto;padding:10px}
+body.readonly canvas{width:100vw;aspect-ratio:9/16;height:auto}
 .hint{font-size:10px;color:#8c8780;text-align:center}
 /* 雲端同步狀態列 */
 .sync-bar{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:6px;font-size:10px;margin-bottom:6px;transition:all 0.3s}
