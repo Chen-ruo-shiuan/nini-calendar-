@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=New+Tegomin&family=Shippori+Mincho:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,"PingFang TC","Microsoft JhengHei",sans-serif;background:#f0ede8;min-height:100vh;display:flex}
-.wrap{display:flex;flex:1;min-height:100vh}
-.panel{width:340px;min-width:340px;background:#faf8f5;border-right:1px solid #ddd8d0;display:flex;flex-direction:column;overflow-y:auto}
+body{font-family:system-ui,"PingFang TC","Microsoft JhengHei",sans-serif;background:#f0ede8;min-height:100vh}
+.wrap{display:flex;align-items:flex-start;min-height:100vh}
+.panel{width:340px;min-width:340px;background:#faf8f5;border-right:1px solid #ddd8d0;display:flex;flex-direction:column}
 .p-block{padding:12px 14px;border-bottom:1px solid #eae6e0}
 .sec{font-size:10px;letter-spacing:0.09em;text-transform:uppercase;color:#8c8780;margin-bottom:8px;font-weight:500;display:flex;align-items:center;gap:6px}
 .saved-dot{width:5px;height:5px;border-radius:50%;background:#6b9e6b;opacity:0;transition:opacity 1s;flex-shrink:0}
@@ -35,8 +35,8 @@ body{font-family:system-ui,"PingFang TC","Microsoft JhengHei",sans-serif;backgro
 .month-title{font-size:13px;font-weight:500;color:#2a2825}
 .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:3px}
 .cal-dow span{text-align:center;font-size:10px;color:#8c8780;padding:2px 0}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.c-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;font-size:12px;cursor:pointer;transition:all 0.1s;position:relative;color:#2a2825}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.c-cell{aspect-ratio:1;min-height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;font-size:13px;cursor:pointer;transition:all 0.1s;position:relative;color:#2a2825}
 .c-cell:hover:not(.om){background:#e8e4df}
 .c-cell.om{color:#b5b0a8;cursor:default}
 .c-cell.has{font-weight:600}
@@ -108,7 +108,7 @@ input:checked+.tsl:before{transform:translateX(12px)}
 .share-btn.copied{background:#d4e8d4;border-color:#6b9e6b;color:#2d5a2d}
 .exp-btn{display:block;width:100%;padding:11px;border:1px solid #4a4642;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;background:#2a2825;color:#f4f0eb;font-family:inherit;transition:all 0.1s;text-align:center;letter-spacing:0.04em}
 .exp-btn:hover{background:#4a4642}
-.preview-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;gap:8px;overflow-y:auto}
+.preview-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;gap:8px}
 .cv-frame{border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);flex-shrink:0}
 /* 桌機編輯模式：右側寬度的 70%，允許捲動 */
 canvas{display:block;width:calc((100vw - 380px) * 0.7);aspect-ratio:9/16;height:auto}
