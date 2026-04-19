@@ -108,9 +108,9 @@ input:checked+.tsl:before{transform:translateX(12px)}
 .share-btn.copied{background:#d4e8d4;border-color:#6b9e6b;color:#2d5a2d}
 .exp-btn{display:block;width:100%;padding:11px;border:1px solid #4a4642;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;background:#2a2825;color:#f4f0eb;font-family:inherit;transition:all 0.1s;text-align:center;letter-spacing:0.04em}
 .exp-btn:hover{background:#4a4642}
-.preview-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:10px}
-.cv-frame{border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
-canvas{display:block;width:270px;height:480px}
+.preview-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:8px;overflow:hidden}
+.cv-frame{border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);flex-shrink:0}
+canvas{display:block;height:calc(100vh - 80px);width:auto;max-width:calc(100vw - 380px)}
 .hint{font-size:10px;color:#8c8780;text-align:center}
 /* 雲端同步狀態列 */
 .sync-bar{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:6px;font-size:10px;margin-bottom:6px;transition:all 0.3s}
