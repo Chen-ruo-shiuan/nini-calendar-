@@ -124,6 +124,11 @@ canvas{display:block;width:270px;height:480px}
 .sync-bar.offline .sync-dot{background:#c0504a}
 .sync-bar.idle .sync-dot{background:#b5b0a8}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+/* ── 唯讀模式（?ro=1）：隱藏編輯側欄，純瀏覽 ── */
+body.readonly .panel{display:none}
+body.readonly .wrap{justify-content:center}
+body.readonly .preview-area{align-items:center;justify-content:flex-start;padding-top:30px}
+body.readonly .cv-frame{box-shadow:0 4px 20px rgba(0,0,0,0.15)}
 </style>
 </head>
 <body>
@@ -247,6 +252,7 @@ const FONTS=[
   {id:'sys',       label:'系統預設',            preview:'System Default',stack:'"PingFang TC","Microsoft JhengHei",system-ui,sans-serif'},
 ];
 const today=new Date();
+const IS_RO=new URLSearchParams(location.search).has('ro');
 
 // ── 狀態 ─────────────────────────────────────────────────────────────────────
 // 全新邏輯：booked[key] 儲存「已被預約」的時段（刪去法）
@@ -291,6 +297,7 @@ function setSyncUI(status,text){
 let saveTimer=null;
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(doSave,900)}
 async function doSave(){
+  if(IS_RO)return;
   const p=getStateObj();
   // 1. localStorage（離線備用）
   try{localStorage.setItem('nini-booking-v2',JSON.stringify(p));}catch(e){}
@@ -358,7 +365,7 @@ function copyShareUrl(){syncToOtherDevice()}
 function syncToOtherDevice(){
   // 有 Railway 雲端同步，只需要乾淨的短網址
   // 手機開啟同樣網址，會自動從 Railway 載入最新資料
-  const cleanUrl=location.href.split('#')[0];
+  const cleanUrl=location.href.split('?')[0].split('#')[0]+'?ro=1';
 
   const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -683,9 +690,16 @@ function buildFonts(){const c=document.getElementById('fnopts');c.innerHTML='';F
 
 // ── 初始化 ───────────────────────────────────────────────────────────────────
 async function init(){
-  buildSW('sw-bg',WBG,'bg');buildSW('sw-tx',WTX,'tx');buildSW('sw-tg',WTG,'tg');buildSW('sw-grid',WGR,'grid');buildSW('sw-sk',WSK,'sk');buildFonts();
+  if(IS_RO){
+    document.body.classList.add('readonly');
+    document.title='NINI 預約月曆';
+  }else{
+    buildSW('sw-bg',WBG,'bg');buildSW('sw-tx',WTX,'tx');buildSW('sw-tg',WTG,'tg');buildSW('sw-grid',WGR,'grid');buildSW('sw-sk',WSK,'sk');buildFonts();
+  }
   await loadPrefs();  // 等雲端載入完再畫面
-  updateUIFromState();rCal();rSP();draw();updateSyncBtnLabel();
+  if(!IS_RO)updateUIFromState();
+  rCal();rSP();draw();
+  if(!IS_RO)updateSyncBtnLabel();
 }
 document.fonts.ready.then(()=>init());
 </script>
