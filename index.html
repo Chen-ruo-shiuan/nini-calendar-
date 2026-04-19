@@ -115,12 +115,14 @@ canvas{display:block;width:calc((100vw - 380px) * 0.7);aspect-ratio:9/16;height:
 /* 手機唯讀模式：填滿螢幕寬度，高度自動 */
 body.readonly .preview-area{justify-content:flex-start;overflow-y:auto;padding:10px}
 body.readonly canvas{width:100vw;aspect-ratio:9/16;height:auto}
-/* 手機響應式：上下排列 */
+/* 手機響應式：左右維持，側欄縮窄 */
 @media(max-width:700px){
-  .wrap{flex-direction:column}
-  .panel{width:100%;min-width:unset;border-right:none;border-bottom:1px solid #ddd8d0;max-height:none}
-  .preview-area{padding:12px;justify-content:flex-start}
-  canvas{width:100vw;aspect-ratio:9/16;height:auto}
+  .panel{width:175px;min-width:175px}
+  .p-block{padding:8px 10px}
+  .sec{font-size:9px}
+  .field-hd label,.field input[type=text],.note-ta,.align-btn,.status-btn,.slot-tag,.sm-btn,.add-btn,.font-opt .fn{font-size:11px}
+  .sz-btn{width:15px;height:15px;font-size:10px}
+  canvas{width:calc(100vw - 185px);aspect-ratio:9/16;height:auto}
 }
 .hint{font-size:10px;color:#8c8780;text-align:center}
 /* 雲端同步狀態列 */
