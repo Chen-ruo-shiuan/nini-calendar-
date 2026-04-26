@@ -265,6 +265,21 @@ main.w,.sv,.mw,.pw2,.rdw,.nw{padding-left:14px;padding-right:14px;}
 .int-box{background:rgba(139,110,82,.05);border:1.5px dashed rgba(139,110,82,.2);border-radius:9px;padding:12px 14px;font-size:.78rem;color:var(--earth);line-height:1.7;margin-top:6px;}
 .int-box::before{content:"🔒 僅供內部參考";display:block;font-size:.68rem;font-weight:600;margin-bottom:5px;color:var(--gray);}
 
+/* ── Cloud Sync ── */
+.sync-btn{position:relative;}
+.sync-pip{display:inline-block;width:7px;height:7px;border-radius:50%;vertical-align:middle;margin-left:4px;background:var(--gray);flex-shrink:0;}
+.sync-pip.ok{background:var(--sage);}
+.sync-pip.err{background:var(--coral);}
+.sync-pip.ing{background:var(--amber);animation:spulse .7s infinite;}
+@keyframes spulse{0%,100%{opacity:1}50%{opacity:.25}}
+.sync-modal-body{text-align:left;}
+.sync-step{background:var(--parchment);border-radius:11px;padding:14px 16px;margin-bottom:12px;}
+.sync-step-title{font-size:.7rem;font-weight:600;color:var(--sage-d);letter-spacing:.12em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.sync-msg{font-size:.74rem;text-align:center;min-height:18px;margin:8px 0;font-weight:600;letter-spacing:.04em;}
+.sync-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0;}
+.sync-info{text-align:center;font-size:.65rem;color:var(--gray);letter-spacing:.06em;margin-top:8px;}
+.sync-guide{font-size:.63rem;color:var(--gray);line-height:1.8;margin-top:5px;}
+.sync-guide a{color:var(--sage-d);}
 /* ── Skincare Plan ── */
 .skin-plan-wrap{margin-bottom:16px;}
 .skin-tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--border);overflow-x:auto;}
@@ -324,6 +339,7 @@ main.w,.sv,.mw,.pw2,.rdw,.nw{padding-left:14px;padding-right:14px;}
     </div>
     <button class="nav-btn home-btn" onclick="goHome()">⌂ 首頁</button>
     <button class="nav-btn" onclick="gotoClients()">👥 客戶管理</button>
+    <button class="nav-btn sync-btn" id="sync-hdr-btn" onclick="openSyncModal()" title="雲端同步設定">☁ 同步<span class="sync-pip" id="sync-pip"></span></button>
   </div>
 </header>
 <div id="talert"></div>
@@ -925,6 +941,45 @@ main.w,.sv,.mw,.pw2,.rdw,.nw{padding-left:14px;padding-right:14px;}
   </div>
 </div></div>
 
+<div class="modal" id="mod-sync">
+  <div class="mb" style="max-width:500px;text-align:center;">
+    <div class="mi">☁️</div>
+    <div class="mt2">雲端資料同步</div>
+    <div class="mbd">透過 GitHub 私密 Gist 跨裝置同步<br>資料加密存放 · 只有你能存取</div>
+    <div class="sync-modal-body">
+
+      <div class="sync-step">
+        <div class="sync-step-title">① GitHub Token<span style="font-size:.6rem;color:var(--gray);font-weight:400;">本機存放・每台電腦各填一次</span></div>
+        <input type="password" id="sync-tok" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" style="margin-bottom:6px;">
+        <div class="sync-guide">
+          1. 前往 <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a><br>
+          2. Generate new token（classic）→ 勾選 <strong>gist</strong> 權限<br>
+          3. 複製 token 貼到上方
+        </div>
+      </div>
+
+      <div class="sync-step">
+        <div class="sync-step-title">② Gist ID<span style="font-size:.6rem;color:var(--gray);font-weight:400;">第一次留空自動建立・之後複製貼上</span></div>
+        <input type="text" id="sync-gid" placeholder="第一次設定請留空，系統自動建立" autocomplete="off" style="margin-bottom:6px;">
+        <div id="sync-gid-hint" class="sync-guide"></div>
+      </div>
+
+      <button class="btn bs" style="width:100%;margin-bottom:6px;" onclick="setupSync()">💾 儲存設定</button>
+      <div class="sync-msg" id="sync-msg"></div>
+
+      <div class="sync-actions">
+        <button class="btn bs" onclick="doSyncUp()">⬆ 推送到雲端</button>
+        <button class="btn bg" onclick="doSyncDown()">⬇ 從雲端拉取</button>
+      </div>
+
+      <div class="sync-info">上次同步：<span id="sync-last">—</span></div>
+    </div>
+    <div class="mbs" style="margin-top:16px;">
+      <button class="btn bg" onclick="closeSyncModal()">關閉</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="modconf"><div class="mb">
   <div class="mi">🌿</div>
   <div class="mt2">建立新諮詢紀錄</div>
@@ -1157,6 +1212,7 @@ function saveNotes(){
   recs.unshift({id,type:'notes',name,dateStr,dateLine,summaryHTML,internalHTML:'',plainText:'',data:{course,date,amSteps,pmSteps,rec,recO,sa,ba,intv,nd,rm}});
   saveAll(recs);
   toast('✓ 術後保養筆記已儲存到客戶管理','#5A7D5E');
+  autoSync();
 }
 
 function clearNotes(){if(!confirm('確定清空？'))return;document.querySelectorAll('#view-notes input[type=text],#view-notes textarea').forEach(el=>el.value='');document.querySelectorAll('#view-notes .rp.on,#view-notes .chip.on').forEach(el=>el.classList.remove('on'));document.querySelectorAll('.ams,.pms').forEach(s=>s.value='');document.getElementById('nodt').value=tds();}
@@ -1187,6 +1243,7 @@ function saveR(t){
   const iH=document.getElementById(t==='new'?'sni':t==='skin'?'ssi':'shi').innerHTML;
   const pt=sptxt[t];
   const recs=allRecs();recs.unshift({id,type:t,name,dateStr:dStr,dateLine:dLine,summaryHTML:sH,internalHTML:iH,plainText:pt,data});saveAll(recs);toast('✓ 已儲存至客戶管理','#5A7D5E');
+  autoSync();
 }
 
 // ═══ CLIENT LIST ═══
@@ -1222,10 +1279,10 @@ let pfTags=[];
 function rPfTags(){document.getElementById('pftags').innerHTML=pfTags.map((t,i)=>`<div class="ct2">${t}<button onclick="rmPT(${i})">×</button></div>`).join('');}
 function addPT(){const i=document.getElementById('pftinp');const v=i.value.trim();if(!v)return;pfTags.push(v);i.value='';rPfTags();}
 function rmPT(i){pfTags.splice(i,1);rPfTags();}
-function saveProf(){const p=getProfs();p[curClient]={tags:pfTags,prefs:document.getElementById('pfpref').value,notes:document.getElementById('pfnotes').value};saveProfs(p);toast('✓ 客戶偏好已儲存','#5A7D5E');}
+function saveProf(){const p=getProfs();p[curClient]={tags:pfTags,prefs:document.getElementById('pfpref').value,notes:document.getElementById('pfnotes').value};saveProfs(p);toast('✓ 客戶偏好已儲存','#5A7D5E');autoSync();}
 function openRecD(id){const r=allRecs().find(x=>x.id===id);if(!r)return;curRecId=id;const tl={new:'初次諮詢',skin:'皮膚回訪',healing:'療癒回訪',notes:'術後保養筆記'};document.getElementById('rdtitle').textContent=(tl[r.type]||'')+' · '+r.name;document.getElementById('rddl').textContent=r.dateLine;document.getElementById('rdb').innerHTML=r.summaryHTML||'';document.getElementById('rdi').innerHTML=r.internalHTML||'';document.getElementById('rdi').style.display='none';document.getElementById('rdlb').textContent='🔒 查看 Ni 的內部筆記';setTimeout(()=>initBAzoom(document.getElementById('rdb')),80);showView('view-rec-detail');}
 function backToProf(){if(curClient)openProf(encodeURIComponent(curClient));else gotoClients();}
-function delR(){if(!curRecId||!confirm('確定要刪除這筆紀錄嗎？'))return;saveAll(allRecs().filter(r=>r.id!==curRecId));curRecId=null;backToProf();toast('紀錄已刪除','#C4614A');}
+function delR(){if(!curRecId||!confirm('確定要刪除這筆紀錄嗎？'))return;saveAll(allRecs().filter(r=>r.id!==curRecId));curRecId=null;backToProf();toast('紀錄已刪除','#C4614A');autoSync();}
 
 // ═══ RESET ═══
 function confNew(){document.getElementById('modconf').classList.add('open');}
@@ -1248,6 +1305,187 @@ rPDB();
 updDL('sk');updDL('hl');
 // init sliders
 [['n-pain-score','nps-v'],['nst','nst-v'],['sk-confidence','skc-v'],['hl-sleep-score','hlss-v'],['hl-pain-score','hlps-v'],['hl-muscle-tension','hlmt-v'],['hlst','hlst-v']].forEach(([id,vid])=>{const el=document.getElementById(id);if(el)slid(el,vid);});
+// init cloud sync (pull latest data on page load)
+initSync();
+
+// ═══ CLOUD SYNC (GitHub Gist) ═══
+const SYNC_KEY = 'nini_sync_v1';
+let _syncTimer = null;
+
+/* ── config helpers ── */
+function getSyncCfg(){try{return JSON.parse(localStorage.getItem(SYNC_KEY)||'null')||null;}catch{return null;}}
+function saveSyncCfg(c){localStorage.setItem(SYNC_KEY,JSON.stringify(c));}
+
+/* ── pip indicator ── */
+function setPip(state){
+  const p=document.getElementById('sync-pip');
+  if(!p)return;
+  p.className='sync-pip'+(state?' '+state:'');
+}
+
+/* ── modal open/close ── */
+function openSyncModal(){
+  const cfg=getSyncCfg()||{};
+  document.getElementById('sync-tok').value=cfg.token||'';
+  document.getElementById('sync-gid').value=cfg.gistId||'';
+  const hint=document.getElementById('sync-gid-hint');
+  if(hint&&cfg.gistId)hint.innerHTML='✓ 已設定 Gist ID：<strong>'+cfg.gistId+'</strong>（其他電腦請複製此 ID）';
+  else if(hint)hint.textContent='';
+  const lt=document.getElementById('sync-last');
+  if(lt)lt.textContent=cfg.lastSync?new Date(cfg.lastSync).toLocaleString('zh-TW'):'未曾同步';
+  setSyncMsg('');
+  document.getElementById('mod-sync').classList.add('open');
+}
+function closeSyncModal(){document.getElementById('mod-sync').classList.remove('open');}
+
+/* ── status message ── */
+function setSyncMsg(msg,type){
+  const el=document.getElementById('sync-msg');if(!el)return;
+  el.textContent=msg;
+  el.style.color=type==='ok'?'var(--sage-d)':type==='err'?'var(--coral)':'var(--gray)';
+}
+
+/* ── build payload ── */
+function buildPayload(){
+  return{v:3,records:allRecs(),profiles:getProfs(),products:getPDB(),syncedAt:new Date().toISOString()};
+}
+
+/* ── create new gist ── */
+async function createGist(token){
+  setSyncMsg('正在建立私密 Gist…');
+  const r=await fetch('https://api.github.com/gists',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},
+    body:JSON.stringify({
+      description:'NINI 皮膚療癒所 · 諮詢紀錄系統',
+      public:false,
+      files:{'nini-records.json':{content:JSON.stringify(buildPayload(),null,2)}}
+    })
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e.message||'HTTP '+r.status));}
+  const g=await r.json();return g.id;
+}
+
+/* ── push to gist ── */
+async function pushGist(cfg){
+  const r=await fetch('https://api.github.com/gists/'+cfg.gistId,{
+    method:'PATCH',
+    headers:{'Authorization':'Bearer '+cfg.token,'Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},
+    body:JSON.stringify({files:{'nini-records.json':{content:JSON.stringify(buildPayload(),null,2)}}})
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e.message||'HTTP '+r.status));}
+}
+
+/* ── pull from gist ── */
+async function pullGist(cfg){
+  const r=await fetch('https://api.github.com/gists/'+cfg.gistId,{
+    headers:{'Authorization':'Bearer '+cfg.token,'X-GitHub-Api-Version':'2022-11-28'}
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e.message||'HTTP '+r.status));}
+  const g=await r.json();
+  const f=g.files['nini-records.json'];
+  if(!f)throw new Error('找不到資料檔 nini-records.json');
+  // If truncated, fetch raw url
+  const content=f.truncated?await(await fetch(f.raw_url,{headers:{'Authorization':'Bearer '+cfg.token}})).text():f.content;
+  return JSON.parse(content);
+}
+
+/* ── merge pulled data into local ── */
+function mergeData(data){
+  if(data.records){
+    const local=allRecs();
+    const localIds=new Set(local.map(r=>r.id));
+    const incoming=data.records.filter(r=>r.id&&r.name);
+    // incoming records not in local → add; local keeps its own
+    const newOnes=incoming.filter(r=>!localIds.has(r.id));
+    const merged=[...newOnes,...local].sort((a,b)=>+b.id-+a.id);
+    saveAll(merged);
+  }
+  if(data.profiles){const lp=getProfs();saveProfs(Object.assign({},data.profiles,lp));}
+  if(data.products){const cp=getPDB();savePDB([...new Set([...cp,...(data.products||[])])]);rPDB();}
+}
+
+/* ── UI: setup & save config ── */
+async function setupSync(){
+  const token=(document.getElementById('sync-tok').value||'').trim();
+  const gistId=(document.getElementById('sync-gid').value||'').trim();
+  if(!token){setSyncMsg('請填入 GitHub Token','err');return;}
+  setSyncMsg('驗證中…');
+  let finalId=gistId;
+  if(!finalId){
+    try{finalId=await createGist(token);}
+    catch(e){setSyncMsg('✕ 建立 Gist 失敗：'+e.message,'err');return;}
+    setSyncMsg('✓ Gist 建立成功！','ok');
+    document.getElementById('sync-gid').value=finalId;
+    const hint=document.getElementById('sync-gid-hint');
+    if(hint)hint.innerHTML='✓ Gist ID：<strong>'+finalId+'</strong>（複製此 ID 到其他電腦使用）';
+  }
+  const cfg={token,gistId:finalId,lastSync:null};
+  saveSyncCfg(cfg);setPip('');setSyncMsg('✓ 設定完成！現在可以推送 / 拉取資料','ok');
+  toast('✓ 同步設定完成','#5A7D5E');
+}
+
+/* ── UI: push ── */
+async function doSyncUp(){
+  const cfg=getSyncCfg();
+  if(!cfg||!cfg.token||!cfg.gistId){setSyncMsg('請先完成設定','err');return;}
+  setSyncMsg('推送中…');setPip('ing');
+  try{
+    await pushGist(cfg);
+    cfg.lastSync=new Date().toISOString();saveSyncCfg(cfg);
+    const lt=document.getElementById('sync-last');
+    if(lt)lt.textContent=new Date(cfg.lastSync).toLocaleString('zh-TW');
+    setSyncMsg('✓ 資料已推送到雲端','ok');setPip('ok');
+    toast('☁ 資料已同步至雲端','#5A7D5E');
+  }catch(e){setSyncMsg('✕ 推送失敗：'+e.message,'err');setPip('err');}
+}
+
+/* ── UI: pull ── */
+async function doSyncDown(){
+  const cfg=getSyncCfg();
+  if(!cfg||!cfg.token||!cfg.gistId){setSyncMsg('請先完成設定','err');return;}
+  if(!confirm('確定從雲端拉取資料？\n雲端有、本機沒有的紀錄會合併進來。')){return;}
+  setSyncMsg('拉取中…');setPip('ing');
+  try{
+    const data=await pullGist(cfg);
+    mergeData(data);
+    cfg.lastSync=new Date().toISOString();saveSyncCfg(cfg);
+    const lt=document.getElementById('sync-last');
+    if(lt)lt.textContent=new Date(cfg.lastSync).toLocaleString('zh-TW');
+    setSyncMsg('✓ 已從雲端合併資料','ok');setPip('ok');
+    renderCL('');
+    toast('☁ 已從雲端同步資料','#5A7D5E');
+  }catch(e){setSyncMsg('✕ 拉取失敗：'+e.message,'err');setPip('err');}
+}
+
+/* ── auto-sync (debounced, called after every save) ── */
+function autoSync(){
+  const cfg=getSyncCfg();
+  if(!cfg||!cfg.token||!cfg.gistId)return;
+  clearTimeout(_syncTimer);
+  setPip('ing');
+  _syncTimer=setTimeout(async()=>{
+    try{
+      await pushGist(cfg);
+      cfg.lastSync=new Date().toISOString();saveSyncCfg(cfg);
+      setPip('ok');
+    }catch(e){setPip('err');}
+  },2000);
+}
+
+/* ── init: pull on page load if configured ── */
+async function initSync(){
+  const cfg=getSyncCfg();
+  if(!cfg||!cfg.token||!cfg.gistId){setPip('');return;}
+  setPip('ing');
+  try{
+    const data=await pullGist(cfg);
+    mergeData(data);
+    cfg.lastSync=new Date().toISOString();saveSyncCfg(cfg);
+    setPip('ok');
+    renderCL('');
+  }catch(e){setPip('err');}
+}
 
 // ═══ SKINCARE PLAN ═══
 let pfAmSteps=[], pfPmSteps=[], pfCurProds=[];
@@ -1352,6 +1590,7 @@ function saveSkinPlan(){
   const upd=document.getElementById('skin-plan-updated');
   if(upd)upd.textContent='最後更新：'+dateStr;
   toast('✓ 保養方案已儲存','#5A7D5E');
+  autoSync();
 }
 
 /* --- 載入保養方案 --- */
