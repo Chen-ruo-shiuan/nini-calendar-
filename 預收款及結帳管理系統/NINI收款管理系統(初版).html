@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NINIの皮膚療癒所｜收款管理系統</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #FAF8F5; font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
+    select, input, button { font-family: inherit; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const C = {
+      bg: "#FAF8F5", card: "#FFFFFF", green: "#3D5A3E", greenLight: "#EAF0EA",
+      greenMid: "#6B8F6C", gold: "#B8862A", goldLight: "#FBF3E3",
+      red: "#8B3A2A", redLight: "#FAEAE7", blue: "#2A4A6B", blueLight: "#E8EFF7",
+      text: "#2C2C28", muted: "#8A8880", border: "#E8E5DF",
+    };
+
+    const LEVELS = [
+      { value: "", label: "無" },
+      { value: "甜癒米", label: "甜癒米", bg: "#FCE4EC", color: "#B71C5B" },
+      { value: "療癒米", label: "療癒米", bg: "#E3F2FD", color: "#0D47A1" },
+      { value: "悟癒米", label: "悟癒米", bg: "#FFF8E1", color: "#BF6000" },
+    ];
+    const levelStyle = (v) => LEVELS.find(l => l.value === v) || {};
+
+    const PAYMENT_METHODS = ["現金", "匯款", "LINE Pay", "分期"];
+
+    const DEFAULT_SERVICES = [
+      "精細光彩", "原液調理", "泡光氧彗", "雨林頭療",
+      "小顏骨氣", "森林癒撥筋", "深皮超導", "光波嫩膚", "臭氧離子",
+    ];
+
+    const fmt = n => `$${Number(n).toLocaleString()}`;
+    const todayStr = () => new Date().toISOString().slice(0, 10);
+
+    const INIT_CLIENTS = [
+      { id: "c1", name: "林小涵", phone: "0912-345-678", note: "敏感膚質", level: "療癒米" },
+      { id: "c2", name: "王雅婷", phone: "0923-456-789", note: "", level: "甜癒米" },
+      { id: "c3", name: "陳怡君", phone: "0934-567-890", note: "定期頭療", level: "悟癒米" },
+    ];
+    const INIT_PACKAGES = [
+      { id: "p1", clientId: "c1", serviceName: "精細光彩", totalSessions: 5, unitPrice: 2300, prepaidAmount: 11500, date: "2025-01-10", note: "五堂套組", paymentMethod: "現金" },
+      { id: "p2", clientId: "c2", serviceName: "雨林頭療", totalSessions: 3, unitPrice: 2200, prepaidAmount: 6600, date: "2025-02-15", note: "", paymentMethod: "LINE Pay" },
+      { id: "p3", clientId: "c3", serviceName: "雨林頭療", totalSessions: 10, unitPrice: 1900, prepaidAmount: 19000, date: "2024-12-01", note: "十堂特惠", paymentMethod: "匯款" },
+      { id: "p4", clientId: "c1", serviceName: "原液調理", totalSessions: 1, unitPrice: 2500, prepaidAmount: 2500, date: "2025-03-01", note: "單次", paymentMethod: "現金" },
+    ];
+    const INIT_SESSIONS = [
+      { id: "s1", packageId: "p1", clientId: "c1", serviceName: "精細光彩", amount: 2300, date: "2025-01-20", note: "" },
+      { id: "s2", packageId: "p1", clientId: "c1", serviceName: "精細光彩", amount: 2300, date: "2025-02-05", note: "" },
+      { id: "s3", packageId: "p2", clientId: "c2", serviceName: "雨林頭療", amount: 2200, date: "2025-02-20", note: "" },
+      { id: "s4", packageId: "p3", clientId: "c3", serviceName: "雨林頭療", amount: 1900, date: "2025-01-05", note: "" },
+      { id: "s5", packageId: "p3", clientId: "c3", serviceName: "雨林頭療", amount: 1900, date: "2025-01-19", note: "" },
+      { id: "s6", packageId: "p3", clientId: "c3", serviceName: "雨林頭療", amount: 1900, date: "2025-02-02", note: "" },
+      { id: "s7", packageId: "p3", clientId: "c3", serviceName: "雨林頭療", amount: 1900, date: "2025-02-16", note: "" },
+      { id: "s8", packageId: "p4", clientId: "c1", serviceName: "原液調理", amount: 2500, date: "2025-03-05", note: "" },
+    ];
+
+    function Btn({ children, onClick, variant = "primary", size = "md", disabled, full }) {
+      const s = {
+        primary: { background: C.green, color: "#fff", border: "none" },
+        outline: { background: "transparent", color: C.green, border: `1.5px solid ${C.green}` },
+        ghost: { background: "transparent", color: C.muted, border: "none" },
+        danger: { background: C.red, color: "#fff", border: "none" },
+      };
+      const p = { sm: "5px 12px", md: "8px 18px", lg: "11px 26px" };
+      return <button onClick={onClick} disabled={disabled}
+        style={{ ...s[variant], padding: p[size], borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? .5 : 1, width: full ? "100%" : "auto", transition: "opacity .15s" }}>{children}</button>;
+    }
+
+    function IconBtn({ icon, onClick, title, color }) {
+      return <button onClick={onClick} title={title}
+        style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 7px", borderRadius: 6, fontSize: 13, color: color || C.muted, lineHeight: 1 }}
+        onMouseEnter={e => e.currentTarget.style.background = color ? `${color}18` : "#F0EDE8"}
+        onMouseLeave={e => e.currentTarget.style.background = "none"}>
+        {icon}
+      </button>;
+    }
+
+    function Field({ label, required, children }) {
+      return <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+        <label style={{ fontSize: 12, color: C.muted, fontWeight: 500 }}>
+          {label}{required && <span style={{ color: C.red }}> *</span>}
+        </label>
+        {children}
+      </div>;
+    }
+    const inputStyle = { padding: "8px 12px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13, color: C.text, background: "#fff", width: "100%", boxSizing: "border-box" };
+
+    function LevelBadge({ level }) {
+      if (!level) return null;
+      const ls = levelStyle(level);
+      return <span style={{ display: "inline-block", padding: "2px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600, background: ls.bg, color: ls.color, letterSpacing: "0.03em" }}>{level}</span>;
+    }
+
+    function StatCard({ label, value, sub, color, bg }) {
+      return <div style={{ background: bg || C.card, borderRadius: 12, padding: "16px 18px", border: `1px solid ${C.border}`, flex: 1, minWidth: 140 }}>
+        <div style={{ fontSize: 11, color: C.muted, marginBottom: 5, letterSpacing: "0.05em", textTransform: "uppercase" }}>{label}</div>
+        <div style={{ fontSize: 21, fontWeight: 700, color: color || C.text, letterSpacing: "-0.02em" }}>{value}</div>
+        {sub && <div style={{ fontSize: 11, color: C.muted, marginTop: 3 }}>{sub}</div>}
+      </div>;
+    }
+
+    function App() {
+      const [tab, setTab] = useState("overview");
+      const [clients, setClients] = useState(INIT_CLIENTS);
+      const [packages, setPackages] = useState(INIT_PACKAGES);
+      const [sessions, setSessions] = useState(INIT_SESSIONS);
+      const [customServices, setCustomServices] = useState([]);
+      const [modal, setModal] = useState(null);
+      const [editingId, setEditingId] = useState(null);
+      const [deleteConfirm, setDeleteConfirm] = useState(null);
+      const [filterClient, setFilterClient] = useState("");
+      const [notice, setNotice] = useState("");
+
+      const [pf, setPf] = useState({ clientId: "", serviceName: "", totalSessions: 1, unitPrice: "", prepaidAmount: "", date: todayStr(), note: "", paymentMethod: "現金" });
+      const [rf, setRf] = useState({ clientId: "", packageId: "", date: todayStr(), note: "" });
+      const [cf, setCf] = useState({ name: "", phone: "", note: "", level: "" });
+      const [sf, setSf] = useState({ date: todayStr(), amount: "", note: "" });
+      const [showCustomInput, setShowCustomInput] = useState(false);
+      const [customInput, setCustomInput] = useState("");
+
+      const allServices = [...DEFAULT_SERVICES, ...customServices];
+
+      const usedMap = sessions.reduce((a, s) => { a[s.packageId] = (a[s.packageId] || 0) + 1; return a; }, {});
+      const rem = (pkgId, total) => total - (usedMap[pkgId] || 0);
+
+      const totalPrepaid = packages.reduce((s, p) => s + p.prepaidAmount, 0);
+      const totalRealized = sessions.reduce((s, r) => s + r.amount, 0);
+      const pendingAmt = totalPrepaid - totalRealized;
+      const thisMonth = todayStr().slice(0, 7);
+      const monthRealized = sessions.filter(s => s.date.slice(0, 7) === thisMonth).reduce((s, r) => s + r.amount, 0);
+
+      const notify = msg => { setNotice(msg); setTimeout(() => setNotice(""), 3000); };
+      const closeModal = () => { setModal(null); setEditingId(null); setShowCustomInput(false); setCustomInput(""); };
+
+      const openAddPkg = (clientId = "") => { setPf({ clientId, serviceName: "", totalSessions: 1, unitPrice: "", prepaidAmount: "", date: todayStr(), note: "", paymentMethod: "現金" }); setEditingId(null); setModal("pkg"); };
+      const openEditPkg = (pkg) => { setPf({ clientId: pkg.clientId, serviceName: pkg.serviceName, totalSessions: pkg.totalSessions, unitPrice: pkg.unitPrice, prepaidAmount: pkg.prepaidAmount, date: pkg.date, note: pkg.note, paymentMethod: pkg.paymentMethod || "現金" }); setEditingId(pkg.id); setModal("pkg"); };
+      const openRedeem = (clientId = "", packageId = "") => { setRf({ clientId, packageId, date: todayStr(), note: "" }); setModal("redeem"); };
+      const openAddClient = () => { setCf({ name: "", phone: "", note: "", level: "" }); setEditingId(null); setModal("client"); };
+      const openEditClient = (c) => { setCf({ name: c.name, phone: c.phone || "", note: c.note, level: c.level || "" }); setEditingId(c.id); setModal("client"); };
+      const openEditSession = (s) => { setSf({ date: s.date, amount: s.amount, note: s.note }); setEditingId(s.id); setModal("session"); };
+
+      const addCustomService = () => {
+        const name = customInput.trim();
+        if (!name) return;
+        if (allServices.includes(name)) return notify("此服務名稱已存在");
+        setCustomServices(prev => [...prev, name]);
+        setPf(p => ({ ...p, serviceName: name }));
+        setCustomInput(""); setShowCustomInput(false);
+        notify(`✓ 已新增服務項目「${name}」`);
+      };
+      const removeCustomService = (name) => setCustomServices(prev => prev.filter(s => s !== name));
+
+      const exportData = () => {
+        const data = { clients, packages, sessions, customServices, exportedAt: new Date().toISOString() };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `NINI備份_${todayStr()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        notify("✓ 備份已匯出");
+      };
+
+      const importData = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            if (data.clients) setClients(data.clients);
+            if (data.packages) setPackages(data.packages);
+            if (data.sessions) setSessions(data.sessions);
+            if (data.customServices) setCustomServices(data.customServices);
+            notify("✓ 備份匯入成功，資料已還原");
+          } catch {
+            notify("✗ 檔案格式錯誤，請選擇正確的 .json 備份檔");
+          }
+          e.target.value = "";
+        };
+        reader.readAsText(file);
+      };
+
+      const submitPkg = () => {
+        if (!pf.clientId || !pf.serviceName || !pf.prepaidAmount) return notify("請填寫必填欄位");
+        if (editingId) {
+          setPackages(prev => prev.map(p => p.id === editingId ? { ...p, ...pf, totalSessions: +pf.totalSessions, unitPrice: +pf.unitPrice, prepaidAmount: +pf.prepaidAmount } : p));
+          closeModal(); notify("✓ 課程已更新");
+        } else {
+          const pkg = { id: "p" + Date.now(), clientId: pf.clientId, serviceName: pf.serviceName, totalSessions: +pf.totalSessions, unitPrice: +pf.unitPrice, prepaidAmount: +pf.prepaidAmount, date: pf.date, note: pf.note, paymentMethod: pf.paymentMethod };
+          setPackages(prev => [pkg, ...prev]); closeModal(); notify(`✓ 預收 ${fmt(+pf.prepaidAmount)} 已記錄`);
+        }
+      };
+      const submitRedeem = () => {
+        if (!rf.packageId) return notify("請選擇課程");
+        const pkg = packages.find(p => p.id === rf.packageId);
+        if (!pkg || rem(pkg.id, pkg.totalSessions) <= 0) return notify("此課程堂數已用完");
+        const sess = { id: "s" + Date.now(), packageId: pkg.id, clientId: rf.clientId, serviceName: pkg.serviceName, amount: pkg.unitPrice, date: rf.date, note: rf.note };
+        setSessions(prev => [sess, ...prev]); closeModal(); notify(`✓ 核銷成功，實收認列 ${fmt(pkg.unitPrice)}`);
+      };
+      const submitClient = () => {
+        if (!cf.name) return notify("請輸入姓名");
+        if (editingId) {
+          setClients(prev => prev.map(c => c.id === editingId ? { ...c, ...cf } : c));
+          closeModal(); notify("✓ 客戶資料已更新");
+        } else {
+          setClients(prev => [{ id: "c" + Date.now(), ...cf }, ...prev]);
+          closeModal(); notify(`✓ 已新增 ${cf.name}`);
+        }
+      };
+      const submitSession = () => {
+        if (!sf.amount || !sf.date) return notify("請填寫必填欄位");
+        setSessions(prev => prev.map(s => s.id === editingId ? { ...s, date: sf.date, amount: +sf.amount, note: sf.note } : s));
+        closeModal(); notify("✓ 服務記錄已更新");
+      };
+
+      const confirmDelete = (type, id, label) => setDeleteConfirm({ type, id, label });
+      const execDelete = () => {
+        const { type, id } = deleteConfirm;
+        if (type === "client") {
+          const pkgIds = packages.filter(p => p.clientId === id).map(p => p.id);
+          setSessions(prev => prev.filter(s => !pkgIds.includes(s.packageId)));
+          setPackages(prev => prev.filter(p => p.clientId !== id));
+          setClients(prev => prev.filter(c => c.id !== id));
+          notify("✓ 客戶及相關資料已刪除");
+        } else if (type === "pkg") {
+          setSessions(prev => prev.filter(s => s.packageId !== id));
+          setPackages(prev => prev.filter(p => p.id !== id));
+          notify("✓ 課程及核銷記錄已刪除");
+        } else if (type === "session") {
+          setSessions(prev => prev.filter(s => s.id !== id));
+          notify("✓ 服務記錄已刪除");
+        }
+        setDeleteConfirm(null);
+      };
+
+      const clientPkgs = cid => packages.filter(p => p.clientId === cid);
+      const clientRemainingSessions = cid => clientPkgs(cid).reduce((sum, p) => sum + rem(p.id, p.totalSessions), 0);
+      const activePkgs = cid => clientPkgs(cid).filter(p => rem(p.id, p.totalSessions) > 0);
+      const filterPkgs = filterClient ? packages.filter(p => p.clientId === filterClient) : packages;
+      const filterSess = filterClient ? sessions.filter(s => s.clientId === filterClient) : sessions;
+      const TABS = [{ k: "overview", l: "總覽" }, { k: "packages", l: "預收課程" }, { k: "sessions", l: "服務記錄" }, { k: "clients", l: "客戶管理" }];
+
+      return (
+        <div style={{ fontFamily: "'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif", background: C.bg, minHeight: "100vh", color: C.text }}>
+          <div style={{ background: C.green, padding: "14px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            <div>
+              <div style={{ color: "#fff", fontSize: 15, fontWeight: 600, letterSpacing: "0.05em" }}>NINIの皮膚療癒所</div>
+              <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 11, marginTop: 1 }}>收款管理系統</div>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => openAddPkg()} style={{ background: "rgba(255,255,255,0.15)", color: "#fff", border: "1px solid rgba(255,255,255,0.35)", padding: "7px 14px", borderRadius: 8, fontSize: 13, cursor: "pointer", fontWeight: 500 }}>＋ 新增預收</button>
+              <button onClick={() => openRedeem()} style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.25)", padding: "7px 14px", borderRadius: 8, fontSize: 13, cursor: "pointer" }}>✔ 核銷服務</button>
+            </div>
+          </div>
+
+          {/* Backup toolbar */}
+          <div style={{ background: "#F0EDE8", borderBottom: `1px solid ${C.border}`, padding: "7px 24px", display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 11, color: C.muted, marginRight: 4 }}>資料備份</span>
+            <button onClick={exportData}
+              style={{ background: "none", border: `1px solid ${C.border}`, color: C.text, padding: "4px 12px", borderRadius: 6, fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }}>
+              ↓ 匯出備份
+            </button>
+            <label style={{ background: C.green, color: "#fff", padding: "4px 12px", borderRadius: 6, fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }}>
+              ↑ 匯入備份
+              <input type="file" accept=".json" onChange={importData} style={{ display: "none" }} />
+            </label>
+          </div>
+
+          <div style={{ padding: "20px 20px", maxWidth: 880, margin: "0 auto" }}>
+            {notice && <div style={{ background: C.greenLight, border: `1px solid ${C.green}`, color: C.green, padding: "10px 16px", borderRadius: 8, marginBottom: 14, fontSize: 13, fontWeight: 500 }}>{notice}</div>}
+
+            <div style={{ display: "flex", gap: 10, marginBottom: 22, flexWrap: "wrap" }}>
+              <StatCard label="預收總額" value={fmt(totalPrepaid)} sub={`${packages.length} 筆套組`} color={C.gold} bg={C.goldLight} />
+              <StatCard label="已實收" value={fmt(totalRealized)} sub={`${sessions.length} 次服務`} color={C.green} bg={C.greenLight} />
+              <StatCard label="待履行" value={fmt(pendingAmt)} sub="服務負債（預收-實收）" color={C.red} bg={C.redLight} />
+              <StatCard label="本月實收" value={fmt(monthRealized)} sub={thisMonth} color={C.blue} bg={C.blueLight} />
+            </div>
+
+            <div style={{ display: "flex", gap: 2, borderBottom: `1px solid ${C.border}`, marginBottom: 18 }}>
+              {TABS.map(t => (
+                <button key={t.k} onClick={() => setTab(t.k)}
+                  style={{ padding: "9px 16px", background: "none", border: "none", borderBottom: tab === t.k ? `2.5px solid ${C.green}` : "2.5px solid transparent", color: tab === t.k ? C.green : C.muted, fontWeight: tab === t.k ? 600 : 400, fontSize: 13, cursor: "pointer", letterSpacing: "0.02em" }}>
+                  {t.l}
+                </button>
+              ))}
+            </div>
+
+            {(tab === "packages" || tab === "sessions") && (
+              <div style={{ display: "flex", gap: 10, marginBottom: 14, alignItems: "center" }}>
+                <span style={{ fontSize: 12, color: C.muted }}>篩選</span>
+                <select value={filterClient} onChange={e => setFilterClient(e.target.value)}
+                  style={{ padding: "6px 12px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13, color: C.text, background: "#fff" }}>
+                  <option value="">全部客人</option>
+                  {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
+            )}
+
+            {/* OVERVIEW */}
+            {tab === "overview" && (
+              <div>
+                <div style={{ fontSize: 13, color: C.muted, marginBottom: 14, fontWeight: 500 }}>各客戶課程概況</div>
+                {clients.map(client => {
+                  const pkgs = clientPkgs(client.id);
+                  const cPre = pkgs.reduce((s, p) => s + p.prepaidAmount, 0);
+                  const cReal = sessions.filter(s => s.clientId === client.id).reduce((s, r) => s + r.amount, 0);
+                  const cPend = cPre - cReal;
+                  const aPkgs = activePkgs(client.id);
+                  return (
+                    <div key={client.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "16px 20px", marginBottom: 12 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 8 }}>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: 15 }}>{client.name}</div>
+                          <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{client.note}</div>
+                        </div>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <Btn size="sm" variant="outline" onClick={() => openAddPkg(client.id)}>新增預收</Btn>
+                          {aPkgs.length > 0 && <Btn size="sm" onClick={() => openRedeem(client.id)}>核銷</Btn>}
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", gap: 18, marginTop: 12, flexWrap: "wrap" }}>
+                        <span style={{ fontSize: 12, color: C.muted }}>預收 <strong style={{ color: C.gold }}>{fmt(cPre)}</strong></span>
+                        <span style={{ fontSize: 12, color: C.muted }}>實收 <strong style={{ color: C.green }}>{fmt(cReal)}</strong></span>
+                        <span style={{ fontSize: 12, color: C.muted }}>待履行 <strong style={{ color: cPend > 0 ? C.red : C.muted }}>{fmt(cPend)}</strong></span>
+                      </div>
+                      {pkgs.length > 0 && (
+                        <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                          {pkgs.map(pkg => {
+                            const r = rem(pkg.id, pkg.totalSessions);
+                            const u = usedMap[pkg.id] || 0;
+                            return (
+                              <div key={pkg.id} style={{ background: r > 0 ? C.greenLight : "#F2F1EF", border: `1px solid ${r > 0 ? "#C5D9C5" : C.border}`, borderRadius: 8, padding: "6px 12px", fontSize: 12 }}>
+                                <span>{pkg.serviceName}</span>
+                                <span style={{ color: r > 0 ? C.green : C.muted, marginLeft: 8, fontWeight: 600 }}>{u}/{pkg.totalSessions} 堂</span>
+                                {r === 0 && <span style={{ color: C.muted, marginLeft: 6 }}>完課</span>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                      {pkgs.length === 0 && <div style={{ fontSize: 12, color: C.muted, marginTop: 8 }}>尚無課程記錄</div>}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* PACKAGES */}
+            {tab === "packages" && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+                  <div style={{ fontSize: 13, color: C.muted, fontWeight: 500 }}>預收課程明細（{filterPkgs.length} 筆）</div>
+                  <Btn size="sm" onClick={() => openAddPkg()}>＋ 新增預收</Btn>
+                </div>
+                {filterPkgs.length === 0 && <div style={{ color: C.muted, fontSize: 13 }}>尚無記錄</div>}
+                {[...filterPkgs].sort((a, b) => b.date.localeCompare(a.date)).map(pkg => {
+                  const client = clients.find(c => c.id === pkg.clientId);
+                  const u = usedMap[pkg.id] || 0;
+                  const r = rem(pkg.id, pkg.totalSessions);
+                  const realized = u * pkg.unitPrice;
+                  const pend = pkg.prepaidAmount - realized;
+                  const pct = Math.round(u / pkg.totalSessions * 100);
+                  return (
+                    <div key={pkg.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "16px 20px", marginBottom: 10 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 8 }}>
+                        <div>
+                          <span style={{ fontWeight: 600, fontSize: 14 }}>{client?.name}</span>
+                          <span style={{ color: C.muted, fontSize: 13 }}> ・ {pkg.serviceName}</span>
+                          <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>
+                            {pkg.date}　單堂 {fmt(pkg.unitPrice)}　共 {pkg.totalSessions} 堂
+                            {pkg.paymentMethod && <span style={{ marginLeft: 8, background: C.blueLight, color: C.blue, padding: "1px 7px", borderRadius: 10, fontSize: 11, fontWeight: 500 }}>{pkg.paymentMethod}</span>}
+                            {pkg.note && `　${pkg.note}`}
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600, color: r > 0 ? C.green : C.muted, background: r > 0 ? C.greenLight : "#F2F1EF" }}>餘 {r} 堂</span>
+                          <IconBtn icon="✎" onClick={() => openEditPkg(pkg)} title="編輯課程" color={C.blue} />
+                          <IconBtn icon="✕" onClick={() => confirmDelete("pkg", pkg.id, `${client?.name} / ${pkg.serviceName}`)} title="刪除課程" color={C.red} />
+                        </div>
+                      </div>
+                      <div style={{ height: 5, background: C.border, borderRadius: 3, marginTop: 12 }}>
+                        <div style={{ height: "100%", background: r > 0 ? C.green : C.muted, borderRadius: 3, width: `${pct}%` }} />
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontSize: 12, flexWrap: "wrap", gap: 6 }}>
+                        <span style={{ color: C.muted }}>已用 {u} 堂 ({pct}%)</span>
+                        <span>預收 <strong style={{ color: C.gold }}>{fmt(pkg.prepaidAmount)}</strong>　實收 <strong style={{ color: C.green }}>{fmt(realized)}</strong>　待履行 <strong style={{ color: pend > 0 ? C.red : C.muted }}>{fmt(pend)}</strong></span>
+                      </div>
+                      {r > 0 && <div style={{ marginTop: 10 }}><Btn size="sm" onClick={() => openRedeem(pkg.clientId, pkg.id)}>核銷一堂</Btn></div>}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* SESSIONS */}
+            {tab === "sessions" && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+                  <div style={{ fontSize: 13, color: C.muted, fontWeight: 500 }}>服務核銷記錄（{filterSess.length} 筆）</div>
+                  <Btn size="sm" onClick={() => openRedeem()}>✔ 核銷服務</Btn>
+                </div>
+                <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, overflow: "hidden" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                    <thead>
+                      <tr style={{ background: "#F8F6F2", borderBottom: `1px solid ${C.border}` }}>
+                        {["日期", "客人", "服務項目", "實收金額", "備註", ""].map((h, i) => (
+                          <th key={i} style={{ padding: "10px 14px", textAlign: "left", fontWeight: 500, color: C.muted, fontSize: 12, width: i === 5 ? "60px" : "auto" }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[...filterSess].sort((a, b) => b.date.localeCompare(a.date)).map((s, i) => {
+                        const client = clients.find(c => c.id === s.clientId);
+                        return (
+                          <tr key={s.id} style={{ borderBottom: `1px solid ${C.border}`, background: i % 2 === 0 ? "#fff" : "#FDFCFA" }}>
+                            <td style={{ padding: "10px 14px", color: C.muted }}>{s.date}</td>
+                            <td style={{ padding: "10px 14px", fontWeight: 500 }}>{client?.name}</td>
+                            <td style={{ padding: "10px 14px" }}>{s.serviceName}</td>
+                            <td style={{ padding: "10px 14px", color: C.green, fontWeight: 600 }}>{fmt(s.amount)}</td>
+                            <td style={{ padding: "10px 14px", color: C.muted }}>{s.note || "—"}</td>
+                            <td style={{ padding: "8px 10px", textAlign: "right" }}>
+                              <span style={{ display: "inline-flex", gap: 2 }}>
+                                <IconBtn icon="✎" onClick={() => openEditSession(s)} title="編輯記錄" color={C.blue} />
+                                <IconBtn icon="✕" onClick={() => confirmDelete("session", s.id, `${client?.name} ${s.date}`)} title="刪除記錄" color={C.red} />
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      {filterSess.length === 0 && <tr><td colSpan={6} style={{ padding: "20px 14px", color: C.muted, fontSize: 13 }}>尚無記錄</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* CLIENTS */}
+            {tab === "clients" && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+                  <div style={{ fontSize: 13, color: C.muted, fontWeight: 500 }}>客戶清單（{clients.length} 位）</div>
+                  <Btn size="sm" onClick={openAddClient}>＋ 新增客戶</Btn>
+                </div>
+                {clients.map(c => {
+                  const cPre = clientPkgs(c.id).reduce((s, p) => s + p.prepaidAmount, 0);
+                  const cReal = sessions.filter(s => s.clientId === c.id).reduce((s, r) => s + r.amount, 0);
+                  const remainingSess = clientRemainingSessions(c.id);
+                  const activePkgCount = activePkgs(c.id).length;
+                  return (
+                    <div key={c.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: "14px 18px", marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <span style={{ fontWeight: 600, fontSize: 14 }}>{c.name}</span>
+                            {c.level && <LevelBadge level={c.level} />}
+                          </div>
+                          {c.note && <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{c.note}</div>}
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+                        <div style={{ display: "flex", gap: 14, fontSize: 12 }}>
+                          <span style={{ color: C.muted }}>預收 <strong style={{ color: C.gold }}>{fmt(cPre)}</strong></span>
+                          <span style={{ color: C.muted }}>實收 <strong style={{ color: C.green }}>{fmt(cReal)}</strong></span>
+                          <span style={{ color: C.muted }}>
+                            {remainingSess > 0
+                              ? <><strong style={{ color: C.green }}>{remainingSess}</strong> 堂待完課（{activePkgCount} 套組）</>
+                              : <span style={{ color: C.muted }}>無有效課程</span>}
+                          </span>
+                        </div>
+                        <div style={{ display: "flex", gap: 4 }}>
+                          <IconBtn icon="✎" onClick={() => openEditClient(c)} title="編輯客戶" color={C.blue} />
+                          <IconBtn icon="✕" onClick={() => confirmDelete("client", c.id, c.name)} title="刪除客戶" color={C.red} />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* MODALS */}
+          {(modal || deleteConfirm) && (
+            <div onClick={e => { if (e.target === e.currentTarget) { setModal(null); setEditingId(null); setDeleteConfirm(null); setShowCustomInput(false); setCustomInput(""); } }}
+              style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 20 }}>
+              <div style={{ background: "#fff", borderRadius: 16, padding: 28, width: "100%", maxWidth: 440, maxHeight: "90vh", overflowY: "auto" }}>
+
+                {deleteConfirm && <>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: C.red, marginBottom: 12 }}>確認刪除</div>
+                  <div style={{ fontSize: 13, color: C.text, marginBottom: 6 }}>確定要刪除「<strong>{deleteConfirm.label}</strong>」嗎？</div>
+                  {deleteConfirm.type === "client" && <div style={{ fontSize: 12, color: C.muted, background: C.redLight, borderRadius: 8, padding: "8px 12px", marginBottom: 16 }}>注意：同時會刪除此客戶的所有套組課程及服務記錄。</div>}
+                  {deleteConfirm.type === "pkg" && <div style={{ fontSize: 12, color: C.muted, background: C.redLight, borderRadius: 8, padding: "8px 12px", marginBottom: 16 }}>注意：同時會刪除此課程的所有核銷記錄。</div>}
+                  {deleteConfirm.type === "session" && <div style={{ fontSize: 12, color: C.muted, marginBottom: 16 }}>此操作無法還原。</div>}
+                  <div style={{ display: "flex", gap: 10 }}>
+                    <Btn variant="danger" onClick={execDelete}>確認刪除</Btn>
+                    <Btn variant="ghost" onClick={() => setDeleteConfirm(null)}>取消</Btn>
+                  </div>
+                </>}
+
+                {modal === "pkg" && <>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: C.green, marginBottom: 20 }}>{editingId ? "編輯預收課程" : "新增預收課程"}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+                    <Field label="客人" required>
+                      <select value={pf.clientId} onChange={e => setPf(p => ({ ...p, clientId: e.target.value }))} style={inputStyle}>
+                        <option value="">請選擇客人</option>
+                        {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </Field>
+                    <Field label="服務項目" required>
+                      <select value={pf.serviceName} onChange={e => setPf(p => ({ ...p, serviceName: e.target.value }))} style={inputStyle}>
+                        <option value="">請選擇</option>
+                        {DEFAULT_SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
+                        {customServices.length > 0 && <>
+                          <option disabled>──── 自訂服務 ────</option>
+                          {customServices.map(s => <option key={s} value={s}>{s}</option>)}
+                        </>}
+                      </select>
+                      {!showCustomInput
+                        ? <button onClick={() => setShowCustomInput(true)} style={{ background: "none", border: "none", color: C.blue, fontSize: 12, cursor: "pointer", textAlign: "left", padding: "2px 0", marginTop: 2 }}>＋ 新增自訂服務項目</button>
+                        : <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
+                            <input value={customInput} onChange={e => setCustomInput(e.target.value)} onKeyDown={e => e.key === "Enter" && addCustomService()} placeholder="輸入服務名稱" autoFocus style={{ ...inputStyle, flex: 1 }} />
+                            <button onClick={addCustomService} style={{ padding: "7px 12px", background: C.green, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap" }}>加入</button>
+                            <button onClick={() => { setShowCustomInput(false); setCustomInput(""); }} style={{ padding: "7px 10px", background: "none", border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, cursor: "pointer", color: C.muted }}>✕</button>
+                          </div>
+                      }
+                      {customServices.length > 0 && (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 4 }}>
+                          {customServices.map(s => (
+                            <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 4, background: C.blueLight, color: C.blue, padding: "2px 8px", borderRadius: 12, fontSize: 11 }}>
+                              {s}
+                              <button onClick={() => removeCustomService(s)} style={{ background: "none", border: "none", cursor: "pointer", color: C.blue, fontSize: 12, padding: 0, lineHeight: 1 }}>✕</button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </Field>
+                    <Field label="付款方式">
+                      <select value={pf.paymentMethod} onChange={e => setPf(p => ({ ...p, paymentMethod: e.target.value }))} style={inputStyle}>
+                        {PAYMENT_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
+                      </select>
+                    </Field>
+                    <div style={{ display: "flex", gap: 10 }}>
+                      <Field label="購買堂數" required>
+                        <input type="number" min="1" value={pf.totalSessions} onChange={e => setPf(p => ({ ...p, totalSessions: e.target.value }))} style={inputStyle} />
+                      </Field>
+                      <Field label="單堂定價">
+                        <input type="number" value={pf.unitPrice} onChange={e => setPf(p => ({ ...p, unitPrice: e.target.value }))} placeholder="0" style={inputStyle} />
+                      </Field>
+                    </div>
+                    <Field label="實際收款金額（預收）" required>
+                      <input type="number" value={pf.prepaidAmount} onChange={e => setPf(p => ({ ...p, prepaidAmount: e.target.value }))}
+                        placeholder={pf.totalSessions && pf.unitPrice ? String(+pf.totalSessions * +pf.unitPrice) : "0"}
+                        style={{ ...inputStyle, background: C.goldLight, fontWeight: 600 }} />
+                      {pf.totalSessions && pf.unitPrice && +pf.prepaidAmount !== +pf.totalSessions * +pf.unitPrice && (
+                        <div style={{ fontSize: 11, color: C.muted }}>定價合計：{fmt(+pf.totalSessions * +pf.unitPrice)}（可輸入優惠金額）</div>
+                      )}
+                    </Field>
+                    <Field label="付款日期">
+                      <input type="date" value={pf.date} onChange={e => setPf(p => ({ ...p, date: e.target.value }))} style={inputStyle} />
+                    </Field>
+                    <Field label="備註">
+                      <input value={pf.note} onChange={e => setPf(p => ({ ...p, note: e.target.value }))} placeholder="套組名稱、優惠說明..." style={inputStyle} />
+                    </Field>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+                    <Btn onClick={submitPkg}>{editingId ? "儲存變更" : "確認新增"}</Btn>
+                    <Btn variant="ghost" onClick={closeModal}>取消</Btn>
+                  </div>
+                </>}
+
+                {modal === "redeem" && <>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: C.green, marginBottom: 20 }}>核銷服務（認列實收）</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+                    <Field label="客人" required>
+                      <select value={rf.clientId} onChange={e => setRf(p => ({ ...p, clientId: e.target.value, packageId: "" }))} style={inputStyle}>
+                        <option value="">請選擇</option>
+                        {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </Field>
+                    {rf.clientId && <Field label="課程" required>
+                      <select value={rf.packageId} onChange={e => setRf(p => ({ ...p, packageId: e.target.value }))} style={inputStyle}>
+                        <option value="">請選擇</option>
+                        {packages.filter(p => p.clientId === rf.clientId && rem(p.id, p.totalSessions) > 0).map(p => <option key={p.id} value={p.id}>{p.serviceName} — 餘 {rem(p.id, p.totalSessions)}/{p.totalSessions} 堂</option>)}
+                      </select>
+                      {packages.filter(p => p.clientId === rf.clientId && rem(p.id, p.totalSessions) > 0).length === 0 && <div style={{ fontSize: 12, color: C.red }}>此客人無可核銷課程</div>}
+                    </Field>}
+                    {rf.packageId && (() => { const pkg = packages.find(p => p.id === rf.packageId); return pkg ? <div style={{ background: C.greenLight, borderRadius: 8, padding: "10px 14px", fontSize: 12 }}><div style={{ color: C.green, fontWeight: 600 }}>本次認列實收：{fmt(pkg.unitPrice)}</div><div style={{ color: C.muted, marginTop: 2 }}>核銷後剩餘：{rem(pkg.id, pkg.totalSessions) - 1} 堂</div></div> : null; })()}
+                    <Field label="服務日期"><input type="date" value={rf.date} onChange={e => setRf(p => ({ ...p, date: e.target.value }))} style={inputStyle} /></Field>
+                    <Field label="備註"><input value={rf.note} onChange={e => setRf(p => ({ ...p, note: e.target.value }))} placeholder="選填" style={inputStyle} /></Field>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+                    <Btn onClick={submitRedeem} disabled={!rf.packageId}>確認核銷</Btn>
+                    <Btn variant="ghost" onClick={closeModal}>取消</Btn>
+                  </div>
+                </>}
+
+                {modal === "client" && <>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: C.green, marginBottom: 20 }}>{editingId ? "編輯客戶資料" : "新增客戶"}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+                    <Field label="姓名" required><input value={cf.name} onChange={e => setCf(p => ({ ...p, name: e.target.value }))} style={inputStyle} /></Field>
+                    <Field label="會員級別">
+                      <select value={cf.level} onChange={e => setCf(p => ({ ...p, level: e.target.value }))} style={inputStyle}>
+                        {LEVELS.map(l => <option key={l.value} value={l.value}>{l.label || "無"}</option>)}
+                      </select>
+                      {cf.level && <div style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: C.muted }}>預覽：<LevelBadge level={cf.level} /></div>}
+                    </Field>
+                    <Field label="電話"><input value={cf.phone} onChange={e => setCf(p => ({ ...p, phone: e.target.value }))} style={inputStyle} /></Field>
+                    <Field label="備註"><input value={cf.note} onChange={e => setCf(p => ({ ...p, note: e.target.value }))} placeholder="膚質、過敏史..." style={inputStyle} /></Field>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+                    <Btn onClick={submitClient}>{editingId ? "儲存變更" : "新增"}</Btn>
+                    <Btn variant="ghost" onClick={closeModal}>取消</Btn>
+                  </div>
+                </>}
+
+                {modal === "session" && <>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: C.green, marginBottom: 20 }}>編輯服務記錄</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+                    <Field label="服務日期" required><input type="date" value={sf.date} onChange={e => setSf(p => ({ ...p, date: e.target.value }))} style={inputStyle} /></Field>
+                    <Field label="實收金額" required><input type="number" value={sf.amount} onChange={e => setSf(p => ({ ...p, amount: e.target.value }))} style={{ ...inputStyle, background: C.greenLight, fontWeight: 600 }} /></Field>
+                    <Field label="備註"><input value={sf.note} onChange={e => setSf(p => ({ ...p, note: e.target.value }))} placeholder="選填" style={inputStyle} /></Field>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+                    <Btn onClick={submitSession}>儲存變更</Btn>
+                    <Btn variant="ghost" onClick={closeModal}>取消</Btn>
+                  </div>
+                </>}
+
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NINIの皮膚療癒所｜衛教系統</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1917;--ink-mid:#2e2d2b;--ink-soft:#4a4845;--ink-faint:#7a7875;
+  --paper:#dedad4;--paper-warm:#d4cfc8;--paper-mid:#bfb9b1;
+  --ash:#a09a93;--cement:#8c8680;--gold:#7d6e5a;--gold-light:#9e8e78;
+  --accent:#5a4e44;--orange:#c45e2a;--orange-pale:#f0e0d4;
+  --seasonal:#6b7868;--seasonal-bg:#d6d8d4;
+  --serif:'Cormorant Garamond','Noto Serif JP',serif;
+  --sans:'Noto Sans JP',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-weight:300;line-height:1.9;overflow-x:hidden;font-size:16px;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6;}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.3rem 3.5rem;background:rgba(212,207,200,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--paper-mid);}
+.nav-logo{font-family:var(--serif);font-weight:300;font-size:1.1rem;letter-spacing:0.18em;color:var(--ink);text-decoration:none;}
+.nav-logo span{font-style:italic;color:var(--orange);}
+.nav-hamburger{display:none;}
+.nav-links{display:flex;gap:0;list-style:none;}
+.nav-links li{position:relative;}
+.nav-links a{display:block;padding:0.3rem 1.3rem;font-size:0.74rem;letter-spacing:0.16em;color:var(--ink-soft);text-decoration:none;transition:color 0.3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--ink);}
+.nav-links a.active::after{content:'';position:absolute;bottom:-1px;left:1.3rem;right:1.3rem;height:2px;background:var(--orange);}
+
+.page{display:none;}.page.active{display:block;}
+
+/* Typography */
+.section-label{font-size:0.68rem;letter-spacing:0.38em;color:var(--orange);margin-bottom:0.5rem;}
+.section-title{font-family:var(--serif);font-size:clamp(2rem,3.2vw,2.8rem);font-weight:300;letter-spacing:0.06em;line-height:1.4;color:var(--ink);}
+.title-chip{display:inline-block;background:var(--orange);color:#fff;font-family:var(--serif);font-size:clamp(1.5rem,2.5vw,2.1rem);font-weight:300;letter-spacing:0.08em;padding:0.25rem 1rem 0.3rem;line-height:1.35;}
+.title-chip.gold{background:var(--gold);}
+.title-chip.dark{background:var(--ink);}
+.section-body{font-size:0.9rem;line-height:2.3;color:var(--ink-mid);letter-spacing:0.06em;}
+
+/* Hero */
+.hero{min-height:100vh;display:grid;grid-template-columns:52% 48%;position:relative;overflow:hidden;}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:11rem 4rem 6rem 6rem;position:relative;z-index:1;}
+.hero-eyebrow{font-size:0.7rem;letter-spacing:0.36em;color:var(--orange);margin-bottom:1.6rem;opacity:0;animation:fadeUp 1s 0.3s forwards;}
+.hero-title{font-family:var(--serif);font-size:clamp(2.6rem,4.5vw,4rem);font-weight:300;line-height:1.35;letter-spacing:0.04em;opacity:0;animation:fadeUp 1s 0.5s forwards;}
+.hero-title em{font-style:italic;color:var(--orange);}
+.hero-intro{margin-top:2rem;opacity:0;animation:fadeUp 1s 0.7s forwards;}
+.hero-intro p{font-size:0.88rem;letter-spacing:0.08em;color:var(--ink-soft);line-height:2.2;max-width:400px;}
+.hero-intro p+p{margin-top:0.8rem;}
+.hero-cta{margin-top:2.8rem;display:flex;gap:1.2rem;opacity:0;animation:fadeUp 1s 0.9s forwards;}
+.btn-primary{display:inline-block;padding:1rem 2.4rem;background:var(--orange);color:#fff;font-size:0.74rem;letter-spacing:0.2em;text-decoration:none;border:none;cursor:pointer;transition:background 0.3s,transform 0.3s;}
+.btn-primary:hover{background:var(--accent);transform:translateY(-2px);}
+.btn-ghost{display:inline-block;padding:1rem 2.4rem;border:1px solid var(--cement);color:var(--ink-soft);font-size:0.74rem;letter-spacing:0.2em;text-decoration:none;background:none;cursor:pointer;transition:all 0.3s;}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink);}
+.hero-right{position:relative;overflow:hidden;background:var(--paper-warm);border-left:1px solid var(--paper-mid);}
+.hero-right::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(196,94,42,0.07) 100%);}
+.hero-kanji{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--serif);font-size:clamp(8rem,16vw,14rem);font-weight:200;color:rgba(196,94,42,0.1);user-select:none;writing-mode:vertical-rl;opacity:0;animation:fadeIn 2s 0.4s forwards;}
+
+/* About */
+.about-band{padding:5rem 6rem;background:var(--paper-warm);display:grid;grid-template-columns:1fr 1px 1fr;gap:5rem;align-items:center;border-top:1px solid var(--paper-mid);border-bottom:1px solid var(--paper-mid);position:relative;z-index:1;}
+.about-divider{background:var(--paper-mid);align-self:stretch;}
+
+/* Disclaimer banner */
+.disclaimer-bar{background:var(--ink-mid);padding:0.6rem 6rem;display:flex;align-items:center;gap:0.8rem;position:relative;z-index:1;}
+.disclaimer-bar p{font-size:0.62rem;letter-spacing:0.08em;color:var(--ash);line-height:1.6;}
+.disclaimer-bar strong{color:var(--paper-mid);font-weight:400;}
+
+/* Skin diagram section */
+.skin-diagram-section{padding:6rem 6rem 4rem;position:relative;z-index:1;}
+.skin-diagram-intro{margin-bottom:2.5rem;}
+.skin-diagram-hint{font-size:0.74rem;letter-spacing:0.12em;color:var(--ink-faint);margin-top:1rem;display:flex;align-items:center;gap:0.5rem;}
+.hint-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+
+/* Diagram tabs */
+.diag-tabs{display:flex;gap:0;margin-bottom:2rem;border-bottom:1px solid var(--paper-mid);}
+.diag-tab{padding:0.7rem 2rem;font-size:0.74rem;letter-spacing:0.14em;color:var(--ink-soft);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.3s;}
+.diag-tab.active{color:var(--ink);border-bottom-color:var(--orange);}
+
+.diag-panel{display:none;}.diag-panel.active{display:grid;grid-template-columns:1fr 380px;gap:3rem;align-items:start;}
+
+/* Course diagram list */
+.course-diagram-list{display:flex;flex-direction:column;gap:0.8rem;}
+.course-diag-item{padding:1.2rem 1.6rem;border:1px solid var(--paper-mid);background:var(--paper);cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;}
+.course-diag-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange);transform:scaleY(0);transform-origin:bottom;transition:transform 0.3s;}
+.course-diag-item:hover,.course-diag-item.active{background:var(--paper-warm);}
+.course-diag-item:hover::before,.course-diag-item.active::before{transform:scaleY(1);}
+.course-diag-item.active{border-color:var(--orange);}
+.diag-item-name{font-family:var(--serif);font-size:1rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.2rem;}
+.diag-item-layer{font-size:0.64rem;letter-spacing:0.18em;color:var(--orange);}
+
+/* SVG wrap */
+.skin-svg-wrap{position:sticky;top:100px;background:var(--paper-warm);border:1px solid var(--paper-mid);padding:1.2rem;}
+.layer-info{margin-top:0.8rem;padding:1rem 1.4rem;background:var(--paper);border:1px solid var(--paper-mid);border-left:3px solid var(--orange);min-height:60px;transition:all 0.3s;}
+.layer-info-title{font-size:0.68rem;letter-spacing:0.2em;color:var(--orange);margin-bottom:0.3rem;}
+.layer-info-text{font-size:0.8rem;line-height:1.8;color:var(--ink-mid);letter-spacing:0.04em;}
+
+/* Process diagram (animated SVG steps) */
+.process-diag-wrap{margin-top:1.5rem;border:1px solid var(--paper-mid);background:var(--paper);padding:1.5rem;}
+.process-diag-title{font-size:0.64rem;letter-spacing:0.28em;color:var(--orange);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--cement);}
+
+/* Courses */
+.courses{padding:5rem 6rem 6rem;position:relative;z-index:1;}
+.courses-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3.5rem;padding-bottom:2rem;border-bottom:1px solid var(--paper-mid);}
+.courses-grid{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--paper-mid);border-top:1px solid var(--paper-mid);}
+.course-card{border-right:1px solid var(--paper-mid);border-bottom:1px solid var(--paper-mid);padding:2.6rem;cursor:pointer;transition:background 0.4s;position:relative;overflow:hidden;}
+.course-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease;}
+.course-card:hover{background:var(--paper-warm);}
+.course-card:hover::after{transform:scaleX(1);}
+.course-num{font-family:var(--serif);font-size:0.7rem;color:var(--ash);letter-spacing:0.22em;margin-bottom:1rem;}
+.course-name{font-family:var(--serif);font-size:1.25rem;font-weight:300;letter-spacing:0.1em;color:var(--ink);margin-bottom:0.4rem;}
+.course-en{font-size:0.63rem;letter-spacing:0.18em;color:var(--orange);margin-bottom:1.4rem;}
+.course-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.4rem;}
+.tag{font-size:0.62rem;letter-spacing:0.1em;padding:0.28rem 0.7rem;border:1px solid var(--cement);color:var(--ink-mid);background:var(--paper);}
+.course-desc{font-size:0.83rem;line-height:2;color:var(--ink-soft);letter-spacing:0.04em;}
+.course-arrow{display:inline-flex;align-items:center;gap:0.5rem;margin-top:1.5rem;font-size:0.64rem;letter-spacing:0.2em;color:var(--orange);transition:gap 0.3s;}
+.course-card:hover .course-arrow{gap:1rem;}
+
+/* Detail */
+.course-detail{display:none;padding:0 6rem 5rem;animation:fadeIn 0.4s;}
+.course-detail.active{display:block;}
+.detail-inner{background:var(--paper-warm);border:1px solid var(--paper-mid);padding:3.5rem 4rem;position:relative;}
+.detail-close{position:absolute;top:2rem;right:2rem;background:none;border:1px solid var(--cement);width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-soft);font-size:1.1rem;transition:all 0.25s;}
+.detail-close:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.detail-header{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-bottom:2.8rem;padding-bottom:2.2rem;border-bottom:1px solid var(--paper-mid);}
+.detail-title{font-family:var(--serif);font-size:2rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.5rem;}
+.detail-en{font-size:0.66rem;letter-spacing:0.28em;color:var(--orange);}
+.detail-summary{font-size:0.86rem;line-height:2.2;color:var(--ink-mid);letter-spacing:0.05em;padding-top:0.5rem;}
+.detail-body{display:grid;grid-template-columns:repeat(3,1fr);gap:2.8rem;}
+.detail-block-title{font-size:0.64rem;letter-spacing:0.3em;color:var(--orange);margin-bottom:1.1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--cement);}
+.detail-list{list-style:none;}
+.detail-list li{display:flex;gap:0.7rem;align-items:flex-start;font-size:0.84rem;line-height:1.95;color:var(--ink-mid);letter-spacing:0.04em;}
+.detail-list li::before{content:'—';color:var(--orange);flex-shrink:0;}
+.notice-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.8rem;padding-top:2.2rem;border-top:1px solid var(--paper-mid);}
+.notice-box{padding:1.8rem 2rem;border:1px solid var(--paper-mid);background:var(--paper);}
+.notice-box.caution{border-left:3px solid var(--orange);}
+.notice-label{font-size:0.62rem;letter-spacing:0.28em;color:var(--orange);margin-bottom:0.9rem;}
+
+/* Course ingredients highlight */
+.course-ingredients{margin-top:2.8rem;padding-top:2.2rem;border-top:1px solid var(--paper-mid);}
+.course-ingr-label{font-size:0.6rem;letter-spacing:0.36em;color:var(--orange);margin-bottom:1.4rem;}
+.course-ingr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-left:1px solid var(--paper-mid);border-top:1px solid var(--paper-mid);}
+.course-ingr-item{border-right:1px solid var(--paper-mid);border-bottom:1px solid var(--paper-mid);padding:1.6rem 1.8rem;background:var(--paper);position:relative;}
+.course-ingr-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange);}
+.course-ingr-icon{font-size:1.1rem;margin-bottom:0.7rem;line-height:1;}
+.course-ingr-name{font-family:var(--serif);font-size:0.95rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.4rem;}
+.course-ingr-desc{font-size:0.78rem;line-height:1.9;color:var(--ink-soft);letter-spacing:0.04em;}
+.course-ingr-badge{display:inline-block;font-size:0.56rem;letter-spacing:0.14em;padding:0.18rem 0.6rem;border:1px solid var(--orange);color:var(--orange);margin-top:0.6rem;}
+@media(max-width:960px){.course-ingr-grid{grid-template-columns:1fr 1fr;}}
+
+/* Products */
+.products{padding:8rem 6rem;position:relative;z-index:1;}
+.products-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--paper-mid);}
+.prod-tabs{display:flex;gap:0;margin-bottom:3.5rem;border-bottom:1px solid var(--paper-mid);}
+.prod-tab{padding:0.9rem 2.4rem;font-size:0.78rem;letter-spacing:0.16em;color:var(--ink-soft);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;margin-bottom:-1px;transition:all 0.3s;}
+.prod-tab.active{color:var(--ink);border-bottom-color:var(--orange);}
+.prod-tab:hover{color:var(--ink);}
+.prod-panel{display:none;}.prod-panel.active{display:block;}
+.prod-intro{background:var(--paper-warm);border:1px solid var(--paper-mid);border-left:3px solid var(--orange);padding:2rem 2.8rem;margin-bottom:3rem;}
+.prod-intro-text{font-size:0.88rem;line-height:2.2;color:var(--ink-mid);letter-spacing:0.05em;}
+.prod-intro-text strong{font-weight:400;color:var(--ink);}
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--paper-mid);border-top:1px solid var(--paper-mid);margin-bottom:3rem;}
+.prod-card{border-right:1px solid var(--paper-mid);border-bottom:1px solid var(--paper-mid);padding:2rem 2.4rem;cursor:pointer;transition:background 0.35s;position:relative;overflow:hidden;}
+.prod-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform 0.4s;}
+.prod-card:hover{background:var(--paper-warm);}
+.prod-card:hover::after{transform:scaleX(1);}
+.prod-card.seasonal{background:var(--seasonal-bg);}
+.prod-card.seasonal::after{background:var(--seasonal);}
+.prod-card.seasonal:hover{background:#cdd8cc;}
+.seasonal-badge{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.58rem;letter-spacing:0.12em;color:#fff;background:var(--seasonal);padding:0.18rem 0.6rem;margin-bottom:0.5rem;}
+.prod-cat{font-size:0.6rem;letter-spacing:0.28em;color:var(--cement);margin-bottom:0.5rem;}
+.prod-name{font-family:var(--serif);font-size:1.1rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.3rem;}
+.prod-en{font-size:0.62rem;letter-spacing:0.14em;color:var(--orange);margin-bottom:0.9rem;}
+.prod-card.seasonal .prod-en{color:var(--seasonal);}
+.prod-short{font-size:0.81rem;line-height:1.9;color:var(--ink-soft);letter-spacing:0.04em;}
+.prod-more{display:inline-flex;align-items:center;gap:0.4rem;margin-top:1.1rem;font-size:0.62rem;letter-spacing:0.16em;color:var(--orange);transition:gap 0.3s;}
+.prod-card.seasonal .prod-more{color:var(--seasonal);}
+.prod-card:hover .prod-more{gap:0.8rem;}
+.prod-detail{display:none;margin-bottom:3rem;animation:fadeIn 0.4s;}
+.prod-detail.active{display:block;}
+.prod-detail-inner{background:var(--paper-warm);border:1px solid var(--paper-mid);padding:3rem 3.8rem;position:relative;}
+.prod-detail-close{position:absolute;top:1.8rem;right:1.8rem;background:none;border:1px solid var(--cement);width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-soft);font-size:1rem;transition:all 0.25s;}
+.prod-detail-close:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.prod-detail-head{display:grid;grid-template-columns:1fr 2fr;gap:3rem;margin-bottom:2.2rem;padding-bottom:2.2rem;border-bottom:1px solid var(--paper-mid);}
+.prod-detail-name{font-family:var(--serif);font-size:1.8rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.4rem;}
+.prod-detail-en{font-size:0.65rem;letter-spacing:0.26em;color:var(--orange);}
+.skin-badges{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:1rem;}
+.skin-badge{font-size:0.6rem;letter-spacing:0.1em;padding:0.25rem 0.7rem;border:1px solid var(--cement);color:var(--ink-soft);background:var(--paper);}
+.skin-badge.highlight{background:var(--orange);color:#fff;border-color:var(--orange);}
+.skin-badge.layer{background:var(--ink);color:var(--paper);border-color:var(--ink);font-size:0.58rem;}
+.prod-detail-body{display:grid;grid-template-columns:repeat(4,1fr);gap:2.2rem;}
+.prod-block-title{font-size:0.62rem;letter-spacing:0.28em;color:var(--orange);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--cement);}
+.detail-summary-sm{font-size:0.85rem;line-height:2.1;color:var(--ink-mid);letter-spacing:0.05em;}
+.how-steps{list-style:none;counter-reset:step;}
+.how-steps li{counter-increment:step;display:flex;gap:0.8rem;align-items:flex-start;font-size:0.83rem;line-height:1.9;color:var(--ink-mid);letter-spacing:0.04em;margin-bottom:0.4rem;}
+.how-steps li::before{content:counter(step);font-family:var(--serif);font-size:0.72rem;color:var(--orange);background:var(--paper);border:1px solid var(--orange);width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.12em;}
+
+/* Guide */
+.humid-section,.pairing-section,.routine-section{margin-top:2.5rem;padding:3rem 3.5rem;background:var(--paper-warm);border:1px solid var(--paper-mid);}
+.humid-title{font-family:var(--serif);font-size:1.4rem;font-weight:300;letter-spacing:0.1em;color:var(--ink);margin-bottom:0.4rem;}
+.humid-sub{font-size:0.77rem;letter-spacing:0.1em;color:var(--ink-faint);margin-bottom:2rem;}
+.humid-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--paper-mid);border-top:1px solid var(--paper-mid);margin-bottom:2rem;}
+.humid-step{border-right:1px solid var(--paper-mid);border-bottom:1px solid var(--paper-mid);padding:1.5rem;}
+.humid-step-num{font-family:var(--serif);font-size:2rem;font-weight:200;color:rgba(196,94,42,0.2);line-height:1;margin-bottom:0.5rem;}
+.humid-step-title{font-size:0.82rem;font-weight:400;letter-spacing:0.1em;color:var(--ink-mid);margin-bottom:0.4rem;}
+.humid-step-desc{font-size:0.77rem;line-height:1.9;color:var(--ink-soft);letter-spacing:0.04em;}
+.humid-tip{font-size:0.82rem;line-height:2;color:var(--ink-mid);letter-spacing:0.05em;padding-left:1rem;border-left:3px solid var(--orange);}
+.pairing-section{border-left:3px solid var(--orange);}
+.pairing-title{font-family:var(--serif);font-size:1.4rem;font-weight:300;letter-spacing:0.1em;color:var(--ink);margin-bottom:0.4rem;}
+.pairing-sub{font-size:0.77rem;letter-spacing:0.1em;color:var(--ink-faint);margin-bottom:2rem;}
+.pairing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;}
+.pair-card{padding:1.8rem;background:var(--paper);border:1px solid var(--paper-mid);}
+.pair-label{font-size:0.62rem;letter-spacing:0.26em;color:var(--orange);margin-bottom:0.7rem;}
+.pair-items{font-size:0.83rem;line-height:2;color:var(--ink-mid);letter-spacing:0.04em;}
+.routine-cols{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2rem;}
+.routine-col-title{font-size:0.64rem;letter-spacing:0.28em;color:var(--orange);margin-bottom:1.2rem;padding-bottom:0.6rem;border-bottom:1px solid var(--cement);}
+.routine-step{display:flex;align-items:flex-start;gap:1rem;margin-bottom:0.8rem;font-size:0.83rem;line-height:1.9;color:var(--ink-mid);letter-spacing:0.04em;}
+.routine-step-num{font-family:var(--serif);font-size:0.7rem;color:var(--orange);background:var(--paper);border:1px solid var(--orange);min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* Skin concern & calculator */
+.concern-tag{background:var(--paper);border:1px solid var(--cement);color:var(--ink-soft);font-size:0.76rem;letter-spacing:0.1em;padding:0.55rem 1.1rem;cursor:pointer;font-family:var(--sans);transition:all 0.25s;-webkit-tap-highlight-color:transparent;}
+.concern-tag.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+.rec-chip{display:inline-block;font-size:0.72rem;letter-spacing:0.08em;padding:0.4rem 1rem;background:var(--paper-warm);border:1px solid var(--paper-mid);color:var(--ink-mid);}
+.rec-chip.essence{border-left:3px solid var(--orange);}
+.rec-chip.hydrosol{border-left:3px solid var(--seasonal);}
+.calc-list{display:flex;flex-direction:column;gap:0;}
+.calc-item{display:flex;justify-content:space-between;align-items:center;padding:0.9rem 1.2rem;border-bottom:1px solid var(--paper-mid);cursor:pointer;transition:background 0.2s;-webkit-tap-highlight-color:transparent;}
+.calc-item:hover{background:var(--paper-warm);}
+.calc-item.selected{background:var(--orange-pale);border-left:3px solid var(--orange);}
+.calc-item-name{font-size:0.82rem;letter-spacing:0.06em;color:var(--ink-mid);}
+.calc-item-price{font-size:0.78rem;letter-spacing:0.06em;color:var(--orange);font-family:var(--serif);}
+.calc-total-bar{position:sticky;bottom:0;background:var(--ink);padding:1.4rem 2rem;display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;margin-top:2rem;z-index:10;}
+.calc-selected-list{font-size:0.72rem;line-height:2;color:var(--ash);letter-spacing:0.06em;}
+.calc-total-num{font-family:var(--serif);font-size:1.8rem;font-weight:300;color:#fff;letter-spacing:0.06em;}
+@media(max-width:768px){
+  #calc-wrap{grid-template-columns:1fr;}
+  .calc-total-bar{flex-direction:column;gap:1rem;}
+}
+
+/* Essence story section */
+.essence-story{margin-top:2.5rem;margin-bottom:3rem;}
+.essence-story-title{font-family:var(--serif);font-size:1.4rem;font-weight:300;letter-spacing:0.1em;color:var(--ink);margin-bottom:0.3rem;}
+.essence-story-sub{font-size:0.77rem;letter-spacing:0.1em;color:var(--ink-faint);margin-bottom:2rem;}
+.story-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--paper-mid);border-top:1px solid var(--paper-mid);margin-bottom:2.5rem;}
+.story-card{border-right:1px solid var(--paper-mid);border-bottom:1px solid var(--paper-mid);padding:2rem 1.8rem;background:var(--paper-warm);}
+.story-card-icon{font-size:1.6rem;margin-bottom:1rem;line-height:1;}
+.story-card-label{font-size:0.6rem;letter-spacing:0.3em;color:var(--orange);margin-bottom:0.6rem;}
+.story-card-title{font-family:var(--serif);font-size:1.05rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.8rem;line-height:1.4;}
+.story-card-body{font-size:0.8rem;line-height:2;color:var(--ink-soft);letter-spacing:0.04em;}
+.feeling-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.8rem;}
+.feeling-tag{font-size:0.62rem;letter-spacing:0.1em;padding:0.22rem 0.7rem;border:1px solid var(--cement);color:var(--ink-soft);background:var(--paper);}
+.feeling-tag.primary{background:var(--orange);color:#fff;border-color:var(--orange);}
+.timing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:2.5rem;}
+.timing-item{padding:1.5rem 1.6rem;background:var(--paper);border:1px solid var(--paper-mid);border-top:3px solid var(--orange);}
+.timing-label{font-size:0.6rem;letter-spacing:0.28em;color:var(--orange);margin-bottom:0.6rem;}
+.timing-title{font-family:var(--serif);font-size:1rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.5rem;}
+.timing-products{font-size:0.78rem;line-height:1.9;color:var(--ink-soft);letter-spacing:0.04em;}
+.origin-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--paper-mid);border-top:1px solid var(--paper-mid);}
+.origin-item{border-right:1px solid var(--paper-mid);border-bottom:1px solid var(--paper-mid);padding:1.5rem 1.8rem;}
+.origin-item-name{font-size:0.6rem;letter-spacing:0.22em;color:var(--ink-faint);margin-bottom:0.3rem;}
+.origin-item-title{font-family:var(--serif);font-size:1rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.4rem;}
+.origin-item-story{font-size:0.76rem;line-height:1.85;color:var(--ink-soft);letter-spacing:0.04em;}
+.origin-item-from{font-size:0.6rem;letter-spacing:0.16em;color:var(--orange);margin-top:0.6rem;}
+@media(max-width:960px){.story-cards,.timing-grid,.origin-strip{grid-template-columns:1fr 1fr;}}
+
+/* Recommended goods */
+.goods{padding:8rem 6rem;position:relative;z-index:1;}
+.goods-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--paper-mid);}
+.goods-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-bottom:3rem;}
+.good-card{border:1px solid var(--paper-mid);background:var(--paper-warm);overflow:hidden;}
+.good-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--paper-mid);}
+.good-img-placeholder{width:100%;aspect-ratio:4/3;background:var(--paper-mid);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.5rem;color:var(--cement);font-size:0.72rem;letter-spacing:0.1em;}
+.good-body{padding:1.6rem;}
+.good-name{font-family:var(--serif);font-size:1.1rem;font-weight:300;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.3rem;}
+.good-channel{font-size:0.62rem;letter-spacing:0.18em;color:var(--orange);margin-bottom:0.8rem;}
+.good-reason{font-size:0.8rem;line-height:1.9;color:var(--ink-soft);letter-spacing:0.04em;}
+/* Admin */
+.admin-bar{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;}
+.admin-btn{background:var(--ink);color:var(--paper);border:none;padding:0.7rem 1.5rem;font-size:0.68rem;letter-spacing:0.16em;cursor:pointer;transition:background 0.3s;font-family:var(--sans);}
+.admin-btn:hover{background:var(--orange);}
+.admin-modal-bg{display:none;position:fixed;inset:0;background:rgba(26,25,23,0.7);z-index:300;align-items:center;justify-content:center;}
+.admin-modal-bg.open{display:flex;}
+.admin-modal{background:var(--paper);border:1px solid var(--paper-mid);padding:3rem;width:90%;max-width:560px;position:relative;max-height:80vh;overflow-y:auto;}
+.admin-modal h3{font-family:var(--serif);font-size:1.4rem;font-weight:300;letter-spacing:0.1em;color:var(--ink);margin-bottom:2rem;}
+.admin-field{margin-bottom:1.2rem;}
+.admin-field label{display:block;font-size:0.65rem;letter-spacing:0.22em;color:var(--orange);margin-bottom:0.4rem;}
+.admin-field input,.admin-field textarea{width:100%;background:var(--paper-warm);border:1px solid var(--paper-mid);padding:0.7rem 1rem;font-size:0.83rem;font-family:var(--sans);color:var(--ink);outline:none;transition:border-color 0.2s;}
+.admin-field input:focus,.admin-field textarea:focus{border-color:var(--orange);}
+.admin-field textarea{resize:vertical;min-height:80px;}
+.admin-actions{display:flex;gap:1rem;margin-top:1.5rem;}
+.admin-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:1px solid var(--cement);width:36px;height:36px;cursor:pointer;color:var(--ink-soft);font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.admin-close:hover{background:var(--ink);color:var(--paper);}
+.goods-list-admin{margin-top:1.5rem;border-top:1px solid var(--paper-mid);padding-top:1rem;}
+.good-admin-item{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px dashed var(--paper-mid);font-size:0.8rem;color:var(--ink-mid);}
+.good-admin-del{background:none;border:1px solid var(--cement);color:var(--cement);padding:0.2rem 0.5rem;font-size:0.62rem;cursor:pointer;transition:all 0.2s;}
+.good-admin-del:hover{background:var(--orange);border-color:var(--orange);color:#fff;}
+.goods-empty{padding:4rem;text-align:center;color:var(--ink-faint);font-size:0.82rem;letter-spacing:0.1em;border:1px dashed var(--paper-mid);}
+
+/* Rich text editor */
+.rte-toolbar{display:flex;gap:0.3rem;flex-wrap:wrap;padding:0.5rem 0.6rem;background:var(--paper-mid);border:1px solid var(--cement);border-bottom:none;align-items:center;}
+.rte-btn{background:var(--paper);border:1px solid transparent;padding:0.25rem 0.55rem;font-size:0.72rem;cursor:pointer;font-family:var(--sans);color:var(--ink-soft);transition:all 0.2s;min-width:28px;text-align:center;-webkit-tap-highlight-color:transparent;}
+.rte-btn:hover,.rte-btn:active{background:var(--orange);color:#fff;border-color:var(--orange);}
+.rte-btn.rte-clear{color:var(--cement);font-size:0.65rem;}
+.rte-divider{width:1px;height:18px;background:var(--cement);margin:0 0.2rem;}
+.rte-editor{width:100%;min-height:120px;background:var(--paper-warm);border:1px solid var(--paper-mid);padding:0.8rem 1rem;font-size:0.83rem;font-family:var(--sans);color:var(--ink);outline:none;line-height:1.9;letter-spacing:0.04em;cursor:text;}
+.rte-editor:focus{border-color:var(--orange);}
+.rte-editor:empty:before{content:attr(data-placeholder);color:var(--ash);white-space:pre-wrap;pointer-events:none;}
+.rte-editor [data-size="large"]{font-size:1.05rem;}
+.rte-editor [data-size="small"]{font-size:0.72rem;}
+.good-reason-display{font-size:0.8rem;line-height:2;color:var(--ink-soft);letter-spacing:0.04em;}
+.good-reason-display [data-size="large"]{font-size:1rem;}
+.good-reason-display [data-size="small"]{font-size:0.7rem;}
+
+/* Footer */
+footer{padding:3rem 6rem;background:var(--ink);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.footer-logo{font-family:var(--serif);font-size:1.1rem;font-weight:300;letter-spacing:0.18em;color:var(--paper);}
+.footer-logo span{font-style:italic;color:var(--orange);}
+.footer-note{font-size:0.68rem;letter-spacing:0.14em;color:var(--ash);}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+@media(max-width:960px){
+  nav{padding:1.2rem 2rem;}
+  .nav-links a{padding:0.3rem 0.8rem;font-size:0.68rem;}
+  .hero{grid-template-columns:1fr;min-height:auto;}
+  .hero-left{padding:9rem 2.5rem 3rem;}
+  .hero-right{height:180px;}
+  .about-band{grid-template-columns:1fr;gap:2.5rem;padding:4rem 2.5rem;}
+  .about-divider{display:none;}
+  .disclaimer-bar{padding:0.6rem 2.5rem;}
+  .skin-diagram-section,.courses,.products,.goods{padding:4rem 2.5rem;}
+  .courses-header,.products-header,.goods-header{flex-direction:column;align-items:flex-start;gap:1rem;}
+  .courses-grid,.prod-grid,.goods-grid{grid-template-columns:1fr;}
+  .course-detail,.prod-detail{padding:0 2.5rem 3rem;}
+  .detail-header,.prod-detail-head{grid-template-columns:1fr;gap:1.5rem;}
+  .detail-body,.prod-detail-body{grid-template-columns:1fr;}
+  .notice-grid,.pairing-grid,.routine-cols{grid-template-columns:1fr;}
+  .humid-steps{grid-template-columns:1fr 1fr;}
+  .diag-panel.active{grid-template-columns:1fr;}
+  .skin-svg-wrap{position:static;}
+  footer{flex-direction:column;gap:1rem;text-align:center;padding:2.5rem 2rem;}
+}
+
+/* ── Mobile / Tablet RWD ── */
+@media(max-width:768px){
+  /* Nav: hamburger */
+  nav{padding:1rem 1.4rem;flex-wrap:wrap;gap:0;}
+  .nav-logo{font-size:0.95rem;}
+  .nav-hamburger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;cursor:pointer;background:none;border:none;padding:4px;-webkit-tap-highlight-color:transparent;}
+  .nav-hamburger span{display:block;width:22px;height:2px;background:var(--ink);transition:all 0.3s;border-radius:1px;}
+  .nav-links{display:none;width:100%;flex-direction:column;gap:0;background:var(--paper-warm);border-top:1px solid var(--paper-mid);margin-top:0.6rem;padding:0.6rem 0;}
+  .nav-links.open{display:flex;}
+  .nav-links li{width:100%;}
+  .nav-links a{display:block;padding:0.9rem 1.4rem;font-size:0.82rem;letter-spacing:0.12em;border-bottom:1px solid var(--paper-mid);}
+  .nav-links a.active::after{display:none;}
+  .nav-links a.active{color:var(--orange);}
+
+  /* Hero */
+  .hero-left{padding:7rem 1.6rem 2.5rem;}
+  .hero-title{font-size:clamp(1.8rem,7vw,2.8rem);}
+  .hero-cta{flex-direction:column;gap:0.8rem;}
+  .btn-primary,.btn-ghost{width:100%;text-align:center;padding:1rem;}
+  .hero-right{height:120px;}
+
+  /* General spacing */
+  .about-band{padding:3rem 1.6rem;}
+  .disclaimer-bar{padding:0.6rem 1.6rem;}
+  .skin-diagram-section,.courses,.products,.goods{padding:3rem 1.6rem;}
+  .courses-header,.products-header,.goods-header{gap:0.8rem;}
+
+  /* Course grid */
+  .courses-grid{grid-template-columns:1fr;}
+  .course-card{padding:1.8rem 1.6rem;}
+  .course-detail{padding:0 1.6rem 2.5rem;}
+  .detail-inner{padding:2rem 1.6rem;}
+  .detail-header{grid-template-columns:1fr;gap:1.2rem;margin-bottom:1.8rem;}
+  .detail-body{grid-template-columns:1fr;gap:1.8rem;}
+  .notice-grid{grid-template-columns:1fr;}
+  .course-ingr-grid{grid-template-columns:1fr;}
+
+  /* Product grid */
+  .prod-grid{grid-template-columns:1fr 1fr;}
+  .prod-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .prod-tab{white-space:nowrap;padding:0.9rem 1.2rem;font-size:0.72rem;}
+  .prod-detail{padding:0 1.6rem 2.5rem;}
+  .prod-detail-inner{padding:2rem 1.6rem;}
+  .prod-detail-head{grid-template-columns:1fr;gap:1.2rem;}
+  .prod-detail-body{grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .humid-steps{grid-template-columns:1fr;}
+  .pairing-grid,.routine-cols{grid-template-columns:1fr;}
+  .timing-grid{grid-template-columns:1fr;}
+  .story-cards,.origin-strip{grid-template-columns:1fr;}
+
+  /* Diagram */
+  .diag-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .diag-tab{white-space:nowrap;}
+  .diag-panel.active{grid-template-columns:1fr;}
+
+  /* Goods */
+  .goods-grid{grid-template-columns:1fr;}
+  .admin-modal{padding:2rem 1.4rem;width:95%;}
+
+  /* Footer */
+  footer{padding:2rem 1.6rem;}
+  .footer-note{font-size:0.62rem;}
+}
+
+@media(max-width:480px){
+  .prod-grid{grid-template-columns:1fr;}
+  .prod-detail-body{grid-template-columns:1fr;}
+  .nav-logo{font-size:0.88rem;}
+  .hero-left{padding:6.5rem 1.4rem 2rem;}
+}
+
+/* Touch targets — iOS & Android */
+a,button,.course-card,.prod-card,.course-diag-item,.diag-tab,.prod-tab,.nav-links a{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+button,input,textarea,select{
+  -webkit-appearance:none;
+  font-size:16px;/* prevent iOS zoom on focus */
+}
+.admin-field input,.admin-field textarea{font-size:16px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo" onclick="showPage('courses');return false;">NINI<span>の</span>皮膚療癒所</a>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="選單">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#" id="nav-courses" class="active" onclick="showPage('courses');closeMenu();return false;">課程衛教</a></li>
+    <li><a href="#" id="nav-products" onclick="showPage('products');closeMenu();return false;">產品衛教</a></li>
+    <li><a href="#" id="nav-goods" onclick="showPage('goods');closeMenu();return false;">推薦好物</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ COURSES PAGE ═══════════════ -->
+<div class="page active" id="page-courses">
+
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Skin Healing Sanctuary · Taichung</p>
+    <h1 class="hero-title"><span class="title-chip" style="font-size:clamp(1.8rem,3.5vw,3rem);">溫柔守護</span><br><em style="font-size:clamp(2.4rem,4vw,3.6rem);">每一吋肌膚</em></h1>
+    <div class="hero-intro">
+      <p>NINIの是一間位在台中的療癒系皮膚工作室，</p>
+      <p>在這裡，臉不是用來被修正的，<br>而是用來被理解的。</p>
+      <p>我們以直覺、香氣、能量與溫柔的技法，<br>陪你一起走進自己的狀態。</p>
+      <p>不只做臉，更像在療癒你正在穿越的生活。<br>每一次來，都像寫一封信給你自己。</p>
+    </div>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('skin-diagram').scrollIntoView({behavior:'smooth'})">認識肌膚結構</button>
+      <button class="btn-ghost" onclick="document.getElementById('courses-section').scrollIntoView({behavior:'smooth'})">瀏覽課程</button>
+    </div>
+  </div>
+  <div class="hero-right"><div class="hero-kanji">癒</div></div>
+</section>
+
+<div class="about-band">
+  <div>
+    <p class="section-label reveal">Philosophy</p>
+    <h2 class="reveal" style="transition-delay:0.1s"><span class="title-chip gold">肌膚的照護</span><br><span style="font-family:var(--serif);font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:300;letter-spacing:0.06em;line-height:1.5;">始於真正的了解</span></h2>
+  </div>
+  <div class="about-divider"></div>
+  <div class="reveal" style="transition-delay:0.2s">
+    <p class="section-body">在小屋，我們相信每一位客人的肌膚都有其獨特的語言。透過細膩的評估與溫柔的服務，陪伴肌膚走向最好的狀態。<br><br>本衛教系統旨在讓您在服務前後，都能清楚了解每項課程的原理，以及產品的正確使用方式。</p>
+  </div>
+</div>
+
+<!-- Disclaimer -->
+<div class="disclaimer-bar">
+  <p><strong>保養說明聲明</strong> &nbsp;|&nbsp; 本頁面所有服務說明及保養品介紹，均屬美容護膚範疇之保養資訊，不涉及醫療行為，亦不宣稱任何醫療效果。產品成分說明為一般保養知識分享，個人使用感受因膚質而異。如有肌膚相關疾病，請諮詢皮膚科醫師。</p>
+</div>
+
+<!-- ═══ SKIN DIAGRAM ═══ -->
+<section class="skin-diagram-section" id="skin-diagram">
+  <div class="skin-diagram-intro reveal">
+    <p class="section-label">Skin Structure</p>
+    <h2><span class="title-chip">皮膚層次</span>&nbsp;<span style="font-family:var(--serif);font-size:clamp(1.5rem,2.2vw,2rem);font-weight:300;letter-spacing:0.06em;">與服務作用示意</span></h2>
+    <p class="skin-diagram-hint"><span class="hint-dot"></span>點選左側服務，查看其在皮膚層次中的作用示意（示意圖僅供衛教說明，不代表醫療宣稱）</p>
+  </div>
+
+  <div class="diag-tabs">
+    <button class="diag-tab active" onclick="switchDiagTab('face',this)">臉部服務示意</button>
+    <button class="diag-tab" onclick="switchDiagTab('head',this)">頭皮・筋膜示意</button>
+  </div>
+
+  <!-- Face diagram panel -->
+  <div class="diag-panel active" id="diag-panel-face">
+    <div>
+      <div class="course-diagram-list">
+        <div class="course-diag-item" onclick="activateDiag('face','jingxi')" id="fdiag-jingxi">
+          <div class="diag-item-name">精細光彩</div>
+          <div class="diag-item-layer">示意層次：角質層・顆粒層</div>
+        </div>
+        <div class="course-diag-item" onclick="activateDiag('face','yuanye')" id="fdiag-yuanye">
+          <div class="diag-item-name">原液調理</div>
+          <div class="diag-item-layer">示意層次：表皮屏障・毛孔通道</div>
+        </div>
+        <div class="course-diag-item" onclick="activateDiag('face','paoguang')" id="fdiag-paoguang">
+          <div class="diag-item-name">泡光氧彗</div>
+          <div class="diag-item-layer">示意層次：表皮層・細胞活化</div>
+        </div>
+        <div class="course-diag-item" onclick="activateDiag('face','senlin')" id="fdiag-senlin">
+          <div class="diag-item-name">森林癒撥筋</div>
+          <div class="diag-item-layer">示意層次：肌膚表面・筋膜循環</div>
+        </div>
+      </div>
+      <!-- Process diagram area -->
+      <div class="process-diag-wrap" id="process-wrap" style="display:none">
+        <p class="process-diag-title" id="process-title"></p>
+        <svg id="process-svg" width="100%" viewBox="0 0 340 200"></svg>
+      </div>
+    </div>
+
+    <div class="skin-svg-wrap">
+      <svg id="face-skin-svg" width="100%" viewBox="0 0 340 540" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <!-- Surface label -->
+        <text x="10" y="22" font-family="Noto Sans JP,sans-serif" font-size="9" fill="#c45e2a" letter-spacing="1">▲ 肌膚表面</text>
+
+        <!-- SC 角質層 -->
+        <rect id="fl-sc" x="10" y="28" width="320" height="34" fill="#e8ddd0" stroke="#c4b8a8" stroke-width="0.5"/>
+        <!-- Granular 顆粒層 -->
+        <rect id="fl-gr" x="10" y="62" width="320" height="26" fill="#e0d4c4" stroke="#c4b8a8" stroke-width="0.5"/>
+        <!-- Spinous 有棘層 -->
+        <rect id="fl-sp" x="10" y="88" width="320" height="26" fill="#d8cabb" stroke="#c4b8a8" stroke-width="0.5"/>
+        <!-- Basal 基底層 -->
+        <rect id="fl-ba" x="10" y="114" width="320" height="26" fill="#cfc0b0" stroke="#c4b8a8" stroke-width="0.5"/>
+        <!-- DEJ line -->
+        <line x1="10" y1="140" x2="330" y2="140" stroke="#a09080" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="12" y="152" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#7a6858" opacity="0.8">── 真皮層交界 ──</text>
+        <!-- Dermis papillary -->
+        <rect id="fl-dp" x="10" y="156" width="320" height="60" fill="#c8b8a6" stroke="#c4b8a8" stroke-width="0.5"/>
+        <!-- Dermis reticular -->
+        <rect id="fl-dr" x="10" y="216" width="320" height="80" fill="#bfae9c" stroke="#c4b8a8" stroke-width="0.5"/>
+        <!-- Hypodermis -->
+        <rect id="fl-hd" x="10" y="296" width="320" height="60" fill="#b4a292" stroke="#c4b8a8" stroke-width="0.5"/>
+
+        <!-- Layer labels -->
+        <text x="18" y="50" font-family="Noto Sans JP,sans-serif" font-size="10" fill="#5a4a3a" letter-spacing="0.5">角質層</text>
+        <text x="200" y="50" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#8a7a6a" opacity="0.7">Stratum Corneum</text>
+        <text x="18" y="80" font-family="Noto Sans JP,sans-serif" font-size="9" fill="#54453a">顆粒層</text>
+        <text x="200" y="80" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#8a7a6a" opacity="0.7">Granular Layer</text>
+        <text x="18" y="106" font-family="Noto Sans JP,sans-serif" font-size="9" fill="#4e4035">有棘層</text>
+        <text x="200" y="106" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#8a7a6a" opacity="0.7">Spinous Layer</text>
+        <text x="18" y="132" font-family="Noto Sans JP,sans-serif" font-size="9" fill="#48392e">基底層</text>
+        <text x="200" y="132" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#8a7a6a" opacity="0.7">Basal Layer</text>
+        <text x="18" y="176" font-family="Noto Sans JP,sans-serif" font-size="10" fill="#3e3028">真皮層（乳頭層）</text>
+        <text x="18" y="250" font-family="Noto Sans JP,sans-serif" font-size="10" fill="#382a22">真皮層（網狀層）</text>
+        <text x="18" y="322" font-family="Noto Sans JP,sans-serif" font-size="10" fill="#32261e">皮下組織</text>
+
+        <!-- Structures: hair follicle + sebaceous gland -->
+        <ellipse cx="80" cy="200" rx="5" ry="20" fill="#9a8878" opacity="0.55"/>
+        <line x1="80" y1="180" x2="80" y2="28" stroke="#9a8878" stroke-width="2.5" opacity="0.55"/>
+        <line x1="76" y1="28" x2="84" y2="23" stroke="#9a8878" stroke-width="1.5" opacity="0.5"/><!-- hair -->
+        <ellipse cx="240" cy="210" rx="5" ry="22" fill="#9a8878" opacity="0.45"/>
+        <line x1="240" y1="188" x2="240" y2="28" stroke="#9a8878" stroke-width="2" opacity="0.45"/>
+        <line x1="236" y1="28" x2="244" y2="23" stroke="#9a8878" stroke-width="1.5" opacity="0.4"/>
+        <text x="56" y="75" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#7a6858" opacity="0.75">毛囊</text>
+
+        <!-- Sebaceous -->
+        <ellipse cx="103" cy="172" rx="9" ry="6" fill="#c4a882" opacity="0.65"/>
+        <text x="115" y="175" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#6a5840" opacity="0.8">皮脂腺</text>
+
+        <!-- Sweat gland -->
+        <path d="M290,90 Q288,150 292,200 Q296,210 292,220" stroke="#a8c4d8" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <text x="296" y="208" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#5a7888" opacity="0.75">汗腺</text>
+
+        <!-- Collagen fibres in dermis -->
+        <path d="M15,180 Q80,170 140,182 Q200,193 260,175 Q300,168 330,180" stroke="#c4a882" stroke-width="0.8" fill="none" opacity="0.45"/>
+        <path d="M15,195 Q70,205 130,192 Q190,180 250,198 Q295,208 330,195" stroke="#c4a882" stroke-width="0.8" fill="none" opacity="0.38"/>
+        <text x="18" y="215" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#5a4e36" opacity="0.7">膠原蛋白纖維</text>
+
+        <!-- Blood vessels -->
+        <path d="M15,240 Q90,232 170,244 Q240,255 330,238" stroke="#c88888" stroke-width="1.2" fill="none" opacity="0.55"/>
+        <text x="18" y="272" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#885858" opacity="0.7">微血管</text>
+
+        <!-- Cells: keratinocytes in spinous (circles) -->
+        <circle cx="160" cy="101" r="4" fill="none" stroke="#8a7868" stroke-width="0.8" opacity="0.5"/>
+        <circle cx="180" cy="101" r="4" fill="none" stroke="#8a7868" stroke-width="0.8" opacity="0.5"/>
+        <circle cx="200" cy="101" r="4" fill="none" stroke="#8a7868" stroke-width="0.8" opacity="0.5"/>
+        <text x="160" y="113" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#7a6858" opacity="0.65">角質形成細胞</text>
+
+        <!-- Melanocytes in basal -->
+        <circle cx="140" cy="127" r="5" fill="#8a6a5a" opacity="0.5"/>
+        <circle cx="160" cy="127" r="5" fill="#8a6a5a" opacity="0.4"/>
+        <text x="168" y="130" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#6a5040" opacity="0.65">黑色素細胞</text>
+
+        <!-- Fibroblasts in dermis -->
+        <ellipse cx="160" cy="235" rx="7" ry="4" fill="#a09070" opacity="0.45"/>
+        <ellipse cx="200" cy="245" rx="7" ry="4" fill="#a09070" opacity="0.4"/>
+        <text x="210" y="248" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#7a6848" opacity="0.65">纖維母細胞</text>
+
+        <!-- Highlight overlays -->
+        <rect id="fhl-sc" x="8" y="26" width="324" height="36" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="fhl-gr" x="8" y="60" width="324" height="28" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="fhl-sp" x="8" y="86" width="324" height="28" fill="#e08830" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="fhl-ba" x="8" y="112" width="324" height="28" fill="#e08830" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="fhl-dp" x="8" y="154" width="324" height="64" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="fhl-full-ep" x="8" y="60" width="324" height="80" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+
+        <!-- Border -->
+        <rect x="10" y="28" width="320" height="328" fill="none" stroke="#8a7868" stroke-width="0.8" opacity="0.5"/>
+      </svg>
+      <div class="layer-info" id="face-layer-info">
+        <p class="layer-info-title">點選服務查看示意</p>
+        <p class="layer-info-text" id="face-layer-text">選擇左側任一服務項目，了解其在皮膚示意圖中的作用範圍說明。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Head/fascia diagram panel -->
+  <div class="diag-panel" id="diag-panel-head">
+    <div>
+      <div class="course-diagram-list">
+        <div class="course-diag-item" onclick="activateDiag('head','yulin')" id="hdiag-yulin">
+          <div class="diag-item-name">雨林頭療</div>
+          <div class="diag-item-layer">示意層次：頭皮・皮下循環・穴道</div>
+        </div>
+        <div class="course-diag-item" onclick="activateDiag('head','xiaoyan')" id="hdiag-xiaoyan">
+          <div class="diag-item-name">日式小顏骨氣</div>
+          <div class="diag-item-layer">示意層次：筋膜層・咬肌・淋巴</div>
+        </div>
+      </div>
+      <div class="process-diag-wrap" id="head-process-wrap" style="display:none">
+        <p class="process-diag-title" id="head-process-title"></p>
+        <svg id="head-process-svg" width="100%" viewBox="0 0 340 180"></svg>
+      </div>
+    </div>
+
+    <div class="skin-svg-wrap">
+      <svg id="head-skin-svg" width="100%" viewBox="0 0 340 460" xmlns="http://www.w3.org/2000/svg">
+        <!-- Scalp layers -->
+        <text x="10" y="18" font-family="Noto Sans JP,sans-serif" font-size="9" fill="#c45e2a" letter-spacing="1">▲ 頭皮表面</text>
+        <!-- Hair -->
+        <rect id="hl-hair" x="10" y="22" width="320" height="28" fill="#c8bfb4" stroke="#b0a898" stroke-width="0.5"/>
+        <!-- Epidermis -->
+        <rect id="hl-ep" x="10" y="50" width="320" height="35" fill="#c0b5a8" stroke="#b0a898" stroke-width="0.5"/>
+        <!-- Dermis -->
+        <rect id="hl-dm" x="10" y="85" width="320" height="50" fill="#b8aa9a" stroke="#b0a898" stroke-width="0.5"/>
+        <!-- Subcutis -->
+        <rect id="hl-sub" x="10" y="135" width="320" height="50" fill="#b0a090" stroke="#b0a898" stroke-width="0.5"/>
+        <!-- Galea (fascia) -->
+        <rect id="hl-galea" x="10" y="185" width="320" height="40" fill="#a09282" stroke="#b0a898" stroke-width="0.5"/>
+        <!-- Loose CT -->
+        <rect id="hl-loose" x="10" y="225" width="320" height="35" fill="#988a7a" stroke="#b0a898" stroke-width="0.5"/>
+        <!-- Periosteum -->
+        <rect id="hl-peri" x="10" y="260" width="320" height="20" fill="#908070" stroke="#b0a898" stroke-width="0.5"/>
+        <!-- Skull -->
+        <rect id="hl-skull" x="10" y="280" width="320" height="35" fill="#e8e0d8" stroke="#b0a898" stroke-width="0.8"/>
+        <!-- Muscle layer (face) -->
+        <rect id="hl-muscle" x="10" y="315" width="320" height="60" fill="#c0a898" stroke="#b0a898" stroke-width="0.5"/>
+        <!-- Lymph layer -->
+        <rect id="hl-lymph" x="10" y="375" width="320" height="50" fill="#b8c4b8" stroke="#a8b8a8" stroke-width="0.5"/>
+
+        <!-- Labels -->
+        <text x="18" y="41" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#4a4038">毛髮層</text>
+        <text x="200" y="41" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#8a7868" opacity="0.7">Hair</text>
+        <text x="18" y="73" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#444038">頭皮表皮層</text>
+        <text x="200" y="73" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#8a7868" opacity="0.7">Scalp Epidermis</text>
+        <text x="18" y="116" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#3e3830">真皮・皮脂・血管</text>
+        <text x="200" y="116" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#8a7868" opacity="0.7">Dermis / Vessels</text>
+        <text x="18" y="166" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#3a342c">皮下疏鬆結締組織</text>
+        <text x="200" y="158" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#8a7868" opacity="0.7">Loose connective</text>
+        <text x="18" y="208" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#362e26">帽狀腱膜（筋膜）</text>
+        <text x="200" y="200" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#8a7868" opacity="0.7">Galea / SMAS</text>
+        <text x="18" y="248" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#30281e">疏鬆腱膜下層</text>
+        <text x="18" y="276" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#2a2018">骨膜</text>
+        <text x="18" y="305" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#484038">頭骨</text>
+        <text x="200" y="305" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#8a7868" opacity="0.7">Skull</text>
+        <text x="18" y="348" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#5a4e3e">表情肌・咀嚼肌</text>
+        <text x="200" y="340" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#8a7868" opacity="0.7">Facial muscle</text>
+        <text x="18" y="403" font-family="Noto Sans JP,sans-serif" font-size="9.5" fill="#4a5040">淋巴管・穴道</text>
+        <text x="200" y="395" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#8a7868" opacity="0.7">Lymphatics / Acupoints</text>
+
+        <!-- Blood vessels in dermis -->
+        <path d="M15,108 Q80,100 150,112 Q220,122 330,106" stroke="#c88888" stroke-width="1.2" fill="none" opacity="0.55"/>
+        <!-- Acupressure dots -->
+        <circle cx="70" cy="400" r="4.5" fill="none" stroke="#c45e2a" stroke-width="1.2" opacity="0.7"/>
+        <circle cx="70" cy="400" r="1.8" fill="#c45e2a" opacity="0.55"/>
+        <circle cx="150" cy="408" r="4.5" fill="none" stroke="#c45e2a" stroke-width="1.2" opacity="0.7"/>
+        <circle cx="150" cy="408" r="1.8" fill="#c45e2a" opacity="0.55"/>
+        <circle cx="250" cy="395" r="4.5" fill="none" stroke="#c45e2a" stroke-width="1.2" opacity="0.7"/>
+        <circle cx="250" cy="395" r="1.8" fill="#c45e2a" opacity="0.55"/>
+        <!-- Fascia texture lines -->
+        <path d="M15,195 L330,195" stroke="#786858" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+        <path d="M15,210 L330,210" stroke="#786858" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.35"/>
+        <!-- Muscle fibres -->
+        <path d="M15,330 Q90,322 170,334 Q240,344 330,328" stroke="#9a8070" stroke-width="0.8" fill="none" opacity="0.4"/>
+        <path d="M15,348 Q80,356 160,344 Q230,335 330,350" stroke="#9a8070" stroke-width="0.8" fill="none" opacity="0.35"/>
+
+        <!-- Highlights -->
+        <rect id="hhl-scalp" x="8" y="20" width="324" height="66" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="hhl-sub" x="8" y="133" width="324" height="54" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="hhl-lymph" x="8" y="373" width="324" height="54" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="hhl-galea" x="8" y="183" width="324" height="44" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+        <rect id="hhl-muscle" x="8" y="313" width="324" height="64" fill="#c45e2a" opacity="0" style="pointer-events:none;transition:opacity 0.4s;"/>
+
+        <rect x="10" y="22" width="320" height="403" fill="none" stroke="#8a7868" stroke-width="0.8" opacity="0.5"/>
+      </svg>
+      <div class="layer-info" id="head-layer-info">
+        <p class="layer-info-title">點選服務查看示意</p>
+        <p class="layer-info-text" id="head-layer-text">選擇左側任一服務項目，了解其在頭皮筋膜示意圖中的作用說明。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COURSES GRID ═══ -->
+<section class="courses" id="courses-section">
+  <div class="courses-header reveal">
+    <div><p class="section-label">Course Education</p><h2><span class="title-chip">課程衛教</span></h2></div>
+    <p style="font-size:0.78rem;letter-spacing:0.1em;color:var(--ink-faint);">點選卡片查看詳細說明</p>
+  </div>
+  <div class="courses-grid">
+    <div class="course-card reveal" onclick="openCourse('jingxi')"><p class="course-num">No. 01</p><h3 class="course-name">精細光彩</h3><p class="course-en">Radiance Refining</p><div class="course-tags"><span class="tag">專業果酸煥膚</span><span class="tag">毛孔深層淨化</span><span class="tag">煥亮</span></div><p class="course-desc">以專業級果酸進行精緻煥膚，結合深層毛孔淨化，讓肌膚感受由裡而外的細緻透亮。</p><div class="course-arrow">了解更多 →</div></div>
+    <div class="course-card reveal" style="transition-delay:0.08s" onclick="openCourse('yuanye')"><p class="course-num">No. 02</p><h3 class="course-name">原液調理</h3><p class="course-en">Essence Therapy</p><div class="course-tags"><span class="tag">0添加原液</span><span class="tag">保濕導入</span><span class="tag">修護</span></div><p class="course-desc">使用純成分、零添加的功能性原液，透過導入方式讓肌膚感受深層的保濕與修護。</p><div class="course-arrow">了解更多 →</div></div>
+    <div class="course-card reveal" style="transition-delay:0.16s" onclick="openCourse('paoguang')"><p class="course-num">No. 03</p><h3 class="course-name">泡光氧彗</h3><p class="course-en">Oxygen Glow · Geneo X</p><div class="course-tags"><span class="tag">活氧泡泡煥膚</span><span class="tag">超音波導入</span><span class="tag">淋巴按摩</span></div><p class="course-desc">使用 Geneo X 儀器，以活氧泡泡、超音波與淋巴按摩四步驟，帶來即時的淨透光感體驗。</p><div class="course-arrow">了解更多 →</div></div>
+    <div class="course-card reveal" style="transition-delay:0.08s" onclick="openCourse('yulin')"><p class="course-num">No. 04</p><h3 class="course-name">雨林頭療</h3><p class="course-en">Rainforest Scalp Therapy</p><div class="course-tags"><span class="tag">頭部撥筋</span><span class="tag">放鬆</span><span class="tag">舒壓</span></div><p class="course-desc">以溫柔而精準的撥筋手法，疏通頭部筋膜，釋放日常累積的壓力與緊繃。</p><div class="course-arrow">了解更多 →</div></div>
+    <div class="course-card reveal" style="transition-delay:0.16s" onclick="openCourse('xiaoyan')"><p class="course-num">No. 05</p><h3 class="course-name">日式小顏骨氣</h3><p class="course-en">Japanese Face Sculpting</p><div class="course-tags"><span class="tag">筋膜調整</span><span class="tag">輪廓調理</span><span class="tag">咀嚼肌</span></div><p class="course-desc">源自日本的小顏工法，透過筋膜手技調整臉部輪廓，帶來緊緻立體的感受。</p><div class="course-arrow">了解更多 →</div></div>
+    <div class="course-card reveal" style="transition-delay:0.24s" onclick="openCourse('senlin')"><p class="course-num">No. 06</p><h3 class="course-name">森林癒撥筋</h3><p class="course-en">Forest Healing Gua Sha</p><div class="course-tags"><span class="tag">藥草球</span><span class="tag">專屬精油</span><span class="tag">臉部撥筋</span></div><p class="course-desc">以當季花草手製藥草球，搭配為小屋量身訂製的專屬精油，進行溫柔而深層的撥筋儀式。</p><div class="course-arrow">了解更多 →</div></div>
+  </div>
+</section>
+
+<!-- Course details -->
+<div class="course-detail" id="detail-jingxi"><div class="detail-inner"><button class="detail-close" onclick="closeCourse('jingxi')">✕</button><div class="detail-header"><div><h3 class="detail-title">精細光彩</h3><p class="detail-en">Professional Radiance Refining Treatment</p></div><p class="detail-summary">在小屋，精細光彩使用的是專業級果酸配方，濃度與作用力道遠超過一般居家保養品，屬於需由專業人員操作的煥膚服務。透過果酸加速老廢角質的代謝週期，結合毛孔深層淨化，讓肌膚感受更細緻、均勻與透亮的狀態。服務後肌膚對後續保養品的接受感也會顯著提升。</p></div><div class="detail-body"><div><p class="detail-block-title">服務後肌膚感受</p><ul class="detail-list"><li>角質代謝加速，膚觸趨向細緻</li><li>毛孔阻塞情況改善</li><li>暗沉感減輕，透亮感提升</li><li>膚色感受趨向均勻</li><li>後續保養品吸收感改善</li></ul></div><div><p class="detail-block-title">服務前注意</p><ul class="detail-list"><li>前一週避免自行使用酸類保養品</li><li>前三天請避免自行處理毛孔</li><li>請告知是否有服用 A 酸、抗生素等藥物</li><li>近期有大量日曬請事先告知</li></ul></div><div><p class="detail-block-title">服務後居家照護</p><ul class="detail-list"><li>24 小時內避免酸類、高濃度酒精類保養品</li><li>三天內以溫和潔顏品清洗</li><li>確實做好防曬，建議 SPF50+ 物理性防曬</li><li>輕微脫屑為正常代謝，請勿用手剝除</li><li>加強保濕，可搭配舒緩面膜</li><li>一週內避免高溫環境（蒸氣、三溫暖）</li></ul></div></div><div class="notice-grid"><div class="notice-box caution"><p class="notice-label">⚠ 建議暫緩服務的情況</p><ul class="detail-list"><li>孕期或哺乳期</li><li>近期有服用 A 酸（Isotretinoin）</li><li>臉部有傷口、急性發炎</li><li>已知對果酸類成分過敏者</li></ul></div><div class="notice-box"><p class="notice-label">常見問題</p><ul class="detail-list"><li>做完會刺痛嗎？ — 輕微熱感屬正常，如有不適請立即告知</li><li>建議多久一次？ — 間隔 3～4 週較為適合</li><li>脫屑會很明顯嗎？ — 視膚況而異，通常輕微</li></ul></div></div>
+<div class="course-ingredients">
+  <p class="course-ingr-label">Service Ingredients · 課程原料亮點</p>
+  <div class="course-ingr-grid">
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">⚗️</div>
+      <h4 class="course-ingr-name">專業等級果酸配方</h4>
+      <p class="course-ingr-desc">小屋使用的果酸配方，屬於需由受過專業訓練的美容師操作的等級，並非一般開放居家自行使用的品項。每次服務前由美容師依當日膚況評估，以合適的方式進行。</p>
+      <span class="course-ingr-badge">Professional Grade</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🤲</div>
+      <h4 class="course-ingr-name">美容師精湛手技</h4>
+      <p class="course-ingr-desc">果酸的使用節奏與判斷，取決於美容師對肌膚狀態的即時觀察與經驗累積。技術與成分的精準搭配，是這份服務最核心的價值——每一次，都是為你量身而生的體驗。</p>
+      <span class="course-ingr-badge">Artisan Technique</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🧴</div>
+      <h4 class="course-ingr-name">服務後舒緩調護</h4>
+      <p class="course-ingr-desc">搭配小屋嚴選的零添加舒緩原液，協助肌膚在服務後進行屏障調護，讓每次服務的感受延續更久。</p>
+      <span class="course-ingr-badge">Post-Care Essence</span>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<div class="course-detail" id="detail-yuanye"><div class="detail-inner"><button class="detail-close" onclick="closeCourse('yuanye')">✕</button><div class="detail-header"><div><h3 class="detail-title">原液調理</h3><p class="detail-en">Pure Essence Infusion Therapy</p></div><p class="detail-summary">採用零添加劑、高純度的功能性原液，針對肌膚當下的狀態進行客製化調配。透過專業導入手法，讓保養成分與肌膚充分接觸，進行密集的保濕補水與屏障調護，特別適合敏感、乾燥或剛接受煥膚服務後的肌膚。</p></div><div class="detail-body"><div><p class="detail-block-title">服務後肌膚感受</p><ul class="detail-list"><li>深層補水，乾燥緊繃感舒緩</li><li>肌膚屏障獲得調護</li><li>泛紅與敏感感有所改善</li><li>後續保養品吸收感改善</li></ul></div><div><p class="detail-block-title">服務前注意</p><ul class="detail-list"><li>請告知目前使用的保養品及肌膚困擾</li><li>若肌膚正處於敏感期請事先告知</li><li>請告知是否有成分過敏紀錄</li></ul></div><div><p class="detail-block-title">服務後居家照護</p><ul class="detail-list"><li>24 小時內避免刺激性成分</li><li>服務後吸收力佳，搭配溫和保濕品加乘</li><li>做好日常防曬</li><li>可搭配居家原液做日常維護</li></ul></div></div><div class="notice-grid"><div class="notice-box caution"><p class="notice-label">⚠ 建議暫緩服務的情況</p><ul class="detail-list"><li>臉部有傷口或急性感染</li><li>首次使用特定原液建議先做肌膚測試</li></ul></div><div class="notice-box"><p class="notice-label">常見問題</p><ul class="detail-list"><li>0 添加是什麼意思？ — 不含香料、防腐劑、色素等添加物</li><li>敏感肌適合嗎？ — 非常適合，為敏感肌的首選服務</li><li>建議多久一次？ — 每 2～4 週一次</li></ul></div></div>
+<div class="course-ingredients">
+  <p class="course-ingr-label">Service Ingredients · 課程原料亮點</p>
+  <div class="course-ingr-grid">
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🧪</div>
+      <h4 class="course-ingr-name">零添加功能性原液</h4>
+      <p class="course-ingr-desc">服務中使用的，正是你在產品衛教中認識的每一瓶——藍銅胜肽、積雪草、神經醯胺等高純度原液，不含香料、色素與多餘添加物，成分直白，對肌膚溫柔。</p>
+      <span class="course-ingr-badge">Zero Additives</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🌸</div>
+      <h4 class="course-ingr-name">天然植物純露</h4>
+      <p class="course-ingr-desc">搭配橙花、千葉玫瑰、洋甘菊等天然蒸餾純露，依你當日的膚況與情緒狀態，選擇最適合的品項導入。香氣即是療癒，保養即是感受。</p>
+      <span class="course-ingr-badge">Botanical Hydrosol</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">✦</div>
+      <h4 class="course-ingr-name">美容師即時客製調配</h4>
+      <p class="course-ingr-desc">沒有固定的公式——美容師在服務前評估你當日的肌膚狀態與需求，親手為你選配最合適的原液組合。每一次都是獨一無二的調護處方。</p>
+      <span class="course-ingr-badge">Bespoke Formula</span>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<div class="course-detail" id="detail-paoguang"><div class="detail-inner"><button class="detail-close" onclick="closeCourse('paoguang')">✕</button><div class="detail-header"><div><h3 class="detail-title">泡光氧彗</h3><p class="detail-en">Oxygen Glow · Powered by Geneo X</p></div><p class="detail-summary">在小屋使用 Geneo X 專業儀器，以四個步驟進行服務：① Oxfoliation™ 活氧泡泡煥膚——OxyPod 膠囊與導引凝膠接觸後產生 CO₂ 泡泡，透過 Bohr Effect 引導身體從內部自然提升含氧量，同時溫和去除老廢角質；② 超音波導入——微震動波開啟肌膚通透性，讓保養成分更有效與肌膚接觸；③ 淋巴導引按摩——促進淋巴循環，舒緩浮腫感；④ 全程搭配針對膚況客製化的功能性精華。</p></div><div class="detail-body"><div><p class="detail-block-title">服務後肌膚感受</p><ul class="detail-list"><li>毛孔感受淨化、清爽</li><li>肌膚含氧感提升，活力感增加</li><li>暗沉感改善，光澤感增加</li><li>臉部輪廓感受較清晰、緊緻</li></ul></div><div><p class="detail-block-title">服務前注意</p><ul class="detail-list"><li>告知是否有蟹足腫體質或傷口</li><li>告知目前用藥狀況</li></ul></div><div><p class="detail-block-title">服務後居家照護</p><ul class="detail-list"><li>24 小時內避免高溫環境</li><li>使用溫和保濕品延續肌膚狀態</li><li>確實防曬</li><li>避免過度清潔或去角質</li></ul></div></div><div class="notice-grid"><div class="notice-box caution"><p class="notice-label">⚠ 建議暫緩服務的情況</p><ul class="detail-list"><li>孕期或哺乳期</li><li>臉部有活躍性傷口</li><li>肌膚極度敏感（建議先諮詢）</li></ul></div><div class="notice-box"><p class="notice-label">常見問題</p><ul class="detail-list"><li>會不舒服嗎？ — 全程舒適，無不適感</li><li>建議多久一次？ — 每 3～4 週</li></ul></div></div>
+<div class="course-ingredients">
+  <p class="course-ingr-label">Service Ingredients · 課程原料亮點</p>
+  <div class="course-ingr-grid">
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🔬</div>
+      <h4 class="course-ingr-name">Geneo X 官方正版授權儀器</h4>
+      <p class="course-ingr-desc">小屋使用的是 Geneo X 官方正版授權機台，而非市面上流通的仿製機型。原廠品質認證確保每一次活氧泡泡、超音波、淋巴按摩步驟均達到標準效能，是你感受到的差異所在。</p>
+      <span class="course-ingr-badge">Official Licensed Device</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">💊</div>
+      <h4 class="course-ingr-name">原廠 OxyPod 活氧膠囊</h4>
+      <p class="course-ingr-desc">每顆 OxyPod 膠囊以天然植物萃取成分搭配精油配方製成，不含人工色素與刺激成分。由美容師依你當日膚況現場客製選用——每一次的膠囊，都是為你而開的那一顆。</p>
+      <span class="course-ingr-badge">Customized OxyPod</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🩺</div>
+      <h4 class="course-ingr-name">護理師背景 × 專業淋巴導引手法</h4>
+      <p class="course-ingr-desc">老師曾任職護理師，對淋巴系統走向與循環引流有紮實的醫護背景。服務最終的淋巴導引按摩步驟，因此不只是手法上的放鬆，而是建立在人體循環知識上的專業操作。</p>
+      <span class="course-ingr-badge">RN × Lymphatic Expertise</span>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<div class="course-detail" id="detail-yulin"><div class="detail-inner"><button class="detail-close" onclick="closeCourse('yulin')">✕</button><div class="detail-header"><div><h3 class="detail-title">雨林頭療</h3><p class="detail-en">Rainforest Scalp & Head Therapy</p></div><p class="detail-summary">以撥筋概念結合頭部穴道，透過手技疏通頭部、頸部筋膜，釋放長期壓力與情緒緊繃所累積的筋結。有助於改善頭部不適感、肩頸僵硬，同時促進頭皮循環，讓身心同步獲得舒緩。</p></div><div class="detail-body"><div><p class="detail-block-title">服務後身心感受</p><ul class="detail-list"><li>頭部與頸部緊繃感舒緩</li><li>頭皮循環狀態改善</li><li>壓力型頭部不適感減輕</li><li>睡眠品質有所改善</li><li>身心深層放鬆感</li></ul></div><div><p class="detail-block-title">服務前注意</p><ul class="detail-list"><li>請告知是否有頸椎問題或受傷史</li><li>告知是否有偏頭痛、高血壓病史</li><li>建議穿著舒適寬鬆衣物</li><li>服務前避免過飽飲食</li></ul></div><div><p class="detail-block-title">服務後居家照護</p><ul class="detail-list"><li>多補充溫水，協助身體代謝</li><li>輕微痠感屬正常，通常 1～2 天消散</li><li>當天避免劇烈運動</li><li>建議充分休息</li><li>若酸痛持續超過 2 天請告知</li></ul></div></div><div class="notice-grid"><div class="notice-box caution"><p class="notice-label">⚠ 建議暫緩服務的情況</p><ul class="detail-list"><li>頭部有傷口、皮膚炎或感染</li><li>嚴重頸椎病變（請先諮詢醫師）</li><li>血壓控制不穩定者</li><li>孕期前三個月</li></ul></div><div class="notice-box"><p class="notice-label">常見問題</p><ul class="detail-list"><li>頭療後會掉髮嗎？ — 不會，有助頭皮循環健康</li><li>建議多久一次？ — 每 2～3 週</li><li>需要先洗頭嗎？ — 不需要，服務中視情況調整</li></ul></div></div>
+<div class="course-ingredients">
+  <p class="course-ingr-label">Service Ingredients · 課程原料亮點</p>
+  <div class="course-ingr-grid">
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🎵</div>
+      <h4 class="course-ingr-name">現場音療 — 頌缽與雨棍</h4>
+      <p class="course-ingr-desc">服務過程中，美容師以頌缽與雨棍進行現場演奏，而非播放錄音。頌缽的震頻共鳴直接作用於身體，雨棍的節奏引導呼吸放鬆——聲音本身，就是療癒的一部分。</p>
+      <span class="course-ingr-badge">Live Sound Therapy</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🩺</div>
+      <h4 class="course-ingr-name">護理師背景 × 穴道與循環知識</h4>
+      <p class="course-ingr-desc">老師曾任職護理師，將護理專業中對人體循環與穴道的理解，融入頭部撥筋手法之中。這份背景使服務不只停留在放鬆層次，而是有所依據的身體調護。</p>
+      <span class="course-ingr-badge">RN × Meridian Knowledge</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🌺</div>
+      <h4 class="course-ingr-name">國際芳療師專屬精油 · 最高等級產地</h4>
+      <p class="course-ingr-desc">與長期合作的國際認證芳療師共同研發。所有原料均選自該植物最高等級的產地——法國格拉斯薰衣草、保加利亞玫瑰……每一滴都有它的來歷。</p>
+      <span class="course-ingr-badge">Exclusive Blend · Premium Origin</span>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<div class="course-detail" id="detail-xiaoyan"><div class="detail-inner"><button class="detail-close" onclick="closeCourse('xiaoyan')">✕</button><div class="detail-header"><div><h3 class="detail-title">日式小顏骨氣</h3><p class="detail-en">Japanese Kogao Face Sculpting</p></div><p class="detail-summary">「小顏」（こがお）源自日本，意指精緻小臉的概念。此服務透過專業筋膜手技，針對臉部筋膜層、咀嚼肌進行鬆解與調整，改善因緊咬牙關、壓力或姿勢不良造成的臉部線條偏移，帶來緊緻立體的感受。</p></div><div class="detail-body"><div><p class="detail-block-title">服務後肌膚感受</p><ul class="detail-list"><li>臉部輪廓線條較為清晰</li><li>咀嚼肌緊繃感舒緩</li><li>臉部不對稱情況有所調整</li><li>整體臉部緊緻感提升</li></ul></div><div><p class="detail-block-title">服務前注意</p><ul class="detail-list"><li>請告知是否有施打肉毒桿菌素（特別是咬肌）</li><li>告知是否有顳顎關節問題</li><li>請告知臉部是否有植入物或填充物</li><li>近期臉部有手術請暫緩</li></ul></div><div><p class="detail-block-title">服務後居家照護</p><ul class="detail-list"><li>服務後避免大力按壓臉部</li><li>當日避免食用過硬食物</li><li>多補充水分</li><li>建議持續服務以延續感受</li></ul></div></div><div class="notice-grid"><div class="notice-box caution"><p class="notice-label">⚠ 建議暫緩服務的情況</p><ul class="detail-list"><li>施打肉毒素未滿 3 個月</li><li>臉部有急性發炎或感染</li><li>嚴重顳顎關節疾病</li><li>孕期</li></ul></div><div class="notice-box"><p class="notice-label">常見問題</p><ul class="detail-list"><li>會不舒服嗎？ — 部分區域有壓迫感，在可接受範圍內</li><li>建議多久一次？ — 每 2～3 週</li></ul></div></div>
+<div class="course-ingredients">
+  <p class="course-ingr-label">Service Ingredients · 課程原料亮點</p>
+  <div class="course-ingr-grid">
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🗾</div>
+      <h4 class="course-ingr-name">老師親赴日本習得正統工法</h4>
+      <p class="course-ingr-desc">小顏骨氣技術由老師親自遠赴日本，向源流技術師習得正統工法，而非透過二手教材或線上課程取得。每一個手法都有其根源與依據，是帶回台灣的第一手技術。</p>
+      <span class="course-ingr-badge">Japan-Certified Technique</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🩺</div>
+      <h4 class="course-ingr-name">護理師背景 × 解剖學手技</h4>
+      <p class="course-ingr-desc">老師曾任職護理師，將護理專業中對臉部解剖學的理解——咀嚼肌走向、顏面神經分布、淋巴節位置——融入每一個筋膜手法之中，讓服務有所依據，不只是手感的堆疊。</p>
+      <span class="course-ingr-badge">RN × Fascia Expertise</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">✦</div>
+      <h4 class="course-ingr-name">小屋融合的在地美學</h4>
+      <p class="course-ingr-desc">日本工法引進後，老師將其融入小屋獨有的服務節奏與美學語言，讓這份技術不只是技術，而是一個有溫度、有儀式感的完整體驗。</p>
+      <span class="course-ingr-badge">NINI Exclusive Ritual</span>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<div class="course-detail" id="detail-senlin"><div class="detail-inner"><button class="detail-close" onclick="closeCourse('senlin')">✕</button><div class="detail-header"><div><h3 class="detail-title">森林癒撥筋</h3><p class="detail-en">Forest Herbal Gua Sha Ritual</p></div><p class="detail-summary">結合傳統草藥智慧與現代芳療，以當季採集的天然花草手工製作藥草球，搭配長期配合的國際芳療師為小屋量身打造的專屬複方精油，在臉部進行溫柔而深層的撥筋儀式。花草的自然芳香療癒身心，帶來如置身自然的全感官舒緩體驗。</p></div><div class="detail-body"><div><p class="detail-block-title">服務後身心感受</p><ul class="detail-list"><li>臉部筋膜與氣色獲得調理</li><li>芳香帶來情緒舒緩與放鬆</li><li>溫熱敷感放鬆深層肌肉</li><li>肌膚光澤與彈力感提升</li><li>身心整體舒緩感</li></ul></div><div><p class="detail-block-title">服務前注意</p><ul class="detail-list"><li>請告知是否對植物或精油有過敏反應</li><li>蠶豆症患者請告知（部分藥草需調整）</li><li>告知是否有熱敷禁忌（如酒糟肌）</li><li>服務前請取下隱形眼鏡</li></ul></div><div><p class="detail-block-title">服務後居家照護</p><ul class="detail-list"><li>服務後 4 小時內建議不洗臉，讓精油持續作用</li><li>避免立即接觸陽光，做好防曬</li><li>多喝溫水，促進循環代謝</li><li>輕微臉部泛紅屬正常循環反應</li><li>當天避免使用刺激性保養品</li></ul></div></div><div class="notice-grid"><div class="notice-box caution"><p class="notice-label">⚠ 建議暫緩服務的情況</p><ul class="detail-list"><li>對特定植物或精油有過敏反應</li><li>酒糟肌急性發作期</li><li>孕期前三個月（部分精油需調整）</li><li>臉部有傷口或急性感染</li></ul></div><div class="notice-box"><p class="notice-label">常見問題</p><ul class="detail-list"><li>藥草球每次都不同嗎？ — 是，依當季花材與膚況調配</li><li>是什麼精油？ — 由長期配合的國際芳療師為小屋打造的專屬精油</li></ul></div></div>
+<div class="course-ingredients">
+  <p class="course-ingr-label">Service Ingredients · 課程原料亮點</p>
+  <div class="course-ingr-grid">
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🌾</div>
+      <h4 class="course-ingr-name">當季乾燥花草・手製藥草球</h4>
+      <p class="course-ingr-desc">每一顆藥草球都由小屋親手製作，以當季採集的天然乾燥花草包裹而成。沒有兩顆完全相同，也沒有任何一顆是提前量產的——你收到的，是這個當下最新鮮的季節氣息。</p>
+      <span class="course-ingr-badge">Handcrafted · Seasonal</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🌺</div>
+      <h4 class="course-ingr-name">國際芳療師專屬複方精油</h4>
+      <p class="course-ingr-desc">與長期合作的國際認證芳療師共同打造，專為森林癒撥筋研發的臉部專屬複方精油。所有原料精油均嚴選自最高等級的原產地——法國、摩洛哥、斯里蘭卡…每一滴都有它的產地故事。</p>
+      <span class="course-ingr-badge">Exclusive Blend · Premium Origin</span>
+    </div>
+    <div class="course-ingr-item">
+      <div class="course-ingr-icon">🩺</div>
+      <h4 class="course-ingr-name">護理師手法 × 臉部筋膜撥筋</h4>
+      <p class="course-ingr-desc">老師曾任職護理師，將護理訓練中對人體肌肉、筋膜與神經走向的認識，融入臉部撥筋手法。每一次力道與節奏的拿捏，都有其專業脈絡作為依據。</p>
+      <span class="course-ingr-badge">RN × Gua Sha Mastery</span>
+    </div>
+  </div>
+</div>
+</div></div>
+
+</div><!-- /page-courses -->
+
+<!-- ═══════════════ PRODUCTS PAGE ═══════════════ -->
+<div class="page" id="page-products">
+<section class="products">
+  <div class="products-header reveal">
+    <div><p class="section-label">Product Education</p><h2><span class="title-chip">產品衛教</span></h2></div>
+    <p style="font-size:0.78rem;letter-spacing:0.1em;color:var(--ink-faint);">點選產品卡片查看詳細說明</p>
+  </div>
+  <div class="prod-tabs">
+    <button class="prod-tab active" onclick="switchProdTab('essence',this)">原液系列</button>
+    <button class="prod-tab" onclick="switchProdTab('hydrosol',this)">純露系列</button>
+    <button class="prod-tab" onclick="switchProdTab('guide',this)">使用指南</button>
+    <button class="prod-tab" onclick="switchProdTab('proposal',this)">保養提案</button>
+  </div>
+
+  <!-- Proposal Panel: 膚況推薦 + 價格試算合一 -->
+  <div class="prod-panel" id="panel-proposal">
+    <div class="prod-intro"><p class="prod-intro-text">選擇你現在最在意的肌膚狀況，小屋為你推薦適合的原液與純露組合。推薦結果出現後，可以直接在下方的清單中點選品項，即時計算你的保養提案金額。</p></div>
+
+    <!-- 上半：膚況選擇 -->
+    <p style="font-size:0.64rem;letter-spacing:0.3em;color:var(--orange);margin-bottom:1.2rem;">Step 01 · 選擇你的肌膚狀況（可複選）</p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.8rem;margin-bottom:2.5rem;" id="skin-concern-tags">
+      <button class="concern-tag" onclick="toggleConcern(this,'dry')">💧 乾燥・缺水</button>
+      <button class="concern-tag" onclick="toggleConcern(this,'lock')">🔒 需要鎖水</button>
+      <button class="concern-tag" onclick="toggleConcern(this,'sensitive')">🌸 敏感・泛紅</button>
+      <button class="concern-tag" onclick="toggleConcern(this,'dull')">✨ 暗沉・不均</button>
+      <button class="concern-tag" onclick="toggleConcern(this,'pore')">🌀 毛孔・油膩</button>
+      <button class="concern-tag" onclick="toggleConcern(this,'aging')">⏳ 熟齡・彈力</button>
+      <button class="concern-tag" onclick="toggleConcern(this,'aftercare')">🩹 服務後調護</button>
+      <button class="concern-tag" onclick="toggleConcern(this,'relax')">🌙 放鬆・睡前</button>
+    </div>
+
+    <!-- 推薦結果 -->
+    <div id="recommend-result" style="display:none;margin-bottom:2.5rem;padding:2rem 2.4rem;background:var(--paper-warm);border:1px solid var(--paper-mid);border-left:3px solid var(--orange);">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+        <div>
+          <p style="font-size:0.62rem;letter-spacing:0.28em;color:var(--orange);margin-bottom:1rem;">推薦原液</p>
+          <div id="rec-essence" style="display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
+        </div>
+        <div>
+          <p style="font-size:0.62rem;letter-spacing:0.28em;color:var(--seasonal);margin-bottom:1rem;">推薦純露</p>
+          <div id="rec-hydrosol" style="display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
+        </div>
+      </div>
+      <p style="font-size:0.7rem;line-height:1.9;color:var(--ink-faint);letter-spacing:0.05em;margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--paper-mid);">※ 以上為推薦參考，實際搭配建議可於服務時與小屋確認。</p>
+    </div>
+    <div id="recommend-empty" style="padding:2rem;text-align:center;color:var(--ink-faint);font-size:0.8rem;letter-spacing:0.1em;border:1px dashed var(--paper-mid);margin-bottom:2.5rem;">選擇上方膚況後，推薦組合將顯示在這裡</div>
+
+    <!-- 下半：試算 -->
+    <p style="font-size:0.64rem;letter-spacing:0.3em;color:var(--orange);margin-bottom:1.2rem;">Step 02 · 點選品項試算你的保養清單</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;" id="calc-wrap">
+      <div>
+        <p style="font-size:0.62rem;letter-spacing:0.22em;color:var(--ink-faint);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--paper-mid);">原液系列</p>
+        <div class="calc-list" id="calc-essence"></div>
+      </div>
+      <div>
+        <p style="font-size:0.62rem;letter-spacing:0.22em;color:var(--ink-faint);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--paper-mid);">純露系列</p>
+        <div class="calc-list" id="calc-hydrosol"></div>
+      </div>
+    </div>
+    <div class="calc-total-bar" id="calc-total-bar">
+      <div style="flex:1;min-width:0;">
+        <p style="font-size:0.6rem;letter-spacing:0.2em;color:var(--ash);margin-bottom:0.4rem;">已選品項</p>
+        <p class="calc-selected-list" id="calc-selected-list">尚未選擇任何品項</p>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <p style="font-size:0.6rem;letter-spacing:0.2em;color:var(--ash);margin-bottom:0.3rem;">合計金額</p>
+        <p class="calc-total-num" id="calc-total-num">$0</p>
+        <button onclick="clearCalc()" style="margin-top:0.6rem;background:none;border:1px solid rgba(255,255,255,0.3);color:var(--ash);font-size:0.6rem;letter-spacing:0.14em;padding:0.3rem 0.8rem;cursor:pointer;font-family:var(--sans);transition:all 0.2s;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)';this.style.color='var(--ash)'">清除全部</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Essence Panel -->
+  <div class="prod-panel active" id="panel-essence">
+    <div class="prod-intro"><p class="prod-intro-text">原液是<strong>高濃度、單一功效的純粹萃取液</strong>，不含香料、色素及多餘添加物。每一款原液針對特定肌膚需求設計，可單獨使用，也可依膚況複合搭配。</p></div>
+
+    <div class="prod-grid" id="essence-grid">
+      <div class="prod-card reveal" onclick="openProd('essence','copper')"><p class="prod-cat">Essence — 01</p><h3 class="prod-name">藍銅胜肽</h3><p class="prod-en">Blue Copper Peptide (GHK-Cu)</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">熟齡調護</span><span class="feeling-tag primary">彈力感</span></div><p class="prod-short">1973 年首次從人體血漿中發現的天然三胜肽，協助維持肌膚彈性與緊緻感。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.06s" onclick="openProd('essence','gluta')"><p class="prod-cat">Essence — 02</p><h3 class="prod-name">穀胱甘肽</h3><p class="prod-en">Glutathione</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">明亮感</span><span class="feeling-tag primary">抗氧化</span><span class="feeling-tag">暗沉困擾</span></div><p class="prod-short">廣泛存在於人體每個細胞的天然三胜肽，是對抗氧化壓力、維持肌膚明亮感的核心物質。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.12s" onclick="openProd('essence','cica')"><p class="prod-cat">Essence — 03</p><h3 class="prod-name">積雪草</h3><p class="prod-en">Centella Asiatica (Cica)</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">舒緩</span><span class="feeling-tag primary">敏感肌首選</span><span class="feeling-tag">植物草本</span></div><p class="prod-short">源自熱帶亞洲千年草本智慧，以「老虎療傷的植物」聞名，最溫柔的肌膚安撫者。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" onclick="openProd('essence','egf')"><p class="prod-cat">Essence — 04</p><h3 class="prod-name">表皮生長因子</h3><p class="prod-en">EGF</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">服務後調護</span><span class="feeling-tag primary">膚質調理</span></div><p class="prod-short">協助肌膚細胞自我更新週期的蛋白質生長因子，特別適合密集調護使用。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.06s" onclick="openProd('essence','ceramide')"><p class="prod-cat">Essence — 05</p><h3 class="prod-name">神經醯胺</h3><p class="prod-en">Ceramide</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">屏障修護</span><span class="feeling-tag primary">鎖水</span><span class="feeling-tag">乾燥 · 敏感</span></div><p class="prod-short">角質層細胞間脂質的核心成分，就像磚牆間的水泥，是肌膚屏障完整的關鍵。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.12s" onclick="openProd('essence','catechin')"><p class="prod-cat">Essence — 06</p><h3 class="prod-name">兒茶素</h3><p class="prod-en">Catechin</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">抗氧化</span><span class="feeling-tag primary">油脂調理</span><span class="feeling-tag">植物草本</span></div><p class="prod-short">數千年茶文化沉澱的天然多酚，從茶葉萃取，抗氧化與調油兩用的日常守護。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.06s" onclick="openProd('essence','b3')"><p class="prod-cat">Essence — 08</p><h3 class="prod-name">維他命 B3（菸鹼醯胺）</h3><p class="prod-en">Niacinamide · 油溶性</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">均勻膚色</span><span class="feeling-tag primary">全膚質</span><span class="feeling-tag">油溶 · 穩定</span></div><p class="prod-short">小屋選用油溶性配方，穩定性更高、與肌膚相容性更佳，溫和的日常明星成分。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.06s" onclick="openProd('essence','b5w')"><p class="prod-cat">Essence — 09a</p><h3 class="prod-name">維他命 B5（水溶性）</h3><p class="prod-en">Panthenol · Water-soluble</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">輕盈補水</span><span class="feeling-tag primary">日間使用</span><span class="feeling-tag">各膚質適用</span></div><p class="prod-short">質地輕盈，快速補充水分感。建議純露後接續使用，打造水潤底層。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.12s" onclick="openProd('essence','b5o')"><p class="prod-cat">Essence — 09b</p><h3 class="prod-name">維他命 B5（油溶性）</h3><p class="prod-en">Panthenol · Oil-soluble</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">深層滋潤</span><span class="feeling-tag primary">夜間使用</span><span class="feeling-tag">乾燥肌首選</span></div><p class="prod-short">親脂性使滋潤感更持久深層。與水溶版 B5 早晚搭配，水潤從裡鎖到外。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" onclick="openProd('essence','vitc')"><p class="prod-cat">Essence — 10</p><h3 class="prod-name">維他命 C</h3><p class="prod-en">Vitamin C · 油溶性</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">明亮感</span><span class="feeling-tag primary">抗氧化</span><span class="feeling-tag">油溶 · 穩定</span></div><p class="prod-short">油溶性衍生物穩定性高、不易氧化。每天早晨一瓶，守護肌膚對抗環境氧化。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.06s" onclick="openProd('essence','collagen')"><p class="prod-cat">Essence — 11</p><h3 class="prod-name">膠原蛋白</h3><p class="prod-en">Collagen</p><div class="feeling-tags" style="margin-bottom:0.9rem;"><span class="feeling-tag primary">飽滿感</span><span class="feeling-tag primary">彈力</span><span class="feeling-tag">熟齡 · 乾燥</span></div><p class="prod-short">水解小分子膠原蛋白補充肌膚飽滿支撐感，搭配藍銅胜肽加乘調護。</p><div class="prod-more">了解更多 →</div></div>
+    </div>
+
+    <!-- Essence details -->
+    <div class="prod-detail" id="prod-essence-copper"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','copper')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 01 · GHK-Cu Peptide</p><h3 class="prod-detail-name">藍銅胜肽</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">熟齡調護</span><span class="skin-badge highlight">彈力感</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">1973 年由 Loren Pickart 博士首次在人體血漿中發現。GHK-Cu 是由甘胺酸、組胺酸、賴胺酸三種胺基酸與銅離子結合而成的天然三胜肽，是肌膚科學研究中被廣泛探討的抗齡成分，也是人體血液中原本就存在的物質。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 人體天然存在的三胜肽</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>協助維持肌膚彈性與緊緻感</li><li>有助肌膚自我調護</li><li>抗氧化特性</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>熟齡肌、彈力感下降</li><li>服務後需密集調護</li><li>乾燥、一般肌</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>壓力大、睡眠不足的晚間</li><li>服務後居家加強調護</li><li>搭配 EGF 或膠原蛋白效果加乘</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>取 5～6 滴於掌心</li><li>均勻輕壓於臉部</li><li>待完全吸收後接續鎖水品</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-essence-gluta"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','gluta')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 02 · Glutathione</p><h3 class="prod-detail-name">穀胱甘肽</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">明亮感</span><span class="skin-badge highlight">抗氧化</span><span class="skin-badge">暗沉困擾</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">由穀氨酸、半胱氨酸、甘氨酸組成的天然三胜肽，廣泛存在於人體每一個細胞之中，是維持細胞氧化還原平衡的核心物質，也是身體最重要的內源性抗氧化劑。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 人體細胞天然存在</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>天然抗氧化，對抗氧化壓力</li><li>有助維持肌膚明亮感</li><li>改善暗沉、膚色不均感</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>膚色暗沉困擾</li><li>日常抗氧化需求</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>連假後、外出曝曬後密集補救</li><li>日常早晨抗氧化守護</li><li>搭配維他命 C 加乘效果</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>取 5～6 滴於掌心</li><li>均勻輕壓於全臉</li><li>待完全吸收後疊加保濕品</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-essence-cica"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','cica')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 03 · Centella Asiatica</p><h3 class="prod-detail-name">積雪草</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">舒緩</span><span class="skin-badge highlight">敏感肌首選</span><span class="skin-badge">植物草本</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">原生於熱帶亞洲的多年生草本，在馬來西亞與印度傳統醫學中有超過千年的應用紀錄，因老虎受傷後會在此草上磨蹭療傷而得名「老虎草」，是現代植物保養中最受信賴的舒緩成分之一。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 熱帶亞洲草本，千年應用</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>舒緩泛紅與敏感感</li><li>調護肌膚屏障穩定性</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>敏感、容易泛紅</li><li>服務後需舒緩調護</li><li>初次建立保養習慣</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>服務後居家第一步安撫</li><li>換季肌膚不穩定時</li><li>早晚均可，溫和零負擔</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>取 5～6 滴於掌心</li><li>輕壓全臉，敏感部位多壓幾下</li><li>待完全吸收後疊加保濕品</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-essence-egf"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','egf')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 04 · Epidermal Growth Factor</p><h3 class="prod-detail-name">表皮生長因子 EGF</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">服務後調護</span><span class="skin-badge highlight">膚質調理</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">表皮生長因子（EGF）是 1962 年諾貝爾生理學獎的研究核心成分，由 Stanley Cohen 博士首次分離發現。EGF 是一種蛋白質生長因子，協助促進肌膚細胞的自我更新週期，在肌膚科學研究中具有重要地位。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 諾貝爾獎研究成果</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>協助肌膚細胞自我更新</li><li>有助膚質調理與肌膚活力感</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>服務後需加強調護</li><li>熟齡肌、需要活化的肌膚</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>服務後當晚密集調護</li><li>壓力大或睡眠不足的晚間</li><li>搭配藍銅胜肽加乘使用</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>建議晚間使用</li><li>取 5～6 滴均勻輕壓全臉</li><li>待完全吸收後接續保濕品</li><li>孕期或哺乳期請先諮詢</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-essence-ceramide"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','ceramide')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 05 · Ceramide</p><h3 class="prod-detail-name">神經醯胺</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">屏障修護</span><span class="skin-badge highlight">鎖水</span><span class="skin-badge">乾燥 · 敏感</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">神經醯胺最初由小麥與米糠中萃取，後發展出生物技術合成路徑。它是角質層細胞間脂質的主要組成，約佔 50%，就像磚牆之間的水泥，是肌膚屏障完整性不可缺少的結構成分，也是真正讓水分留住的關鍵。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 穀物萃取 / 生物合成</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>修護肌膚屏障完整性</li><li>協助鎖住肌膚水分感</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>乾燥、緊繃感困擾</li><li>敏感、屏障受損肌</li><li>各類肌膚日常維護</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>換季肌膚乾燥緊繃時</li><li>保養程序最後的鎖水步驟</li><li>早晚均可，與積雪草搭配加乘</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>取 5～6 滴於掌心</li><li>均勻輕壓全臉</li><li>建議作為保養倒數第二步</li><li>接續乳霜完整鎖水</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-essence-catechin"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','catechin')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 06 · Green Tea Catechin</p><h3 class="prod-detail-name">兒茶素</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">抗氧化</span><span class="skin-badge highlight">油脂調理</span><span class="skin-badge">植物草本</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">萃取自茶葉的天然多酚類化合物，尤以日本抹茶與中國綠茶含量最豐富。數千年茶道文化的沉澱，讓兒茶素成為現代保養中備受推崇的天然抗氧化成分，對油性肌膚的日常調理也有良好表現。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 茶葉天然多酚萃取</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>天然抗氧化保護</li><li>協助調節油脂狀態</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>油性、混合肌</li><li>日常抗氧化需求</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>日常早晨防護前置</li><li>油脂分泌旺盛的季節</li><li>可單獨使用或搭配兒茶素</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>取 5～6 滴於掌心</li><li>均勻輕壓全臉或局部 T 區</li><li>待完全吸收後接續保濕品</li><li>避光保存，避免高溫</li></ul></div></div></div></div>
+
+
+    <div class="prod-detail" id="prod-essence-b3"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','b3')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 08 · Niacinamide (Oil-soluble)</p><h3 class="prod-detail-name">維他命 B3（菸鹼醯胺）</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">均勻膚色</span><span class="skin-badge highlight">全膚質</span><span class="skin-badge">油溶 · 穩定</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">菸鹼醯胺廣泛存在於酵母、肉類與穀物中，是人體必需的水溶性維他命。小屋特別選用油溶性配方，溶解於油相後與肌膚的相容性更佳、穩定性更高，是全膚質都能日常使用的溫和多功能成分。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 穀物 / 酵母萃取 · 小屋選用油溶版</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>有助維持膚色均勻感</li><li>協助調理毛孔狀態</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>膚色不均困擾</li><li>各類肌膚日常維護</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>暗沉或膚色不均的日常調護</li><li>早晨抗氧化保養步驟</li><li>與維他命 C 分開不同時段使用</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>取 5～6 滴輕壓全臉</li><li>待完全吸收後接續保濕品</li><li>初次使用從少量開始</li></ul></div></div></div></div>
+
+    <!-- B5 Water -->
+    <div class="prod-detail" id="prod-essence-b5w"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','b5w')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 09a · Panthenol (Water-soluble)</p><h3 class="prod-detail-name">維他命 B5（水溶性）</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">輕盈補水</span><span class="skin-badge highlight">日間使用</span><span class="skin-badge">各膚質適用</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">泛醇（Panthenol）廣泛存在於全穀類、蔬菜與動物性食品中，是維他命 B5 的前驅物形式。水溶性版本質地輕盈清爽，是日間保養的補水基礎選擇，溫和、相容性高，幾乎適合所有膚質。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 全穀類 / 生物合成 · 水溶版</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>即效補水，舒緩乾燥緊繃感</li><li>質地輕盈，易疊加</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>各類肌膚基礎補水</li><li>日間輕盈保養需求</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>純露之後的第一步原液</li><li>日間保養的補水步驟</li><li>與橙花、玫瑰純露搭配加乘</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>純露輕壓後接續使用</li><li>取 5～6 滴均勻輕壓全臉</li><li>待完全吸收後疊加後續保養品</li></ul></div></div></div></div>
+
+    <!-- B5 Oil -->
+    <div class="prod-detail" id="prod-essence-b5o"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','b5o')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 09b · Panthenol (Oil-soluble)</p><h3 class="prod-detail-name">維他命 B5（油溶性）</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">深層滋潤</span><span class="skin-badge highlight">夜間使用</span><span class="skin-badge">乾燥肌首選</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">油溶性版泛醇利用親脂特性，滋潤感更深層、持久度更高，是水溶性 B5 的晚間加強版。特別適合乾燥或極乾燥肌膚，或需要加強調護的時期使用，是夜間鎖水程序的核心步驟。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 全穀類 / 生物合成 · 油溶版</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>深層滋潤，改善乾燥感</li><li>持久鎖水，協助屏障調護</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>乾燥、極乾燥肌膚</li><li>晚間加強調護</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>晚間保養的鎖水關鍵步驟</li><li>換季乾燥期密集調護</li><li>早水溶 · 晚油溶，早晚搭配加乘</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>建議晚間使用</li><li>取 5～6 滴輕壓全臉</li><li>待完全吸收後接續乳霜</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-essence-vitc"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','vitc')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 10 · Vitamin C (Oil-soluble)</p><h3 class="prod-detail-name">維他命 C（油溶性）</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">明亮感</span><span class="skin-badge highlight">抗氧化</span><span class="skin-badge">油溶 · 穩定</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">維他命 C（抗壞血酸）廣泛存在於柑橘類與各種蔬果中。純維他命 C 雖效果顯著，但易氧化變色；小屋選用油溶性衍生物（抗壞血酸酯類），穩定性大幅提升，不易失效，適合日常長期使用。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 柑橘類蔬果 · 小屋選用油溶穩定版</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>抗氧化，抵禦環境氧化壓力</li><li>有助維持肌膚明亮感</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>暗沉、膚色不均困擾</li><li>日常抗氧化防護</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>每日早晨出門前</li><li>搭配防曬使用（必要步驟）</li><li>與穀胱甘肽搭配加乘抗氧化</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>建議早晨使用</li><li>取 5～6 滴輕壓全臉</li><li>待完全吸收後接續防曬</li><li>開封後避光保存</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-essence-collagen"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('essence','collagen')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Essence — 11 · Hydrolyzed Collagen</p><h3 class="prod-detail-name">膠原蛋白</h3><div class="skin-badges" style="margin-top:0.8rem;"><span class="skin-badge highlight">飽滿感</span><span class="skin-badge highlight">彈力</span><span class="skin-badge">熟齡 · 乾燥</span></div></div><div><p class="prod-block-title">成分來歷</p><p class="detail-summary-sm">膠原蛋白是構成肌膚真皮層的主要蛋白質，佔皮膚蛋白質總量約 70%。外用水解小分子膠原蛋白（Hydrolyzed Collagen）經過水解處理，分子量降低，可更有效地補充肌膚飽滿支撐感與保濕感。</p><p class="origin-item-from" style="margin-top:0.6rem;">✦ 海洋 / 動植物來源水解萃取</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>補充肌膚飽滿感與支撐感</li><li>強化保濕感與彈力感</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>熟齡、彈力感下降</li><li>乾燥需要充盈感的肌膚</li></ul></div><div><p class="prod-block-title">使用時機</p><ul class="detail-list"><li>熟齡調護的日常核心步驟</li><li>搭配藍銅胜肽 + EGF 加乘</li><li>早晚均可使用</li></ul></div><div><p class="prod-block-title">使用建議</p><ul class="how-steps"><li>取 5～6 滴均勻輕壓全臉及頸部</li><li>待完全吸收後接續保濕乳霜</li></ul></div></div></div></div>
+  </div><!-- /panel-essence -->
+
+  <!-- Hydrosol Panel -->
+  <div class="prod-panel" id="panel-hydrosol">
+    <div class="prod-intro"><p class="prod-intro-text">純露是植物在蒸餾萃取精油過程中所得的<strong>水相副產物</strong>，含有少量親水性芳香分子。質地輕盈，PH 值接近肌膚，可直接使用、濕敷或加入日常保養程序中。標示 <strong style="color:var(--seasonal);">季節限定</strong> 的品項為特定季節限量供應。</p></div>
+    <div class="prod-grid">
+      <div class="prod-card reveal" onclick="openProd('hydrosol','neroli')"><p class="prod-cat">Hydrosol — 01</p><h3 class="prod-name">橙花純露</h3><p class="prod-en">Neroli Hydrosol</p><p class="prod-short">甜美細緻的花香，舒緩、調理皮脂，適合敏感及混合肌。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.06s" onclick="openProd('hydrosol','osmanthus')"><p class="prod-cat">Hydrosol — 02</p><h3 class="prod-name">桂花純露</h3><p class="prod-en">Osmanthus Hydrosol</p><p class="prod-short">溫潤的桂花芳香，舒緩感佳，適合乾燥及敏感肌。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.12s" onclick="openProd('hydrosol','rose')"><p class="prod-cat">Hydrosol — 03</p><h3 class="prod-name">千葉玫瑰純露</h3><p class="prod-en">Centifolia Rose Hydrosol</p><p class="prod-short">以柔潤舒緩著稱，適合乾燥、熟齡及需要深層調護的肌膚。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" onclick="openProd('hydrosol','chamomile')"><p class="prod-cat">Hydrosol — 04</p><h3 class="prod-name">洋甘菊純露</h3><p class="prod-en">Chamomile Hydrosol</p><p class="prod-short">溫和舒緩，是敏感肌的調護首選，有助安撫泛紅與不穩定肌膚。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.06s" onclick="openProd('hydrosol','grapefruit')"><p class="prod-cat">Hydrosol — 05</p><h3 class="prod-name">葡萄柚純露</h3><p class="prod-en">Grapefruit Hydrosol</p><p class="prod-short">清新柑橘香氣，有助調理油脂與毛孔狀態，適合油性及混合肌。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card reveal" style="transition-delay:0.12s" onclick="openProd('hydrosol','teatree')"><p class="prod-cat">Hydrosol — 06</p><h3 class="prod-name">茶樹純露</h3><p class="prod-en">Tea Tree Hydrosol</p><p class="prod-short">有助於維護毛孔清爽感，適合油性及需要日常調理的肌膚。</p><div class="prod-more">了解更多 →</div></div>
+      <div class="prod-card seasonal reveal" onclick="openProd('hydrosol','vetiver')"><div class="seasonal-badge">季節限定</div><p class="prod-cat">Hydrosol — 07</p><h3 class="prod-name">季節限定 ─ 岩蘭草</h3><p class="prod-en" style="color:var(--seasonal)">Vetiver Hydrosol</p><p class="prod-short">深沉的大地木質香，有助於情緒穩定與肌膚深層滋潤，適合乾燥肌。</p><div class="prod-more" style="color:var(--seasonal)">了解更多 →</div></div>
+      <div class="prod-card seasonal reveal" style="transition-delay:0.06s" onclick="openProd('hydrosol','myrrh')"><div class="seasonal-badge">季節限定</div><p class="prod-cat">Hydrosol — 08</p><h3 class="prod-name">季節限定 ─ 沒藥</h3><p class="prod-en" style="color:var(--seasonal)">Myrrh Hydrosol</p><p class="prod-short">古老的樹脂植物，有助於肌膚調護與穩定感，適合乾燥、需要加強調護的肌膚。</p><div class="prod-more" style="color:var(--seasonal)">了解更多 →</div></div>
+      <div class="prod-card seasonal reveal" style="transition-delay:0.12s" onclick="openProd('hydrosol','calendula')"><div class="seasonal-badge">季節限定</div><p class="prod-cat">Hydrosol — 09</p><h3 class="prod-name">季節限定 ─ 金盞花</h3><p class="prod-en" style="color:var(--seasonal)">Calendula Hydrosol</p><p class="prod-short">以舒緩敏感著稱，適合乾燥、敏感及服務後需要安撫的肌膚。</p><div class="prod-more" style="color:var(--seasonal)">了解更多 →</div></div>
+      <div class="prod-card seasonal reveal" onclick="openProd('hydrosol','immortelle')"><div class="seasonal-badge">季節限定</div><p class="prod-cat">Hydrosol — 10</p><h3 class="prod-name">季節限定 ─ 永久花</h3><p class="prod-en" style="color:var(--seasonal)">Immortelle Hydrosol</p><p class="prod-short">珍貴的調護成分，有助於改善肌膚狀態的穩定度，適合熟齡及需要密集調護的肌膚。</p><div class="prod-more" style="color:var(--seasonal)">了解更多 →</div></div>
+    </div>
+
+    <!-- Hydrosol details (simplified) -->
+    <div class="prod-detail" id="prod-hydrosol-neroli"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('hydrosol','neroli')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Hydrosol — 01</p><h3 class="prod-detail-name">橙花純露</h3><div class="skin-badges"><span class="skin-badge highlight">敏感肌</span><span class="skin-badge highlight">混合肌</span><span class="skin-badge">情緒舒緩</span></div></div><div><p class="prod-block-title">成分特性</p><p class="detail-summary-sm">橙花純露含有橙花醇、沉香醇等親水性芳香分子，質地溫和，有助於調理皮脂狀態、穩定敏感膚況，同時帶來舒緩情緒的芳香感受。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>舒緩敏感與泛紅感</li><li>調理皮脂狀態</li><li>帶來情緒放鬆感</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>敏感肌、混合肌</li><li>日常舒緩調護</li></ul></div><div><p class="prod-block-title">使用方式</p><ul class="how-steps"><li>潔顏後噴於面部或化妝棉輕壓</li><li>可作為日常化妝水</li><li>可搭配濕敷化妝棉使用</li><li>接續原液及保濕品</li></ul></div><div><p class="prod-block-title">注意事項</p><ul class="detail-list"><li>可直接噴灑，無需稀釋</li><li>開封後冷藏保存效果更佳</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-hydrosol-osmanthus"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('hydrosol','osmanthus')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Hydrosol — 02</p><h3 class="prod-detail-name">桂花純露</h3><div class="skin-badges"><span class="skin-badge highlight">乾燥肌</span><span class="skin-badge highlight">敏感肌</span></div></div><div><p class="prod-block-title">成分特性</p><p class="detail-summary-sm">桂花純露擁有溫潤甜美的芳香，含有芳樟醇等舒緩成分，帶來柔軟水嫩的肌膚感受，適合乾燥及敏感肌日常使用。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>舒緩滋潤</li><li>帶來柔嫩肌膚感受</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>乾燥、敏感肌</li></ul></div><div><p class="prod-block-title">使用方式</p><ul class="how-steps"><li>潔顏後噴灑或化妝棉輕壓</li><li>可搭配濕敷化妝棉使用 3～5 分鐘</li><li>接續原液及保濕品</li></ul></div><div><p class="prod-block-title">注意事項</p><ul class="detail-list"><li>開封後冷藏保存</li><li>可搭配千葉玫瑰純露使用</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-hydrosol-rose"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('hydrosol','rose')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Hydrosol — 03</p><h3 class="prod-detail-name">千葉玫瑰純露</h3><div class="skin-badges"><span class="skin-badge highlight">乾燥肌</span><span class="skin-badge highlight">熟齡肌</span><span class="skin-badge">調護首選</span></div></div><div><p class="prod-block-title">成分特性</p><p class="detail-summary-sm">千葉玫瑰純露含有豐富的玫瑰蠟與苯乙醇，質地柔潤，是芳療師公認調護力最佳的玫瑰純露，適合乾燥、熟齡肌的日常調護。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>柔潤舒緩，深層滋潤感</li><li>有助改善乾燥與緊繃</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>乾燥、熟齡肌</li><li>服務後居家維護</li></ul></div><div><p class="prod-block-title">使用方式</p><ul class="how-steps"><li>潔顏後噴灑或化妝棉輕壓</li><li>可搭配濕敷化妝棉 3～5 分鐘</li><li>接續原液與保濕品</li></ul></div><div><p class="prod-block-title">注意事項</p><ul class="detail-list"><li>搭配永久花純露效果更佳</li><li>開封後冷藏保存</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-hydrosol-chamomile"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('hydrosol','chamomile')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Hydrosol — 04</p><h3 class="prod-detail-name">洋甘菊純露</h3><div class="skin-badges"><span class="skin-badge highlight">敏感首選</span><span class="skin-badge highlight">舒緩泛紅</span></div></div><div><p class="prod-block-title">成分特性</p><p class="detail-summary-sm">洋甘菊純露溫和著稱，含有舒緩成分，是敏感肌膚的調護首選，有助安撫泛紅與不穩定的肌膚狀態。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>安撫泛紅與敏感感</li><li>溫和舒緩</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>敏感肌、容易泛紅</li><li>服務後安撫調護</li></ul></div><div><p class="prod-block-title">使用方式</p><ul class="how-steps"><li>潔顏後使用</li><li>噴灑或化妝棉輕壓</li><li>可搭配積雪草原液使用</li></ul></div><div><p class="prod-block-title">注意事項</p><ul class="detail-list"><li>對菊科植物過敏者請先測試</li><li>開封後冷藏保存</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-hydrosol-grapefruit"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('hydrosol','grapefruit')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Hydrosol — 05</p><h3 class="prod-detail-name">葡萄柚純露</h3><div class="skin-badges"><span class="skin-badge highlight">油性肌</span><span class="skin-badge highlight">混合肌</span></div></div><div><p class="prod-block-title">成分特性</p><p class="detail-summary-sm">葡萄柚純露帶有清新柑橘香，有助調理油脂與毛孔狀態，賦予清爽感受。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>調理皮脂，清爽感受</li><li>毛孔狀態調理</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>油性、混合肌</li></ul></div><div><p class="prod-block-title">使用方式</p><ul class="how-steps"><li>潔顏後作為化妝水使用</li><li>化妝棉輕壓</li><li>可搭配兒茶素原液</li></ul></div><div><p class="prod-block-title">注意事項</p><ul class="detail-list"><li>使用後做好防曬（光敏性）</li><li>孕期請諮詢後使用</li></ul></div></div></div></div>
+
+    <div class="prod-detail" id="prod-hydrosol-teatree"><div class="prod-detail-inner"><button class="prod-detail-close" onclick="closeProd('hydrosol','teatree')">✕</button><div class="prod-detail-head"><div><p class="prod-detail-en">Hydrosol — 06</p><h3 class="prod-detail-name">茶樹純露</h3><div class="skin-badges"><span class="skin-badge highlight">油性肌</span><span class="skin-badge highlight">日常淨化</span></div></div><div><p class="prod-block-title">成分特性</p><p class="detail-summary-sm">茶樹純露含有少量 4-松油醇等成分，有助於維護毛孔清爽感，適合油性及需要日常調理的肌膚。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title">主要功能</p><ul class="detail-list"><li>維護毛孔清爽感</li><li>日常調理油脂</li></ul></div><div><p class="prod-block-title">適合膚況</p><ul class="detail-list"><li>油性肌、混合肌</li></ul></div><div><p class="prod-block-title">使用方式</p><ul class="how-steps"><li>潔顏後作為化妝水使用</li><li>可局部使用於 T 區</li></ul></div><div><p class="prod-block-title">注意事項</p><ul class="detail-list"><li>敏感肌建議先局部測試</li><li>避免過量使用</li></ul></div></div></div></div>
+
+    <!-- Seasonal -->
+    <div class="prod-detail" id="prod-hydrosol-vetiver"><div class="prod-detail-inner" style="border-left:3px solid var(--seasonal)"><button class="prod-detail-close" onclick="closeProd('hydrosol','vetiver')">✕</button><div class="prod-detail-head"><div><div class="seasonal-badge" style="margin-bottom:0.6rem">季節限定</div><p class="prod-detail-en">Hydrosol — 07</p><h3 class="prod-detail-name">岩蘭草純露</h3><p class="prod-detail-en" style="margin-top:0.3rem;color:var(--seasonal)">Vetiver Hydrosol</p><div class="skin-badges"><span class="skin-badge highlight" style="background:var(--seasonal);border-color:var(--seasonal)">乾燥肌</span><span class="skin-badge highlight" style="background:var(--seasonal);border-color:var(--seasonal)">情緒穩定</span></div></div><div><p class="prod-block-title" style="color:var(--seasonal)">成分特性</p><p class="detail-summary-sm">岩蘭草純露帶有深沉的大地木質氣息，有助於情緒穩定與肌膚深層滋潤，為季節性限定供應品項。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title" style="color:var(--seasonal)">主要功能</p><ul class="detail-list"><li>深層滋潤乾燥肌膚</li><li>情緒穩定與放鬆感</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">適合膚況</p><ul class="detail-list"><li>乾燥肌，晚間使用</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">使用方式</p><ul class="how-steps"><li>潔顏後或睡前使用</li><li>噴灑化妝棉輕壓全臉</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">注意事項</p><ul class="detail-list"><li>開封後冷藏保存</li><li>氣味較濃郁，可搭配橙花使用</li></ul></div></div></div></div>
+    <div class="prod-detail" id="prod-hydrosol-myrrh"><div class="prod-detail-inner" style="border-left:3px solid var(--seasonal)"><button class="prod-detail-close" onclick="closeProd('hydrosol','myrrh')">✕</button><div class="prod-detail-head"><div><div class="seasonal-badge" style="margin-bottom:0.6rem">季節限定</div><p class="prod-detail-en">Hydrosol — 08</p><h3 class="prod-detail-name">沒藥純露</h3><p class="prod-detail-en" style="margin-top:0.3rem;color:var(--seasonal)">Myrrh Hydrosol</p><div class="skin-badges"><span class="skin-badge highlight" style="background:var(--seasonal);border-color:var(--seasonal)">乾燥調護</span><span class="skin-badge highlight" style="background:var(--seasonal);border-color:var(--seasonal)">穩定肌膚</span></div></div><div><p class="prod-block-title" style="color:var(--seasonal)">成分特性</p><p class="detail-summary-sm">沒藥是古老的樹脂植物，純露有助於肌膚穩定感與調護，為季節性限定供應品項。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title" style="color:var(--seasonal)">主要功能</p><ul class="detail-list"><li>穩定肌膚狀態</li><li>協助乾燥肌膚調護</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">使用方式</p><ul class="how-steps"><li>潔顏後輕壓使用</li><li>可搭配永久花純露</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">注意事項</p><ul class="detail-list"><li>孕期請避免使用</li><li>開封後冷藏保存</li></ul></div><div></div></div></div></div>
+    <div class="prod-detail" id="prod-hydrosol-calendula"><div class="prod-detail-inner" style="border-left:3px solid var(--seasonal)"><button class="prod-detail-close" onclick="closeProd('hydrosol','calendula')">✕</button><div class="prod-detail-head"><div><div class="seasonal-badge" style="margin-bottom:0.6rem">季節限定</div><p class="prod-detail-en">Hydrosol — 09</p><h3 class="prod-detail-name">金盞花純露</h3><p class="prod-detail-en" style="margin-top:0.3rem;color:var(--seasonal)">Calendula Hydrosol</p><div class="skin-badges"><span class="skin-badge highlight" style="background:var(--seasonal);border-color:var(--seasonal)">敏感肌</span><span class="skin-badge highlight" style="background:var(--seasonal);border-color:var(--seasonal)">服務後調護</span></div></div><div><p class="prod-block-title" style="color:var(--seasonal)">成分特性</p><p class="detail-summary-sm">金盞花含有豐富黃酮類成分，有助於安撫敏感、舒緩服務後的肌膚，為季節性限定供應品項。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title" style="color:var(--seasonal)">主要功能</p><ul class="detail-list"><li>舒緩敏感與刺激感</li><li>服務後安撫調護</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">使用方式</p><ul class="how-steps"><li>服務後或潔顏後使用</li><li>可搭配洋甘菊純露</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">注意事項</p><ul class="detail-list"><li>對菊科過敏者請先測試</li><li>開封後冷藏保存</li></ul></div><div></div></div></div></div>
+    <div class="prod-detail" id="prod-hydrosol-immortelle"><div class="prod-detail-inner" style="border-left:3px solid var(--seasonal)"><button class="prod-detail-close" onclick="closeProd('hydrosol','immortelle')">✕</button><div class="prod-detail-head"><div><div class="seasonal-badge" style="margin-bottom:0.6rem">季節限定</div><p class="prod-detail-en">Hydrosol — 10</p><h3 class="prod-detail-name">永久花純露</h3><p class="prod-detail-en" style="margin-top:0.3rem;color:var(--seasonal)">Immortelle Hydrosol</p><div class="skin-badges"><span class="skin-badge highlight" style="background:var(--seasonal);border-color:var(--seasonal)">熟齡肌</span><span class="skin-badge highlight" style="background:var(--seasonal);border-color:var(--seasonal)">密集調護</span></div></div><div><p class="prod-block-title" style="color:var(--seasonal)">成分特性</p><p class="detail-summary-sm">永久花（Helichrysum italicum）純露含有雙酮類成分，有助於改善肌膚狀態的穩定度，為季節性限定供應品項。</p></div></div><div class="prod-detail-body"><div><p class="prod-block-title" style="color:var(--seasonal)">主要功能</p><ul class="detail-list"><li>肌膚穩定度調護</li><li>熟齡肌密集調護</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">使用方式</p><ul class="how-steps"><li>潔顏後使用</li><li>搭配千葉玫瑰純露加乘</li></ul></div><div><p class="prod-block-title" style="color:var(--seasonal)">注意事項</p><ul class="detail-list"><li>孕期請諮詢後使用</li><li>開封後冷藏保存</li></ul></div><div></div></div></div></div>
+  </div><!-- /panel-hydrosol -->
+
+  <!-- Guide Panel -->
+  <div class="prod-panel" id="panel-guide">
+    <div class="humid-section">
+      <h3 class="humid-title">純露濕敷教學</h3>
+      <p class="humid-sub">Hydrosol Compress Guide — 讓肌膚在保養品底層建立好水合基底</p>
+      <div class="humid-steps">
+        <div class="humid-step"><div class="humid-step-num">01</div><div class="humid-step-title">潔顏</div><p class="humid-step-desc">以溫和潔顏品清洗，確保臉部乾淨，輕輕吸乾水分，不要過度摩擦。</p></div>
+        <div class="humid-step"><div class="humid-step-num">02</div><div class="humid-step-title">先使用保濕原液</div><p class="humid-step-desc">選擇 1～2 款保濕型原液（如水溶性 B5、積雪草、神經醯胺），取 5～6 滴輕壓在臉上，待臉部完全吸收。</p></div>
+        <div class="humid-step"><div class="humid-step-num">03</div><div class="humid-step-title">純露浸濕化妝棉</div><p class="humid-step-desc">選擇適合膚況的純露（可混合 2 款），充分浸入濕敷化妝棉，輕擰至不滴水。</p></div>
+        <div class="humid-step"><div class="humid-step-num">04</div><div class="humid-step-title">濕敷 3～5 分鐘</div><p class="humid-step-desc">平躺放鬆，靜待 3～5 分鐘，讓純露在原液基底上進一步補充水分。</p></div>
+      </div>
+      <p class="humid-tip">取下化妝棉後，以掌心輕壓臉部讓剩餘純露充分吸收，再接續使用鎖水型原液（如油溶性 B5、神經醯胺）加強鎖水。最後完成乳液或乳霜步驟。建議每週 2～3 次，服務前後加強使用效果更佳。</p>
+    </div>
+
+    <div class="pairing-section">
+      <h3 class="pairing-title">搭配建議</h3>
+      <p class="pairing-sub">Pairing Guide — 依膚況選擇最適合的原液 × 純露組合</p>
+      <div class="pairing-grid">
+        <div class="pair-card"><p class="pair-label">乾燥 / 敏感肌</p><p class="pair-items">原液：神經醯胺 + 積雪草 + 水溶性B5 + 油溶性B5（鎖水）<br>純露：千葉玫瑰 / 洋甘菊 / 橙花 / 桂花<br><span style="color:var(--ink-faint);font-size:0.78rem;">著重屏障修護、舒緩補水與持久鎖水</span></p></div>
+        <div class="pair-card"><p class="pair-label">油性 / 混合肌</p><p class="pair-items">原液：兒茶素 + B3（油溶）<br>純露：茶樹 / 葡萄柚 / 橙花<br><span style="color:var(--ink-faint);font-size:0.78rem;">著重調理皮脂、收斂毛孔狀態</span></p></div>
+        <div class="pair-card"><p class="pair-label">暗沉 / 均勻膚色</p><p class="pair-items">原液：穀胱甘肽 + 維他命C（油溶）+ B3（油溶）<br>純露：橙花 / 千葉玫瑰 / 桂花<br><span style="color:var(--ink-faint);font-size:0.78rem;">著重抗氧化與膚色均勻調護</span></p></div>
+        <div class="pair-card"><p class="pair-label">熟齡 / 彈力調護</p><p class="pair-items">原液：藍銅胜肽 + EGF + 膠原蛋白 + 油溶性B5<br>純露：永久花（季節）/ 千葉玫瑰 / 沒藥（季節）<br><span style="color:var(--ink-faint);font-size:0.78rem;">著重肌膚彈力、緊緻感調護</span></p></div>
+        <div class="pair-card"><p class="pair-label">服務後安撫調護</p><p class="pair-items">原液：積雪草 + 神經醯胺 + 水溶性B5<br>純露：洋甘菊 / 金盞花（季節）/ 橙花<br><span style="color:var(--ink-faint);font-size:0.78rem;">著重服務後肌膚的舒緩與穩定</span></p></div>
+        <div class="pair-card"><p class="pair-label">情緒放鬆 / 睡前調護</p><p class="pair-items">原液：油溶性B5 + 膠原蛋白 + EGF<br>純露：岩蘭草（季節）/ 千葉玫瑰 / 桂花<br><span style="color:var(--ink-faint);font-size:0.78rem;">著重晚間深層滋潤與身心放鬆</span></p></div>
+      </div>
+    </div>
+
+    <div class="routine-section">
+      <h3 class="humid-title" style="font-family:var(--serif);font-size:1.4rem;font-weight:300;letter-spacing:0.1em;color:var(--ink);margin-bottom:0.4rem;">早晚使用順序</h3>
+      <p class="humid-sub" style="font-size:0.77rem;color:var(--ink-faint);margin-bottom:0;">Daily Routine — 原液與純露的正確疊加順序</p>
+      <div class="routine-cols">
+        <div>
+          <p class="routine-col-title">早晨保養</p>
+          <div class="routine-step"><div class="routine-step-num">1</div><span>溫水潔顏（早晨輕柔清潔）</span></div>
+          <div class="routine-step"><div class="routine-step-num">2</div><span>純露輕壓（化妝水步驟，可選擇性濕敷）</span></div>
+          <div class="routine-step"><div class="routine-step-num">3</div><span>抗氧化原液（穀胱甘肽 / 維他命C油溶 / B3油溶）</span></div>
+          <div class="routine-step"><div class="routine-step-num">4</div><span>保濕原液（水溶性B5 / 積雪草）</span></div>
+          <div class="routine-step"><div class="routine-step-num">5</div><span>鎖水原液（神經醯胺 / 油溶性B5）</span></div>
+          <div class="routine-step"><div class="routine-step-num">6</div><span>乳液或乳霜（加強鎖水）</span></div>
+          <div class="routine-step"><div class="routine-step-num">7</div><span>防曬（每日必要步驟）</span></div>
+        </div>
+        <div>
+          <p class="routine-col-title">晚間保養</p>
+          <div class="routine-step"><div class="routine-step-num">1</div><span>卸妝或潔顏（視使用的卸妝產品，若含乳化成分可單次；若僅潔顏，建議先以卸妝品去除全臉彩妝再潔顏）</span></div>
+          <div class="routine-step"><div class="routine-step-num">2</div><span>純露輕壓或進行濕敷（視膚況選擇）</span></div>
+          <div class="routine-step"><div class="routine-step-num">3</div><span>調護性原液（積雪草 / EGF / 藍銅胜肽）</span></div>
+          <div class="routine-step"><div class="routine-step-num">4</div><span>保濕修護原液（水溶性B5 + 神經醯胺）</span></div>
+          <div class="routine-step"><div class="routine-step-num">5</div><span>鎖水原液（油溶性B5 / 膠原蛋白）</span></div>
+          <div class="routine-step"><div class="routine-step-num">6</div><span>乳液或乳霜（加強鎖水）</span></div>
+          <div class="routine-step"><div class="routine-step-num">7</div><span>眼霜（眼周區域）</span></div>
+        </div>
+      </div>
+      <p class="humid-tip" style="margin-top:2rem;">原液疊加原則：<strong>質地由稀至濃、水溶在前、油溶在後。</strong> 每款原液使用後待臉部完全吸收再疊加下一款。每次使用 2～3 款原液為宜，避免過度疊加造成肌膚負擔。水溶性 B5 建議用於補水步驟，油溶性 B5 建議用於最終鎖水步驟。</p>
+    </div>
+  </div><!-- /panel-guide -->
+
+</section>
+</div><!-- /page-products -->
+
+<!-- ═══════════════ GOODS PAGE ═══════════════ -->
+<div class="page" id="page-goods">
+<section class="goods">
+  <div class="goods-header reveal">
+    <div><p class="section-label">Recommended Items</p><h2><span class="title-chip">推薦好物</span></h2></div>
+    <p style="font-size:0.78rem;letter-spacing:0.1em;color:var(--ink-faint);">小屋親身試用推薦</p>
+  </div>
+  <p style="font-size:0.86rem;line-height:2.2;color:var(--ink-soft);letter-spacing:0.06em;margin-bottom:3rem;max-width:600px;">在小屋，我們只推薦自己真正用過、覺得很棒的好物。每一樣都是來自我們日常生活與工作中的真實體驗，分享給每一位信任小屋的你。</p>
+  <div class="goods-grid" id="goods-grid">
+    <div class="goods-empty">目前尚無推薦好物，請點選右下角「管理好物」新增。</div>
+  </div>
+</section>
+</div><!-- /page-goods -->
+
+<footer>
+  <div class="footer-logo">NINI<span>の</span>皮膚療癒所</div>
+  <p class="footer-note">本衛教資訊僅供保養知識分享，不宣稱任何醫療效果　|　© NINIの皮膚療癒所</p>
+</footer>
+
+<!-- Admin button -->
+<div class="admin-bar" id="admin-bar" style="display:none">
+  <button class="admin-btn" onclick="openAdmin()">管理好物</button>
+</div>
+
+<!-- Password modal -->
+<div class="admin-modal-bg" id="pwd-modal-bg">
+  <div class="admin-modal" style="max-width:400px;">
+    <button class="admin-close" onclick="closePwdModal()">✕</button>
+    <h3>管理驗證</h3>
+    <p style="font-size:0.78rem;color:var(--ink-soft);letter-spacing:0.06em;margin-bottom:1.8rem;line-height:1.8;">請輸入管理密碼以進入好物管理介面。</p>
+    <div class="admin-field">
+      <label>管理密碼</label>
+      <input type="password" id="pwd-input" placeholder="請輸入密碼">
+    </div>
+    <p id="pwd-error" style="display:none;font-size:0.74rem;color:#c45e2a;letter-spacing:0.06em;margin-top:0.4rem;">密碼錯誤，請重新輸入</p>
+    <div class="admin-actions" style="margin-top:1.2rem;">
+      <button class="btn-primary" onclick="submitPwd()">確認進入</button>
+      <button class="btn-ghost" onclick="closePwdModal()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin modal -->
+<div class="admin-modal-bg" id="admin-modal-bg">
+  <div class="admin-modal">
+    <button class="admin-close" onclick="closeAdmin()">✕</button>
+    <h3 id="admin-modal-title">新增推薦好物</h3>
+    <input type="hidden" id="edit-index" value="-1">
+
+    <div class="admin-field"><label>好物名稱</label><input type="text" id="good-name" placeholder="例：某某保濕乳霜"></div>
+    <div class="admin-field"><label>購買通路</label><input type="text" id="good-channel" placeholder="例：屈臣氏、Amazon、品牌官網"></div>
+
+    <!-- Rich text editor -->
+    <div class="admin-field">
+      <label>推薦理由</label>
+      <div class="rte-toolbar">
+        <button type="button" class="rte-btn" onclick="rteCmd('bold')" title="粗體"><b>B</b></button>
+        <button type="button" class="rte-btn" onclick="rteCmd('underline')" title="底線"><u>U</u></button>
+        <button type="button" class="rte-btn" onclick="rteFontSize('large')" title="大字">A↑</button>
+        <button type="button" class="rte-btn" onclick="rteFontSize('small')" title="小字">A↓</button>
+        <span class="rte-divider"></span>
+        <button type="button" class="rte-btn" onclick="rteInsertLine()" title="插入分隔線">──</button>
+        <button type="button" class="rte-btn rte-clear" onclick="rteClear()" title="清除格式">清除</button>
+      </div>
+      <div class="rte-editor" id="good-reason" contenteditable="true" data-placeholder="寫下小屋推薦這個好物的原因...&#10;可分段、加粗、底線、調整字體大小"></div>
+    </div>
+
+    <div class="admin-field"><label>上傳圖片（選填）</label><input type="file" id="good-img" accept="image/*"></div>
+    <div id="img-preview-wrap" style="display:none;margin-top:0.6rem;"><img id="img-preview" style="width:100%;max-height:160px;object-fit:cover;border:1px solid var(--paper-mid);"></div>
+
+    <div class="admin-actions">
+      <button class="btn-primary" id="admin-submit-btn" onclick="submitGood()">新增好物</button>
+      <button class="btn-ghost" onclick="resetAdminForm()">清除</button>
+    </div>
+
+    <!-- Goods list -->
+    <div class="goods-list-admin">
+      <p style="font-size:0.65rem;letter-spacing:0.22em;color:var(--orange);margin-bottom:0.8rem;">目前已新增的好物</p>
+      <div id="admin-goods-list"></div>
+    </div>
+
+    <!-- Export / Import -->
+    <div style="margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid var(--paper-mid);display:flex;gap:0.8rem;flex-wrap:wrap;">
+      <button onclick="exportGoods()" style="background:none;border:1px solid var(--cement);color:var(--ink-soft);font-size:0.65rem;letter-spacing:0.12em;padding:0.5rem 1rem;cursor:pointer;font-family:var(--sans);transition:all 0.2s;" onmouseover="this.style.borderColor=getComputedStyle(document.documentElement).getPropertyValue('--orange');this.style.color=getComputedStyle(document.documentElement).getPropertyValue('--orange')" onmouseout="this.style.borderColor='';this.style.color=''">↓ 匯出備份</button>
+      <label style="background:none;border:1px solid var(--cement);color:var(--ink-soft);font-size:0.65rem;letter-spacing:0.12em;padding:0.5rem 1rem;cursor:pointer;font-family:var(--sans);">↑ 匯入還原<input type="file" accept=".json" onchange="importGoods(event)" style="display:none;"></label>
+      <p style="font-size:0.62rem;color:var(--ink-faint);letter-spacing:0.06em;width:100%;line-height:1.7;">換設備前請先「匯出備份」，在新設備開啟後「匯入還原」即可。</p>
+    </div>
+
+    <!-- Change password -->
+    <div style="margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--paper-mid);">
+      <button onclick="openChangePwd()" style="background:none;border:none;font-size:0.65rem;letter-spacing:0.16em;color:var(--ink-faint);cursor:pointer;padding:0;">⚙ 修改管理密碼</button>
+      <div id="pwd-change-wrap" style="display:none;margin-top:1rem;">
+        <div class="admin-field"><label>新密碼</label><input type="password" id="new-pwd-input" placeholder="請輸入新密碼"></div>
+        <div class="admin-field"><label>確認新密碼</label><input type="password" id="new-pwd-confirm" placeholder="再輸入一次"></div>
+        <p id="pwd-change-error" style="display:none;font-size:0.74rem;color:#c45e2a;letter-spacing:0.06em;margin-bottom:0.6rem;"></p>
+        <p id="pwd-change-success" style="display:none;font-size:0.74rem;color:var(--seasonal);letter-spacing:0.08em;margin-bottom:0.6rem;">✓ 密碼已更新</p>
+        <div style="display:flex;gap:0.8rem;">
+          <button class="btn-primary" style="padding:0.6rem 1.4rem;font-size:0.68rem;" onclick="saveNewPwd()">儲存密碼</button>
+          <button class="btn-ghost" style="padding:0.6rem 1.4rem;font-size:0.68rem;" onclick="hideChangePwd()">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Hamburger menu ──
+function toggleMenu(){
+  const links = document.getElementById('nav-links');
+  const btn = document.getElementById('nav-hamburger');
+  links.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('nav-hamburger').classList.remove('open');
+}
+// Close menu on outside tap
+document.addEventListener('click', function(e){
+  const nav = document.querySelector('nav');
+  if(!nav.contains(e.target)) closeMenu();
+});
+
+// ── Page switching ──
+function showPage(p){
+  ['courses','products','goods'].forEach(id=>{
+    document.getElementById('page-'+id).classList.toggle('active',id===p);
+    document.getElementById('nav-'+id).classList.toggle('active',id===p);
+  });
+  if(p!=='courses') window.scrollTo(0,0);
+  document.querySelectorAll('.course-detail,.prod-detail').forEach(d=>d.classList.remove('active'));
+  document.getElementById('admin-bar').style.display = p==='goods' ? 'block' : 'none';
+}
+
+// ── Course detail ──
+function openCourse(id){
+  document.querySelectorAll('.course-detail').forEach(d=>d.classList.remove('active'));
+  const el=document.getElementById('detail-'+id);
+  el.classList.add('active');
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function closeCourse(id){
+  document.getElementById('detail-'+id).classList.remove('active');
+  document.getElementById('courses-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── Skin concern recommendation ──
+const concernMap = {
+  dry:       { essence:['水溶性 B5','積雪草','神經醯胺'],       hydrosol:['橙花純露','桂花純露','千葉玫瑰純露'] },
+  lock:      { essence:['神經醯胺','油溶性 B5','膠原蛋白'],     hydrosol:['千葉玫瑰純露','洋甘菊純露'] },
+  sensitive: { essence:['積雪草','神經醯胺','水溶性 B5'],       hydrosol:['洋甘菊純露','橙花純露','金盞花純露（季節）'] },
+  dull:      { essence:['穀胱甘肽','維他命 C（油溶）','B3（油溶）'], hydrosol:['橙花純露','千葉玫瑰純露','桂花純露'] },
+  pore:      { essence:['兒茶素','B3（油溶）'],                 hydrosol:['茶樹純露','葡萄柚純露'] },
+  aging:     { essence:['藍銅胜肽','EGF','膠原蛋白','油溶性 B5'], hydrosol:['永久花純露（季節）','千葉玫瑰純露','沒藥純露（季節）'] },
+  aftercare: { essence:['積雪草','神經醯胺','水溶性 B5'],       hydrosol:['洋甘菊純露','金盞花純露（季節）','橙花純露'] },
+  relax:     { essence:['油溶性 B5','膠原蛋白','EGF'],          hydrosol:['岩蘭草純露（季節）','千葉玫瑰純露','桂花純露'] },
+};
+const activeConcerns = new Set();
+
+function toggleConcern(btn, key){
+  btn.classList.toggle('active');
+  activeConcerns.has(key) ? activeConcerns.delete(key) : activeConcerns.add(key);
+  updateRecommend();
+}
+
+function updateRecommend(){
+  if(activeConcerns.size === 0){
+    document.getElementById('recommend-result').style.display = 'none';
+    document.getElementById('recommend-empty').style.display = 'block';
+    return;
+  }
+  const essSet = new Set(), hydSet = new Set();
+  activeConcerns.forEach(k => {
+    concernMap[k].essence.forEach(e => essSet.add(e));
+    concernMap[k].hydrosol.forEach(h => hydSet.add(h));
+  });
+  document.getElementById('rec-essence').innerHTML = [...essSet].map(n=>`<span class="rec-chip essence">${n}</span>`).join('');
+  document.getElementById('rec-hydrosol').innerHTML = [...hydSet].map(n=>`<span class="rec-chip hydrosol">${n}</span>`).join('');
+  document.getElementById('recommend-result').style.display = 'block';
+  document.getElementById('recommend-empty').style.display = 'none';
+}
+
+// ── Price calculator ──
+const essenceItems = [
+  {name:'藍銅胜肽', price:1200},
+  {name:'穀胱甘肽', price:1000},
+  {name:'積雪草', price:900},
+  {name:'表皮生長因子 EGF', price:1300},
+  {name:'神經醯胺', price:1200},
+  {name:'兒茶素', price:700},
+  {name:'維他命 B3（油溶）', price:900},
+  {name:'維他命 B5（水溶）', price:750},
+  {name:'維他命 B5（油溶）', price:750},
+  {name:'維他命 C（油溶）', price:850},
+  {name:'膠原蛋白', price:700},
+];
+const hydrosolItems = [
+  {name:'橙花純露', price:550},
+  {name:'桂花純露', price:550},
+  {name:'千葉玫瑰純露', price:550},
+  {name:'洋甘菊純露', price:550},
+  {name:'葡萄柚純露', price:350},
+  {name:'茶樹純露', price:350},
+  {name:'岩蘭草純露（季節）', price:550},
+  {name:'沒藥純露（季節）', price:550},
+  {name:'金盞花純露（季節）', price:550},
+  {name:'永久花純露（季節）', price:550},
+];
+const selectedItems = new Map();
+
+function buildCalc(){
+  const eEl = document.getElementById('calc-essence');
+  const hEl = document.getElementById('calc-hydrosol');
+  eEl.innerHTML = essenceItems.map((item,i)=>`
+    <div class="calc-item" id="ci-e-${i}" onclick="toggleCalcItem('e',${i})">
+      <span class="calc-item-name">${item.name}</span>
+      <span class="calc-item-price">$${item.price.toLocaleString()}</span>
+    </div>`).join('');
+  hEl.innerHTML = hydrosolItems.map((item,i)=>`
+    <div class="calc-item" id="ci-h-${i}" onclick="toggleCalcItem('h',${i})">
+      <span class="calc-item-name">${item.name}</span>
+      <span class="calc-item-price">$${item.price.toLocaleString()}</span>
+    </div>`).join('');
+}
+
+function toggleCalcItem(type, idx){
+  const key = `${type}-${idx}`;
+  const item = type==='e' ? essenceItems[idx] : hydrosolItems[idx];
+  const el = document.getElementById(`ci-${type}-${idx}`);
+  if(selectedItems.has(key)){
+    selectedItems.delete(key);
+    el.classList.remove('selected');
+  } else {
+    selectedItems.set(key, item);
+    el.classList.add('selected');
+  }
+  updateCalcTotal();
+}
+
+function updateCalcTotal(){
+  let total = 0;
+  const names = [];
+  selectedItems.forEach(item => { total += item.price; names.push(item.name); });
+  document.getElementById('calc-total-num').textContent = `$${total.toLocaleString()}`;
+  document.getElementById('calc-selected-list').textContent = names.length > 0 ? names.join('・') : '尚未選擇任何品項';
+}
+
+function clearCalc(){
+  selectedItems.clear();
+  document.querySelectorAll('.calc-item.selected').forEach(el=>el.classList.remove('selected'));
+  updateCalcTotal();
+}
+
+// Init calculator on first open
+let calcBuilt = false;
+const origSwitchProdTab = switchProdTab;
+
+// ── Product tabs ──
+function switchProdTab(tab,btn){
+  if(tab==='proposal' && !calcBuilt){ buildCalc(); calcBuilt=true; }
+  document.querySelectorAll('.prod-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.prod-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  btn.classList.add('active');
+  document.querySelectorAll('.prod-detail').forEach(d=>d.classList.remove('active'));
+}
+
+// ── Product detail ──
+function openProd(type,id){
+  document.querySelectorAll('.prod-detail').forEach(d=>d.classList.remove('active'));
+  const el=document.getElementById('prod-'+type+'-'+id);
+  if(!el) return;
+  el.classList.add('active');
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function closeProd(type,id){
+  document.getElementById('prod-'+type+'-'+id).classList.remove('active');
+}
+
+// ── Diagram tab switching ──
+function switchDiagTab(tab,btn){
+  document.querySelectorAll('.diag-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.diag-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('diag-panel-'+tab).classList.add('active');
+  btn.classList.add('active');
+  resetAllDiag();
+}
+
+function resetAllDiag(){
+  document.querySelectorAll('[id^="fhl-"],[id^="hhl-"]').forEach(el=>el.setAttribute('opacity','0'));
+  document.querySelectorAll('.course-diag-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('face-layer-info').querySelector('.layer-info-title').textContent='點選服務查看示意';
+  document.getElementById('face-layer-text').textContent='選擇左側任一服務項目，了解其在皮膚示意圖中的作用範圍說明。';
+  document.getElementById('head-layer-info').querySelector('.layer-info-title').textContent='點選服務查看示意';
+  document.getElementById('head-layer-text').textContent='選擇左側任一服務項目，了解其在頭皮筋膜示意圖中的作用說明。';
+  document.getElementById('process-wrap').style.display='none';
+  document.getElementById('head-process-wrap').style.display='none';
+}
+
+// Diagram data
+const faceDiagData={
+  jingxi:{
+    hl:['fhl-sc','fhl-gr'],
+    title:'精細光彩 ── 角質層 · 顆粒層作用示意',
+    text:'專業級果酸從角質層開始作用，加速老廢角質的自然代謝週期。顆粒層中的角質細胞逐漸鬆脫，使肌膚表面恢復均勻細緻的狀態。（本說明為保養服務作用示意，不代表任何醫療宣稱）',
+    process:{title:'精細光彩 ── 服務過程示意',svg:`
+      <rect x="5" y="10" width="95" height="70" rx="4" fill="#e0d4c4" stroke="#c4b8a8" stroke-width="0.8"/>
+      <text x="52" y="28" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#5a4a3a">服務前</text>
+      <rect x="12" y="32" width="81" height="12" fill="#d8cabb" rx="1" opacity="0.8"/>
+      <rect x="12" y="46" width="81" height="10" fill="#cfc0b0" rx="1" opacity="0.8"/>
+      <rect x="16" y="35" width="6" height="18" fill="#9a8878" rx="1" opacity="0.5"/>
+      <rect x="30" y="35" width="6" height="18" fill="#9a8878" rx="1" opacity="0.5"/>
+      <rect x="44" y="35" width="6" height="18" fill="#9a8878" rx="1" opacity="0.5"/>
+      <rect x="58" y="35" width="6" height="18" fill="#9a8878" rx="1" opacity="0.5"/>
+      <text x="52" y="68" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#7a6858">老廢角質堆積</text>
+      <text x="52" y="78" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#9a8878" opacity="0.8">毛孔阻塞</text>
+      <text x="118" y="48" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="12" fill="#c45e2a">→</text>
+      <rect x="130" y="10" width="95" height="70" rx="4" fill="#e0d4c4" stroke="#c45e2a" stroke-width="1"/>
+      <text x="177" y="28" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#c45e2a">服務中</text>
+      <rect x="137" y="32" width="81" height="12" fill="#c8bfb4" rx="1" opacity="0.8"/>
+      <text x="177" y="52" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#c45e2a">⬆ ⬆ ⬆ ⬆</text>
+      <text x="177" y="64" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#7a5838">果酸加速角質</text>
+      <text x="177" y="74" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#7a5838">代謝週期啟動</text>
+      <text x="243" y="48" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="12" fill="#c45e2a">→</text>
+      <rect x="255" y="10" width="80" height="70" rx="4" fill="#f0e8e0" stroke="#c4a882" stroke-width="0.8"/>
+      <text x="295" y="28" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#5a4a3a">服務後</text>
+      <rect x="262" y="32" width="66" height="8" fill="#e8ddd0" rx="1" opacity="0.9"/>
+      <rect x="262" y="42" width="66" height="10" fill="#e0d4c4" rx="1" opacity="0.8"/>
+      <rect x="262" y="54" width="66" height="10" fill="#d8cabb" rx="1" opacity="0.8"/>
+      <text x="295" y="72" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#5a4838">角質層恢復整齊</text>
+      <text x="295" y="80" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#9a8878">毛孔通道暢通</text>
+    `}
+  },
+  yuanye:{
+    hl:['fhl-sp','fhl-ba'],
+    title:'原液調理 ── 表皮屏障 · 毛孔通道作用示意',
+    text:'功能性原液透過毛孔通道與肌膚充分接觸，補充有棘層至基底層所需的活性成分，協助維持角質細胞間脂質的完整性，從根本調護肌膚屏障，改善乾燥、敏感等情況。（本說明為保養服務作用示意）',
+    process:{title:'原液調理 ── 服務過程示意',svg:`
+      <rect x="5" y="10" width="100" height="70" rx="4" fill="#dedad4" stroke="#c4b8a8" stroke-width="0.8"/>
+      <text x="55" y="28" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#5a4a3a">肌膚屏障需調護</text>
+      <rect x="12" y="33" width="81" height="8" fill="#e8ddd0" rx="1"/>
+      <rect x="12" y="43" width="81" height="8" fill="#e0d4c4" rx="1" opacity="0.7"/>
+      <text x="55" y="60" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#9a8878">⬆ 乾燥/敏感/泛紅</text>
+      <text x="55" y="72" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#9a8878">屏障間隙不穩定</text>
+      <text x="122" y="48" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="12" fill="#c45e2a">→</text>
+      <rect x="135" y="10" width="100" height="70" rx="4" fill="#dedad4" stroke="#c45e2a" stroke-width="1"/>
+      <text x="185" y="28" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#c45e2a">導入中</text>
+      <rect x="142" y="33" width="81" height="8" fill="#e0d4c4" rx="1"/>
+      <text x="185" y="50" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="18" fill="#c45e2a" opacity="0.7">↓↓</text>
+      <text x="185" y="68" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#7a5838">原液進入毛孔</text>
+      <text x="185" y="78" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#7a5838">補充水分與保養成分</text>
+      <text x="252" y="48" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="12" fill="#c45e2a">→</text>
+      <rect x="260" y="10" width="75" height="70" rx="4" fill="#f0e8e0" stroke="#c4a882" stroke-width="0.8"/>
+      <text x="297" y="28" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="8" fill="#5a4a3a">調護後</text>
+      <rect x="267" y="33" width="61" height="8" fill="#e8ddd0" rx="1"/>
+      <rect x="267" y="43" width="61" height="8" fill="#e0d4c4" rx="1" opacity="0.9"/>
+      <rect x="267" y="53" width="61" height="8" fill="#d8cabb" rx="1" opacity="0.9"/>
+      <text x="297" y="70" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#5a4838">屏障層趨向穩定</text>
+      <text x="297" y="80" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#9a8878">水分感提升</text>
+    `}
+  },
+  paoguang:{
+    hl:['fhl-full-ep'],
+    title:'泡光氧彗 ── 表皮層 · 細胞活化作用示意',
+    text:'Geneo X 的 OxyPod 膠囊與導引凝膠接觸後產生 CO₂ 泡泡，透過 Bohr Effect 引導身體從內部提升含氧量；超音波微震動開啟表皮層通透性，讓活性成分與肌膚更有效接觸；淋巴導引按摩促進循環。（本說明為保養服務作用示意）',
+    process:{title:'泡光氧彗 ── Geneo X 四步驟示意',svg:`
+      <rect x="2" y="8" width="76" height="78" rx="4" fill="#e8ddd0" stroke="#c45e2a" stroke-width="1"/>
+      <text x="40" y="22" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#c45e2a">① Oxfoliation™</text>
+      <text x="40" y="33" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#5a4838">活氧泡泡煥膚</text>
+      <circle cx="25" cy="55" r="6" fill="none" stroke="#c45e2a" stroke-width="1" opacity="0.7"/>
+      <circle cx="40" cy="55" r="6" fill="none" stroke="#c45e2a" stroke-width="1" opacity="0.6"/>
+      <circle cx="55" cy="55" r="6" fill="none" stroke="#c45e2a" stroke-width="1" opacity="0.5"/>
+      <text x="40" y="75" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="6.5" fill="#7a6858">CO₂泡泡 = 內部提氧</text>
+      <rect x="84" y="8" width="76" height="78" rx="4" fill="#e8ddd0" stroke="#c4b8a8" stroke-width="0.8"/>
+      <text x="122" y="22" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#5a4a3a">② RF Pro（選配）</text>
+      <text x="122" y="33" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#7a6858">射頻緊緻</text>
+      <path d="M100,50 Q110,42 120,50 Q130,58 140,50 Q150,42 160,50" stroke="#c45e2a" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <text x="122" y="75" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="6.5" fill="#7a6858">促進緊緻感受</text>
+      <rect x="166" y="8" width="76" height="78" rx="4" fill="#e8ddd0" stroke="#c4b8a8" stroke-width="0.8"/>
+      <text x="204" y="22" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#5a4a3a">③ 超音波導入</text>
+      <text x="204" y="33" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#7a6858">Ultrasound</text>
+      <path d="M178,55 Q184,48 190,55 Q196,62 202,55 Q208,48 214,55 Q220,62 226,55 Q232,48 238,55" stroke="#a8c4d8" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <text x="204" y="75" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="6.5" fill="#7a6858">微震波提升通透性</text>
+      <rect x="248" y="8" width="86" height="78" rx="4" fill="#e8ddd0" stroke="#c4b8a8" stroke-width="0.8"/>
+      <text x="291" y="22" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7.5" fill="#5a4a3a">④ 淋巴按摩</text>
+      <text x="291" y="33" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="7" fill="#7a6858">Massage</text>
+      <path d="M260,55 Q270,45 280,55 Q290,65 300,55 Q310,45 320,55" stroke="#9ab8a8" stroke-width="1.5" fill="none" opacity="0.65"/>
+      <text x="291" y="72" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="6.5" fill="#7a6858">淋巴導引</text>
+      <text x="291" y="82" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="6.5" fill="#7a6858">舒緩浮腫感</text>
+    `}
+  },
+  senlin:{
+    hl:['fhl-sc','fhl-gr'],
+    title:'森林癒撥筋 ── 肌膚表面 · 筋膜循環作用示意',
+    text:'藥草球的溫熱敷效果溫和作用於角質層與表皮表面，搭配精油的親脂性成分與肌膚接觸，透過臉部撥筋手技疏通筋膜、改善循環，帶來整體面部的舒緩感受。（本說明為保養服務作用示意）',
+    process:null
+  }
+};
+
+const headDiagData={
+  yulin:{
+    hl:['hhl-scalp','hhl-sub','hhl-lymph'],
+    title:'雨林頭療 ── 頭皮・皮下循環・穴道作用示意',
+    text:'撥筋手技作用於頭皮表皮至皮下疏鬆結締組織，疏通頭部穴道與筋膜，促進微血管與淋巴循環。循環改善後，頭部緊繃感得以舒緩，身心同步放鬆。（本說明為服務作用示意）',
+    process:null
+  },
+  xiaoyan:{
+    hl:['hhl-galea','hhl-muscle'],
+    title:'日式小顏骨氣 ── 筋膜層 · 咀嚼肌作用示意',
+    text:'帽狀腱膜（SMAS）層與咀嚼肌是此服務的主要作用區域。精準的筋膜手技鬆解肌肉筋結，帶動表層皮膚產生線條變化，整體臉部感受更為緊緻立體。（本說明為服務作用示意）',
+    process:null
+  }
+};
+
+let currentFaceDiag=null, currentHeadDiag=null;
+
+function activateDiag(panel,key){
+  const data = panel==='face' ? faceDiagData[key] : headDiagData[key];
+  if(!data) return;
+
+  const hlPrefix = panel==='face' ? 'fhl-' : 'hhl-';
+  const mapPrefix = panel==='face' ? 'fdiag-' : 'hdiag-';
+  const infoId = panel==='face' ? 'face-layer-info' : 'head-layer-info';
+  const textId = panel==='face' ? 'face-layer-text' : 'head-layer-text';
+  const currentVar = panel==='face' ? 'currentFaceDiag' : 'currentHeadDiag';
+
+  // Reset highlights for this panel
+  document.querySelectorAll(`[id^="${hlPrefix}"]`).forEach(el=>el.setAttribute('opacity','0'));
+  document.querySelectorAll(`[id^="${mapPrefix}"]`).forEach(el=>el.classList.remove('active'));
+
+  const isSame = (panel==='face' ? currentFaceDiag : currentHeadDiag) === key;
+  if(panel==='face') currentFaceDiag = isSame ? null : key;
+  else currentHeadDiag = isSame ? null : key;
+
+  if(isSame){
+    document.getElementById(infoId).querySelector('.layer-info-title').textContent='點選服務查看示意';
+    document.getElementById(textId).textContent='選擇左側任一服務項目，了解其在示意圖中的作用範圍說明。';
+    if(panel==='face') document.getElementById('process-wrap').style.display='none';
+    else document.getElementById('head-process-wrap').style.display='none';
+    return;
+  }
+
+  data.hl.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.setAttribute('opacity','0.35');
+  });
+  const item=document.getElementById(mapPrefix+key);
+  if(item) item.classList.add('active');
+  document.getElementById(infoId).querySelector('.layer-info-title').textContent=data.title;
+  document.getElementById(textId).textContent=data.text;
+
+  // Process diagram
+  const wrapId = panel==='face' ? 'process-wrap' : 'head-process-wrap';
+  const svgId = panel==='face' ? 'process-svg' : 'head-process-svg';
+  const titleId = panel==='face' ? 'process-title' : 'head-process-title';
+  if(data.process){
+    document.getElementById(wrapId).style.display='block';
+    document.getElementById(titleId).textContent=data.process.title;
+    document.getElementById(svgId).innerHTML=data.process.svg;
+  } else {
+    document.getElementById(wrapId).style.display='none';
+  }
+}
+
+// ── Scroll reveal ──
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ── Goods management ──
+let goods = [];
+try { goods = JSON.parse(localStorage.getItem('nini-goods') || '[]'); } catch(e){ goods=[]; }
+
+function saveGoods(){ try{ localStorage.setItem('nini-goods', JSON.stringify(goods)); } catch(e){} }
+
+// Render goods grid
+function renderGoods(){
+  const grid = document.getElementById('goods-grid');
+  if(goods.length===0){
+    grid.innerHTML='<div class="goods-empty">目前尚無推薦好物，請點選右下角「管理好物」新增。</div>';
+    return;
+  }
+  grid.style.display='grid';
+  grid.innerHTML = goods.map((g,i)=>`
+    <div class="good-card">
+      ${g.img
+        ? `<img class="good-img" src="${g.img}" alt="${g.name}">`
+        : `<div class="good-img-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-5 4 5"/><circle cx="8.5" cy="13.5" r="1.5"/></svg><span>尚無圖片</span></div>`
+      }
+      <div class="good-body">
+        <h3 class="good-name">${g.name}</h3>
+        <p class="good-channel">${g.channel || ''}</p>
+        <div class="good-reason-display">${g.reason || ''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Render admin list with edit + delete
+function renderAdminList(){
+  const el = document.getElementById('admin-goods-list');
+  if(goods.length===0){ el.innerHTML='<p style="font-size:0.78rem;color:var(--ink-faint);">尚無好物</p>'; return; }
+  el.innerHTML = goods.map((g,i)=>`
+    <div class="good-admin-item">
+      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${g.name}</span>
+      <div style="display:flex;gap:0.4rem;flex-shrink:0;">
+        <button class="good-admin-del" style="color:var(--orange);border-color:var(--orange);" onclick="editGood(${i})">修改</button>
+        <button class="good-admin-del" onclick="deleteGood(${i})">刪除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Rich text editor ──
+function rteCmd(cmd){ document.execCommand(cmd, false, null); document.getElementById('good-reason').focus(); }
+function rteFontSize(size){
+  const sel = window.getSelection();
+  if(!sel.rangeCount) return;
+  const range = sel.getRangeAt(0);
+  if(range.collapsed) return;
+  const span = document.createElement('span');
+  span.setAttribute('data-size', size);
+  try{ range.surroundContents(span); } catch(e){
+    const frag = range.extractContents();
+    span.appendChild(frag);
+    range.insertNode(span);
+  }
+  document.getElementById('good-reason').focus();
+}
+function rteInsertLine(){
+  const editor = document.getElementById('good-reason');
+  editor.focus();
+  document.execCommand('insertHTML', false, '<hr style="border:none;border-top:1px solid #bfb9b1;margin:0.6rem 0;">');
+}
+function rteClear(){
+  const sel = window.getSelection();
+  if(sel.rangeCount && !sel.getRangeAt(0).collapsed){
+    document.execCommand('removeFormat');
+    // Also remove custom spans
+    const range = sel.getRangeAt(0);
+    const frag = range.extractContents();
+    const spans = frag.querySelectorAll('[data-size]');
+    spans.forEach(s=>{ s.replaceWith(document.createTextNode(s.textContent)); });
+    range.insertNode(frag);
+  }
+}
+
+// Preview image
+document.addEventListener('DOMContentLoaded', ()=>{
+  const imgInput = document.getElementById('good-img');
+  if(imgInput) imgInput.addEventListener('change', function(){
+    if(this.files[0]){
+      const r = new FileReader();
+      r.onload = e => {
+        document.getElementById('img-preview').src = e.target.result;
+        document.getElementById('img-preview-wrap').style.display = 'block';
+      };
+      r.readAsDataURL(this.files[0]);
+    }
+  });
+  document.getElementById('pwd-input').addEventListener('keydown', e=>{ if(e.key==='Enter') submitPwd(); });
+});
+
+// Submit (add or edit)
+function submitGood(){
+  const name    = document.getElementById('good-name').value.trim();
+  const channel = document.getElementById('good-channel').value.trim();
+  const reason  = document.getElementById('good-reason').innerHTML.trim();
+  const fileInput = document.getElementById('good-img');
+  const editIdx = parseInt(document.getElementById('edit-index').value);
+  if(!name){ alert('請填寫好物名稱'); return; }
+
+  function save(img){
+    if(editIdx >= 0){
+      goods[editIdx] = { name, channel, reason, img: img !== undefined ? img : goods[editIdx].img };
+    } else {
+      goods.push({ name, channel, reason, img: img || null });
+    }
+    saveGoods(); renderGoods(); renderAdminList(); resetAdminForm();
+  }
+
+  const file = fileInput.files[0];
+  if(file){
+    const r = new FileReader();
+    r.onload = e => save(e.target.result);
+    r.readAsDataURL(file);
+  } else {
+    save(undefined);
+  }
+}
+
+// Edit
+function editGood(i){
+  const g = goods[i];
+  document.getElementById('edit-index').value = i;
+  document.getElementById('good-name').value = g.name;
+  document.getElementById('good-channel').value = g.channel || '';
+  document.getElementById('good-reason').innerHTML = g.reason || '';
+  if(g.img){
+    document.getElementById('img-preview').src = g.img;
+    document.getElementById('img-preview-wrap').style.display = 'block';
+  } else {
+    document.getElementById('img-preview-wrap').style.display = 'none';
+  }
+  document.getElementById('admin-modal-title').textContent = '修改好物';
+  document.getElementById('admin-submit-btn').textContent = '儲存修改';
+  document.querySelector('.admin-modal').scrollTo({top:0, behavior:'smooth'});
+}
+
+function resetAdminForm(){
+  document.getElementById('edit-index').value = '-1';
+  document.getElementById('good-name').value = '';
+  document.getElementById('good-channel').value = '';
+  document.getElementById('good-reason').innerHTML = '';
+  document.getElementById('good-img').value = '';
+  document.getElementById('img-preview-wrap').style.display = 'none';
+  document.getElementById('admin-modal-title').textContent = '新增推薦好物';
+  document.getElementById('admin-submit-btn').textContent = '新增好物';
+}
+
+function deleteGood(i){
+  if(!confirm(`確定要刪除「${goods[i].name}」嗎？`)) return;
+  goods.splice(i,1);
+  saveGoods(); renderGoods(); renderAdminList();
+}
+
+// Export / Import
+function exportGoods(){
+  const blob = new Blob([JSON.stringify(goods, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'nini-goods-backup.json';
+  a.click();
+}
+function importGoods(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try{
+      const data = JSON.parse(ev.target.result);
+      if(!Array.isArray(data)) throw new Error();
+      if(!confirm(`確定要匯入 ${data.length} 筆好物資料？（現有資料將被取代）`)) return;
+      goods = data;
+      saveGoods(); renderGoods(); renderAdminList();
+      alert('匯入成功！');
+    } catch(err){ alert('檔案格式錯誤，請確認是正確的備份檔案。'); }
+  };
+  r.readAsText(file);
+  e.target.value = '';
+}
+
+// Init
+renderGoods();
+
+// ── Password ──
+const DEFAULT_PWD = 'nini2024';
+function getSavedPwd(){ try{ return localStorage.getItem('nini-admin-pwd') || DEFAULT_PWD; }catch(e){ return DEFAULT_PWD; } }
+
+function openAdmin(){
+  // Show password modal first
+  document.getElementById('pwd-input').value='';
+  document.getElementById('pwd-error').style.display='none';
+  document.getElementById('pwd-modal-bg').classList.add('open');
+}
+
+function submitPwd(){
+  const entered = document.getElementById('pwd-input').value;
+  if(entered === getSavedPwd()){
+    document.getElementById('pwd-modal-bg').classList.remove('open');
+    document.getElementById('admin-modal-bg').classList.add('open');
+    renderAdminList();
+  } else {
+    document.getElementById('pwd-error').style.display='block';
+    document.getElementById('pwd-input').value='';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+function closePwdModal(){ document.getElementById('pwd-modal-bg').classList.remove('open'); }
+
+// Allow Enter key in password field
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('pwd-input').addEventListener('keydown', e=>{ if(e.key==='Enter') submitPwd(); });
+  document.getElementById('new-pwd-input') && document.getElementById('new-pwd-input').addEventListener('keydown', e=>{ if(e.key==='Enter') saveNewPwd(); });
+});
+
+function openChangePwd(){
+  document.getElementById('new-pwd-input').value='';
+  document.getElementById('new-pwd-confirm').value='';
+  document.getElementById('pwd-change-error').style.display='none';
+  document.getElementById('pwd-change-success').style.display='none';
+  document.getElementById('pwd-change-wrap').style.display='block';
+}
+function hideChangePwd(){ document.getElementById('pwd-change-wrap').style.display='none'; }
+
+function saveNewPwd(){
+  const np = document.getElementById('new-pwd-input').value.trim();
+  const nc = document.getElementById('new-pwd-confirm').value.trim();
+  const errEl = document.getElementById('pwd-change-error');
+  const okEl = document.getElementById('pwd-change-success');
+  if(!np){ errEl.textContent='請輸入新密碼'; errEl.style.display='block'; return; }
+  if(np !== nc){ errEl.textContent='兩次輸入不一致，請重新確認'; errEl.style.display='block'; return; }
+  try{ localStorage.setItem('nini-admin-pwd', np); }catch(e){}
+  errEl.style.display='none';
+  okEl.style.display='block';
+  setTimeout(()=>{ okEl.style.display='none'; hideChangePwd(); }, 1500);
+}
+
+function closeAdmin(){
+  document.getElementById('admin-modal-bg').classList.remove('open');
+  resetAdminForm();
+}
+</script>
+</body>
+</html>
