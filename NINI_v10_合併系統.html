@@ -750,7 +750,10 @@ function renderVisits(){
   var mc=document.getElementById('mc'),vs=cur.visits||[],html='';
   html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">';
   html+='<div style="font-size:15px;font-weight:500;color:var(--tx)">諮詢紀錄 <span style="font-size:12px;font-weight:400;color:var(--tx3)">'+vs.length+' 筆</span></div>';
-  html+='<button id="add-visit-btn" style="height:30px;padding:0 14px;border:0.5px solid var(--acc);border-radius:20px;font-size:11px;color:var(--acc);background:transparent;cursor:pointer;font-family:inherit">+ 新增紀錄</button></div>';
+  html+='<div style="display:flex;gap:7px">';
+  html+='<button id="routine-shortcut-btn" style="height:30px;padding:0 12px;border:0.5px solid var(--sage);border-radius:20px;font-size:11px;color:var(--sage);background:transparent;cursor:pointer;font-family:inherit">💧 保養順序</button>';
+  html+='<button id="add-visit-btn" style="height:30px;padding:0 14px;border:0.5px solid var(--acc);border-radius:20px;font-size:11px;color:var(--acc);background:transparent;cursor:pointer;font-family:inherit">+ 新增紀錄</button>';
+  html+='</div></div>';
   if(vs.length){
     vs.slice().reverse().forEach(function(v,ri){
       var i=vs.length-1-ri,type=v.type||'skin';
@@ -768,6 +771,7 @@ function renderVisits(){
     html+='<div class="empty-st">尚無諮詢紀錄<br><br>點擊「+ 新增紀錄」<br>選擇服務類型開始記錄</div>';
   }
   mc.innerHTML=html;
+  document.getElementById('routine-shortcut-btn').addEventListener('click',openSkincareRoutine);
   document.getElementById('add-visit-btn').addEventListener('click',openVisitTypeSelect);
   mc.querySelectorAll('.visit-hd').forEach(function(hd){hd.addEventListener('click',function(){toggleVB(parseInt(this.getAttribute('data-vi')));});});
   mc.querySelectorAll('[data-gen]').forEach(function(b){b.addEventListener('click',function(){runAI(parseInt(this.getAttribute('data-gen')));});});
@@ -1351,10 +1355,9 @@ function finalSaveVisit(){
   if(!vmState.date)vmState.date=today();
   if(!vmState.label)vmState.label=vtLabel(vmType);
   if(!vmState.mood)vmState.mood=1;
-  // auto-add purchased to client nini list, track newly added
+  // auto-add purchased to client nini list
   var purch=vmState.purchased||[];
-  var newlyAdded=[];
-  purch.forEach(function(p){if(cur.nini.indexOf(p)<0){cur.nini.push(p);newlyAdded.push(p);}});
+  purch.forEach(function(p){if(cur.nini.indexOf(p)<0)cur.nini.push(p);});
   if(vmEditIdx!==null&&vmEditIdx!==undefined&&parseInt(vmEditIdx)>=0){
     var existAI=(cur.visits[vmEditIdx]||{}).aiResult||'';
     vmState.aiResult=existAI;
@@ -1363,27 +1366,6 @@ function finalSaveVisit(){
     vmState.aiResult='';cur.visits.push(vmState);
   }
   saveData();closeModal();renderVisits();
-  // 若有新購品項，提示是否更新保養步驟順序
-  if(newlyAdded.length&&cur){
-    setTimeout(function(){promptUpdateRoutine(newlyAdded);},150);
-  }
-}
-function promptUpdateRoutine(newProds){
-  var listHtml=newProds.map(function(p){return '<span style="display:inline-block;background:var(--bg2);border:0.5px solid var(--bd2);border-radius:20px;padding:3px 10px;font-size:12px;color:var(--tx2);margin:2px 2px">'+esc(p)+'</span>';}).join('');
-  var html='<div class="modal-hd"><span class="modal-title">✓ 紀錄已儲存</span></div>';
-  html+='<div class="modal-body" style="text-align:center;padding:20px 16px">';
-  html+='<div style="font-size:28px;margin-bottom:12px">💧</div>';
-  html+='<div style="font-size:14px;font-weight:500;color:var(--tx);margin-bottom:8px">已將新品項加入 '+esc(cur.name)+' 的手邊清單</div>';
-  html+='<div style="margin-bottom:18px;line-height:2">'+listHtml+'</div>';
-  html+='<div style="font-size:13px;color:var(--tx2);margin-bottom:20px">要現在更新保養步驟順序嗎？</div>';
-  html+='<div style="display:flex;gap:10px;justify-content:center">';
-  html+='<button id="pru-skip" class="btn-cn" style="flex:1;max-width:120px">跳過</button>';
-  html+='<button id="pru-go" class="btn-next" style="flex:1;max-width:160px">💧 更新保養順序</button>';
-  html+='</div></div>';
-  openModal(html,function(modal){
-    modal.querySelector('#pru-skip').addEventListener('click',closeModal);
-    modal.querySelector('#pru-go').addEventListener('click',function(){closeModal();setTimeout(function(){openSkincareRoutine();},80);});
-  });
 }
 
 // ── AI Card Builder ──
