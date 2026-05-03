@@ -375,7 +375,7 @@ function makeChip(label,active,cls){
   el.className=(cls||'chip')+(active?' on':'');el.textContent=label;
   el.addEventListener('click',function(e){e.preventDefault();this.classList.toggle('on');});return el;
 }
-function chipsVal(wrap){var r=[];wrap.querySelectorAll('.chip.on,.nchip.on,.hchip.on').forEach(function(c){r.push(c.textContent);});return r;}
+function chipsVal(wrap){if(!wrap)return[];var r=[];wrap.querySelectorAll('.chip.on,.nchip.on,.hchip.on').forEach(function(c){r.push(c.textContent);});return r;}
 function resizeImg(file,cb){
   var r=new FileReader();r.onload=function(e){
     var img=new Image();img.onload=function(){
