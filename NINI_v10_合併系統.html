@@ -131,6 +131,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;font
 .ai-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .gen-btn{width:100%;height:44px;border:0.5px solid var(--bd2);border-radius:var(--r);font-size:13px;color:var(--acc2);background:none;cursor:pointer;font-family:inherit;margin-top:11px}
 .gen-btn:hover{background:var(--bg2)}
+/* Routine card (for image export) */
+.rc-card{background:#fff;border-radius:18px;padding:26px 24px;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;width:360px}
+.rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;padding-bottom:16px;border-bottom:1.5px solid #e4ede4}
+.rc-brand{font-size:9px;letter-spacing:2.5px;color:#7aaa7a;margin-bottom:3px}
+.rc-name{font-size:21px;font-weight:300;color:#2d3d2d;letter-spacing:.8px}
+.rc-date{font-size:11px;color:#8aaa8a;margin-top:3px}
+.rc-sec{margin-bottom:16px}
+.rc-sec-hd{display:flex;align-items:center;gap:6px;margin-bottom:9px}
+.rc-sec-lbl-am{font-size:10px;font-weight:700;letter-spacing:1.2px;color:#b08820}
+.rc-sec-lbl-pm{font-size:10px;font-weight:700;letter-spacing:1.2px;color:#6850a0}
+.rc-step{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px}
+.rc-step-am{background:#fffbee}.rc-step-pm{background:#f5f0fa}
+.rc-num-am{font-size:12px;font-weight:700;color:#b08820;min-width:20px;text-align:center}
+.rc-num-pm{font-size:12px;font-weight:700;color:#6850a0;min-width:20px;text-align:center}
+.rc-step-name{font-size:13px;color:#3a3530;flex:1}
+.rc-notes{background:#f7f5f0;border-radius:9px;padding:10px 13px;font-size:12px;color:#6a6058;line-height:1.9;margin-bottom:14px}
+.rc-footer{margin-top:16px;padding-top:13px;border-top:1px solid #e4ede4;display:flex;justify-content:space-between;align-items:center}
+.rc-footer-brand{font-size:10px;letter-spacing:2px;color:#7aaa7a}
+.rc-footer-note{font-size:10px;color:#b0c0b0}
 /* Aftercare card (for image export) */
 .ac-card{background:#faf8f4;border-radius:12px;padding:22px;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
 .ac-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #e8e3da}
@@ -607,7 +626,7 @@ function openSkincareRoutine(){
     html+='<div class="fg" style="margin-top:16px"><label>💡 Ni 的備註</label>';
     html+='<textarea id="sr-notes" style="min-height:55px;line-height:1.8">'+esc(srNotes)+'</textarea></div>';
     html+='</div>';
-    html+='<div class="modal-ft"><button id="sr-cancel" class="btn-cn">取消</button><button id="sr-save" class="btn-sv">💾 儲存為新版本</button></div>';
+    html+='<div class="modal-ft" style="flex-wrap:wrap;gap:8px"><button id="sr-cancel" class="btn-cn" style="flex:0 0 auto">取消</button><button id="sr-img" class="btn-ol" style="flex:1;min-width:0">↓ 儲存圖片</button><button id="sr-save" class="btn-sv" style="flex:1;min-width:0">💾 儲存版本</button></div>';
 
     openModal(html,function(modal){
       function saveNoteState(){
@@ -638,6 +657,10 @@ function openSkincareRoutine(){
       });
       modal.querySelector('#sr-close').addEventListener('click',closeModal);
       modal.querySelector('#sr-cancel').addEventListener('click',closeModal);
+      modal.querySelector('#sr-img').addEventListener('click',function(){
+        saveNoteState();
+        saveRoutineImg(cur.name,srDate,srAM,srPM,srNotes);
+      });
       modal.querySelector('#sr-save').addEventListener('click',function(){
         saveNoteState();
         var newEntry={date:srDate,am:srAM.slice(),pm:srPM.slice(),notes:srNotes};
@@ -996,6 +1019,53 @@ function saveACImg(i){
   tmp.innerHTML=buildACCard(v,i);document.body.appendChild(tmp);
   html2canvas(tmp,{backgroundColor:'#faf8f4',scale:2,logging:false,useCORS:true}).then(function(canvas){
     var link=document.createElement('a');link.download='NINI_術後關心_'+esc(cur.name)+'_'+(v.date||today()).replace(/\//g,'-')+'.png';
+    link.href=canvas.toDataURL('image/png');link.click();document.body.removeChild(tmp);
+  }).catch(function(e){alert('圖片儲存失敗：'+e.message);document.body.removeChild(tmp);});
+}
+
+// ── Skincare Routine card (image export) ──
+function buildRoutineCard(name,date,am,pm,notes){
+  var html='<div class="rc-card">';
+  // 頂部
+  html+='<div class="rc-top"><div>';
+  html+='<div class="rc-brand">NINI · 保養步驟</div>';
+  html+='<div class="rc-name">'+esc(name)+'</div>';
+  html+='<div class="rc-date">'+esc(date)+'</div>';
+  html+='</div><div style="font-size:32px;opacity:.7">💧</div></div>';
+  // AM
+  if(am&&am.length){
+    html+='<div class="rc-sec">';
+    html+='<div class="rc-sec-hd"><span style="font-size:15px">☀</span><span class="rc-sec-lbl-am">AM 早上保養</span></div>';
+    am.forEach(function(p,i){
+      html+='<div class="rc-step rc-step-am"><span class="rc-num-am">'+(i+1)+'</span><span class="rc-step-name">'+esc(p)+'</span></div>';
+    });
+    html+='</div>';
+  }
+  // PM
+  if(pm&&pm.length){
+    html+='<div class="rc-sec">';
+    html+='<div class="rc-sec-hd"><span style="font-size:15px">🌙</span><span class="rc-sec-lbl-pm">PM 晚上保養</span></div>';
+    pm.forEach(function(p,i){
+      html+='<div class="rc-step rc-step-pm"><span class="rc-num-pm">'+(i+1)+'</span><span class="rc-step-name">'+esc(p)+'</span></div>';
+    });
+    html+='</div>';
+  }
+  // 備註
+  if(notes)html+='<div class="rc-notes">💡 '+esc(notes)+'</div>';
+  // 頁尾
+  html+='<div class="rc-footer"><span class="rc-footer-brand">NINI BEAUTY</span><span class="rc-footer-note">為妳量身設計的保養步驟 ✦</span></div>';
+  html+='</div>';
+  return html;
+}
+function saveRoutineImg(name,date,am,pm,notes){
+  if(!am.length&&!pm.length){alert('請先設定 AM 或 PM 的保養步驟');return;}
+  var tmp=document.createElement('div');
+  tmp.style.cssText='position:fixed;left:-9999px;top:0;width:408px;z-index:-1;background:#fff';
+  tmp.innerHTML=buildRoutineCard(name,date,am,pm,notes);
+  document.body.appendChild(tmp);
+  html2canvas(tmp,{backgroundColor:'#ffffff',scale:2,logging:false,useCORS:true}).then(function(canvas){
+    var link=document.createElement('a');
+    link.download='NINI_保養步驟_'+esc(name)+'_'+date.replace(/\//g,'-')+'.png';
     link.href=canvas.toDataURL('image/png');link.click();document.body.removeChild(tmp);
   }).catch(function(e){alert('圖片儲存失敗：'+e.message);document.body.removeChild(tmp);});
 }
