@@ -503,38 +503,149 @@ function homeCardClick(type){
 }
 function openSkincareRoutine(){
   if(!cur)return;
-  var sr=cur.skinRoutine||{am:'',pm:'',notes:'',updated:''};
-  var allProds=(cur.nini||[]).concat((cur.ext||[]).map(function(e){return e.name+(e.brand?' ('+e.brand+')':'');}));
-  var prodListHtml='';
-  if(allProds.length){
-    prodListHtml='<div class="info-box" style="margin-bottom:10px;line-height:2">';
-    allProds.forEach(function(p){prodListHtml+='<span style="display:inline-block;background:var(--bg3);border-radius:20px;padding:2px 10px;font-size:12px;margin:2px">'+esc(p)+'</span>';});
-    prodListHtml+='</div>';
-  } else {
-    prodListHtml='<div class="empty-st" style="padding:10px;font-size:12px">尚未記錄手邊產品（可至癒米資料頁新增）</div>';
+  var sr=cur.skinRoutine||{am:[],pm:[],notes:'',updated:''};
+  // 相容舊格式（字串→陣列）
+  var srAM=Array.isArray(sr.am)?sr.am.slice():(sr.am?sr.am.split('\n').map(function(s){return s.trim();}).filter(Boolean):[]);
+  var srPM=Array.isArray(sr.pm)?sr.pm.slice():(sr.pm?sr.pm.split('\n').map(function(s){return s.trim();}).filter(Boolean):[]);
+  var srNotes=sr.notes||'';
+
+  function getProds(){
+    var list=(cur.nini||[]).slice();
+    (cur.ext||[]).forEach(function(e){list.push(e.name+(e.brand?' ('+e.brand+')':''));});
+    return list;
   }
-  var html='<div class="modal-hd"><span class="modal-title">💧 '+esc(cur.name)+' · 保養順序</span><button id="sr-close" class="modal-close">×</button></div>';
+
+  function stepItem(p,i,arr,pfx,bg,col){
+    var html='<div style="display:flex;align-items:center;gap:7px;background:'+bg+';border-radius:var(--r);padding:8px 11px;margin-bottom:4px">';
+    html+='<span style="font-size:11px;font-weight:700;color:'+col+';min-width:18px">'+(i+1)+'</span>';
+    html+='<span style="flex:1;font-size:13px;color:var(--tx)">'+esc(p)+'</span>';
+    if(i>0)html+='<button class="ab" data-'+pfx+'up="'+i+'" style="font-size:11px;padding:3px 8px">↑</button>';
+    if(i<arr.length-1)html+='<button class="ab" data-'+pfx+'dn="'+i+'" style="font-size:11px;padding:3px 8px">↓</button>';
+    html+='<button class="ab" data-'+pfx+'rm="'+i+'" style="font-size:11px;padding:3px 8px;color:#a05050;border-color:#d4aaaa">✕</button>';
+    html+='</div>';return html;
+  }
+
+  function renderModal(){
+    var prods=getProds();
+    var html='<div class="modal-hd"><span class="modal-title">💧 '+esc(cur.name)+' · 保養步驟</span><button id="sr-close" class="modal-close">×</button></div>';
+    html+='<div class="modal-body">';
+
+    // 手邊品項清單
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
+    html+='<div class="sec-lb" style="margin:0">手邊品項</div>';
+    html+='<button class="ab" id="sr-add-prod" style="font-size:11px">+ 新增帶回品項</button></div>';
+    if(prods.length){
+      html+='<div style="display:flex;flex-direction:column;gap:0">';
+      prods.forEach(function(p,i){
+        var inAM=srAM.indexOf(p)>=0,inPM=srPM.indexOf(p)>=0;
+        html+='<div style="display:flex;align-items:center;gap:7px;padding:9px 0;border-bottom:0.5px solid var(--bd)">';
+        html+='<div style="flex:1;font-size:13px;color:var(--tx)">'+esc(p)+'</div>';
+        html+='<button class="ab sr-tog" data-idx="'+i+'" data-t="am" style="font-size:11px;padding:4px 9px;'+(inAM?'background:var(--gold);color:#fff;border-color:var(--gold)':'')+'">☀ AM</button>';
+        html+='<button class="ab sr-tog" data-idx="'+i+'" data-t="pm" style="font-size:11px;padding:4px 9px;'+(inPM?'background:var(--heal);color:#fff;border-color:var(--heal)':'')+'">🌙 PM</button>';
+        html+='</div>';
+      });
+      html+='</div>';
+    } else {
+      html+='<div style="font-size:12px;color:var(--tx3);padding:6px 0">尚無手邊品項，請點右上角新增</div>';
+    }
+
+    // AM 步驟
+    html+='<div class="sec-lb" style="margin-top:16px;margin-bottom:8px">☀ AM 早上步驟順序</div>';
+    if(srAM.length){
+      srAM.forEach(function(p,i){html+=stepItem(p,i,srAM,'am','var(--goldb)','var(--gold)');});
+    } else {
+      html+='<div style="font-size:12px;color:var(--tx3);padding:4px 0">點選品項旁的「☀ AM」加入早上步驟</div>';
+    }
+
+    // PM 步驟
+    html+='<div class="sec-lb" style="margin-top:16px;margin-bottom:8px">🌙 PM 晚上步驟順序</div>';
+    if(srPM.length){
+      srPM.forEach(function(p,i){html+=stepItem(p,i,srPM,'pm','var(--healb)','var(--heal)');});
+    } else {
+      html+='<div style="font-size:12px;color:var(--tx3);padding:4px 0">點選品項旁的「🌙 PM」加入晚上步驟</div>';
+    }
+
+    // 備註
+    html+='<div class="fg" style="margin-top:16px"><label>💡 Ni 的備註</label>';
+    html+='<textarea id="sr-notes" style="min-height:55px;line-height:1.8">'+esc(srNotes)+'</textarea></div>';
+    if(sr.updated&&typeof sr.updated==='string')html+='<div style="font-size:11px;color:var(--tx3);text-align:right;margin-top:4px">上次更新：'+esc(sr.updated)+'</div>';
+    html+='</div>';
+    html+='<div class="modal-ft"><button id="sr-cancel" class="btn-cn">取消</button><button id="sr-save" class="btn-sv">💾 儲存順序</button></div>';
+
+    openModal(html,function(modal){
+      var prods2=getProds();
+      // 儲存備註前先抓目前值
+      function saveNoteState(){var n=modal.querySelector('#sr-notes');if(n)srNotes=n.value;}
+
+      // AM/PM toggle
+      modal.querySelectorAll('.sr-tog').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          saveNoteState();
+          var idx=parseInt(this.getAttribute('data-idx'));
+          var t=this.getAttribute('data-t');
+          var p=prods2[idx];if(!p)return;
+          if(t==='am'){var i=srAM.indexOf(p);if(i>=0)srAM.splice(i,1);else srAM.push(p);}
+          else{var i=srPM.indexOf(p);if(i>=0)srPM.splice(i,1);else srPM.push(p);}
+          renderModal();
+        });
+      });
+      // AM ↑↓✕
+      modal.querySelectorAll('[data-amup]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();var i=parseInt(this.dataset.amup);var t=srAM[i-1];srAM[i-1]=srAM[i];srAM[i]=t;renderModal();});});
+      modal.querySelectorAll('[data-amdn]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();var i=parseInt(this.dataset.amdn);var t=srAM[i+1];srAM[i+1]=srAM[i];srAM[i]=t;renderModal();});});
+      modal.querySelectorAll('[data-amrm]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();srAM.splice(parseInt(this.dataset.amrm),1);renderModal();});});
+      // PM ↑↓✕
+      modal.querySelectorAll('[data-pmup]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();var i=parseInt(this.dataset.pmup);var t=srPM[i-1];srPM[i-1]=srPM[i];srPM[i]=t;renderModal();});});
+      modal.querySelectorAll('[data-pmdn]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();var i=parseInt(this.dataset.pmdn);var t=srPM[i+1];srPM[i+1]=srPM[i];srPM[i]=t;renderModal();});});
+      modal.querySelectorAll('[data-pmrm]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();srPM.splice(parseInt(this.dataset.pmrm),1);renderModal();});});
+      // 新增帶回品項
+      modal.querySelector('#sr-add-prod').addEventListener('click',function(){saveNoteState();openAddProdForRoutine(function(){renderModal();});});
+      modal.querySelector('#sr-close').addEventListener('click',closeModal);
+      modal.querySelector('#sr-cancel').addEventListener('click',closeModal);
+      modal.querySelector('#sr-save').addEventListener('click',function(){
+        saveNoteState();
+        var now=new Date();
+        var dateStr=now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
+        cur.skinRoutine={am:srAM,pm:srPM,notes:srNotes,updated:dateStr};
+        saveData();closeModal();
+        if(document.getElementById('tab-profile')&&document.getElementById('tab-profile').classList.contains('active'))renderProfile();
+        alert('✓ 保養順序已儲存！');
+      });
+    });
+  }
+  renderModal();
+}
+// ── 新增帶回品項（保養順序用）──
+function openAddProdForRoutine(callback){
+  var html='<div class="modal-hd"><span class="modal-title">新增帶回品項</span><button id="apr-close" class="modal-close">×</button></div>';
   html+='<div class="modal-body">';
-  html+='<div class="sec-lb">手邊品項</div>';
-  html+=prodListHtml;
-  html+='<div class="fg"><label>☀ 早上保養步驟（AM）</label><small>依序填入，ex. 純露→精華液→乳液→防曬</small><textarea id="sr-am" style="min-height:80px;line-height:1.8">'+esc(sr.am)+'</textarea></div>';
-  html+='<div class="fg"><label>🌙 晚上保養步驟（PM）</label><small>依序填入，ex. 卸妝→洗臉→純露→原液→乳霜</small><textarea id="sr-pm" style="min-height:80px;line-height:1.8">'+esc(sr.pm)+'</textarea></div>';
-  html+='<div class="fg"><label>💡 Ni 的建議備註</label><small>特別注意事項、調整原因、下次追蹤重點</small><textarea id="sr-notes" style="min-height:60px;line-height:1.8">'+esc(sr.notes)+'</textarea></div>';
-  if(sr.updated)html+='<div style="font-size:11px;color:var(--tx3);text-align:right">上次更新：'+esc(sr.updated)+'</div>';
+  html+='<div class="sec-lb" style="margin-bottom:8px">選擇 Zero 品項</div>';
+  var available=NINI_PRODS.filter(function(p){return (cur.nini||[]).indexOf(p.name)<0;});
+  if(available.length){html+='<div class="chip-row" id="apr-nini-chips" style="margin-bottom:12px"></div>';}
+  else{html+='<div style="font-size:12px;color:var(--tx3);margin-bottom:12px">所有 Zero 品項皆已加入</div>';}
+  html+='<div class="sec-div" style="margin-bottom:12px">或新增其他品牌品項</div>';
+  html+='<div class="f2"><div class="fg"><label>品名</label><input id="apr-name" placeholder="ex. 修護乳霜"></div>';
+  html+='<div class="fg"><label>品牌</label><input id="apr-brand" placeholder="ex. Avene"></div></div>';
+  html+='<div class="fg"><label>類型</label><select id="apr-type"><option>乳液/乳霜</option><option>精華液</option><option>化妝水</option><option>防曬</option><option>卸妝</option><option>洗面乳</option><option>眼霜</option><option>面膜</option><option>其他</option></select></div>';
   html+='</div>';
-  html+='<div class="modal-ft"><button id="sr-cancel" class="btn-cn">取消</button><button id="sr-save" class="btn-sv">💾 儲存順序</button></div>';
+  html+='<div class="modal-ft"><button id="apr-cancel" class="btn-cn">取消</button><button id="apr-save" class="btn-sv">新增並帶入</button></div>';
   openModal(html,function(modal){
-    modal.querySelector('#sr-close').addEventListener('click',closeModal);
-    modal.querySelector('#sr-cancel').addEventListener('click',closeModal);
-    modal.querySelector('#sr-save').addEventListener('click',function(){
-      var am=modal.querySelector('#sr-am').value.trim();
-      var pm=modal.querySelector('#sr-pm').value.trim();
-      var notes=modal.querySelector('#sr-notes').value.trim();
-      var now=new Date();
-      var dateStr=now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
-      cur.skinRoutine={am:am,pm:pm,notes:notes,updated:dateStr};
-      saveData();closeModal();
-      alert('✓ 保養順序已儲存！');
+    var chipsWrap=modal.querySelector('#apr-nini-chips');
+    if(chipsWrap&&available.length){
+      available.forEach(function(p){
+        var c=makeChip(p.name,false,'nchip');
+        c.addEventListener('click',function(e){e.preventDefault();this.classList.toggle('on');});
+        chipsWrap.appendChild(c);
+      });
+    }
+    modal.querySelector('#apr-close').addEventListener('click',closeModal);
+    modal.querySelector('#apr-cancel').addEventListener('click',closeModal);
+    modal.querySelector('#apr-save').addEventListener('click',function(){
+      var added=false;
+      if(chipsWrap){chipsWrap.querySelectorAll('.nchip.on').forEach(function(c){var n=c.textContent;if((cur.nini||[]).indexOf(n)<0){if(!cur.nini)cur.nini=[];cur.nini.push(n);added=true;}});}
+      var name=modal.querySelector('#apr-name').value.trim();
+      if(name){if(!cur.ext)cur.ext=[];cur.ext.push({name:name,brand:modal.querySelector('#apr-brand').value.trim(),type:modal.querySelector('#apr-type').value});added=true;}
+      if(added)saveData();
+      closeModal();callback();
     });
   });
 }
@@ -596,15 +707,26 @@ function renderProfile(){
   }
   // Skincare routine card
   var sr=cur.skinRoutine||null;
-  html+='<div class="card"><div class="card-bd" style="padding-bottom:'+(sr&&(sr.am||sr.pm)?'6px':'14px')+'">';
+  var srAMArr=sr?(Array.isArray(sr.am)?sr.am:(sr.am?[sr.am]:[])):[];
+  var srPMArr=sr?(Array.isArray(sr.pm)?sr.pm:(sr.pm?[sr.pm]:[])):[];
+  var hasRoutine=srAMArr.length>0||srPMArr.length>0;
+  html+='<div class="card"><div class="card-bd" style="padding-bottom:'+(hasRoutine?'6px':'14px')+'">';
   html+='<div style="display:flex;align-items:center;justify-content:space-between"><div class="sec-lb" style="margin:0">💧 保養品使用順序</div>';
   html+='<button class="ab" onclick="openSkincareRoutine()" style="font-size:11px">編輯</button></div>';
-  if(sr&&(sr.am||sr.pm)){
+  if(hasRoutine){
     html+='</div>';
-    if(sr.am)html+='<div style="padding:10px 15px;border-top:0.5px solid var(--bd)"><div style="font-size:10px;font-weight:600;color:var(--gold);letter-spacing:1px;margin-bottom:5px">☀ AM 早上</div><div style="font-size:13px;color:var(--tx);line-height:1.8;white-space:pre-wrap">'+esc(sr.am)+'</div></div>';
-    if(sr.pm)html+='<div style="padding:10px 15px;border-top:0.5px solid var(--bd)"><div style="font-size:10px;font-weight:600;color:var(--heal);letter-spacing:1px;margin-bottom:5px">🌙 PM 晚上</div><div style="font-size:13px;color:var(--tx);line-height:1.8;white-space:pre-wrap">'+esc(sr.pm)+'</div></div>';
-    if(sr.notes)html+='<div class="int-wrap" style="margin:0 15px 12px"><div class="int-lbl">💡 Ni 的備註</div><div class="int-txt">'+esc(sr.notes)+'</div></div>';
-    if(sr.updated)html+='<div style="padding:0 15px 10px;font-size:11px;color:var(--tx3)">更新：'+esc(sr.updated)+'</div>';
+    if(srAMArr.length){
+      html+='<div style="padding:10px 15px;border-top:0.5px solid var(--bd)"><div style="font-size:10px;font-weight:600;color:var(--gold);letter-spacing:1px;margin-bottom:7px">☀ AM 早上</div>';
+      srAMArr.forEach(function(p,i){html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:10px;font-weight:700;color:var(--gold);min-width:18px">'+(i+1)+'</span><span style="font-size:13px;color:var(--tx)">'+esc(p)+'</span></div>';});
+      html+='</div>';
+    }
+    if(srPMArr.length){
+      html+='<div style="padding:10px 15px;border-top:0.5px solid var(--bd)"><div style="font-size:10px;font-weight:600;color:var(--heal);letter-spacing:1px;margin-bottom:7px">🌙 PM 晚上</div>';
+      srPMArr.forEach(function(p,i){html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:10px;font-weight:700;color:var(--heal);min-width:18px">'+(i+1)+'</span><span style="font-size:13px;color:var(--tx)">'+esc(p)+'</span></div>';});
+      html+='</div>';
+    }
+    if(sr&&sr.notes)html+='<div class="int-wrap" style="margin:0 15px 12px"><div class="int-lbl">💡 Ni 的備註</div><div class="int-txt">'+esc(sr.notes)+'</div></div>';
+    if(sr&&sr.updated&&typeof sr.updated==='string')html+='<div style="padding:0 15px 10px;font-size:11px;color:var(--tx3)">更新：'+esc(sr.updated)+'</div>';
   } else {
     html+='<div style="font-size:12px;color:var(--tx3);margin-top:8px">尚未設定保養順序</div></div>';
   }
