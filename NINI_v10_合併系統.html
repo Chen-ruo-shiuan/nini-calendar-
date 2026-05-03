@@ -517,6 +517,7 @@ function openSkincareRoutine(){
   var srAM=latest.am?latest.am.slice():[];
   var srPM=latest.pm?latest.pm.slice():[];
   var srNotes=latest.notes||'';
+  var srDate=latest.date||today();  // 可被使用者更改的版本日期
 
   function getProds(){
     var list=(cur.nini||[]).slice();
@@ -538,13 +539,12 @@ function openSkincareRoutine(){
     var histCount=cur.skinRoutines.length;
     var html='<div class="modal-hd"><span class="modal-title">💧 '+esc(cur.name)+' · 保養步驟</span><button id="sr-close" class="modal-close">×</button></div>';
     html+='<div class="modal-body">';
-    // 版本資訊列
-    if(histCount>0){
-      html+='<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:var(--bg2);border:0.5px solid var(--bd);border-radius:var(--r);margin-bottom:12px">';
-      html+='<div style="font-size:12px;color:var(--tx2)">目前版本：<strong>'+esc(cur.skinRoutines[0].date)+'</strong></div>';
-      if(histCount>1)html+='<button id="sr-hist-btn" class="ab" style="font-size:11px">📅 歷史版本（'+histCount+'筆）</button>';
-      html+='</div>';
-    }
+    // 版本日期列（永遠顯示，可編輯）
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:var(--bg2);border:0.5px solid var(--bd);border-radius:var(--r);margin-bottom:12px">';
+    html+='<div style="display:flex;align-items:center;gap:7px"><span style="font-size:12px;color:var(--tx2)">版本日期</span>';
+    html+='<input type="date" id="sr-date-inp" value="'+toISO(srDate)+'" style="font-size:12px;border:0.5px solid var(--bd2);border-radius:6px;padding:3px 8px;background:var(--bg);color:var(--tx);font-family:inherit;outline:none"></div>';
+    if(histCount>1)html+='<button id="sr-hist-btn" class="ab" style="font-size:11px">📅 歷史（'+histCount+'筆）</button>';
+    html+='</div>';
     // 手邊品項
     html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
     html+='<div class="sec-lb" style="margin:0">手邊品項</div>';
@@ -583,7 +583,11 @@ function openSkincareRoutine(){
       if(mb&&scrollTop)mb.scrollTop=scrollTop;
 
       var prods2=getProds();
-      function saveNoteState(){var n=modal.querySelector('#sr-notes');if(n)srNotes=n.value;}
+      function saveNoteState(){
+        var n=modal.querySelector('#sr-notes');if(n)srNotes=n.value;
+        var d=modal.querySelector('#sr-date-inp');
+        if(d&&d.value){try{var dt=new Date(d.value+'T00:00:00');srDate=dt.toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'});}catch(e){}}
+      }
       function getScroll(){var b=modal.querySelector('.modal-body');return b?b.scrollTop:0;}
 
       // 歷史版本
@@ -614,17 +618,16 @@ function openSkincareRoutine(){
       modal.querySelector('#sr-cancel').addEventListener('click',closeModal);
       modal.querySelector('#sr-save').addEventListener('click',function(){
         saveNoteState();
-        var todayStr=today();
-        var newEntry={date:todayStr,am:srAM.slice(),pm:srPM.slice(),notes:srNotes};
-        // 同一天更新就覆蓋今天那筆，不同天則新增
-        if(cur.skinRoutines.length&&cur.skinRoutines[0].date===todayStr){
-          cur.skinRoutines[0]=newEntry;
-        } else {
-          cur.skinRoutines.unshift(newEntry);
-        }
+        var newEntry={date:srDate,am:srAM.slice(),pm:srPM.slice(),notes:srNotes};
+        // 同日期 → 覆蓋同一筆；不同日期 → 插入最前面（保留舊紀錄）
+        var existIdx=cur.skinRoutines.findIndex(function(e){return e.date===srDate;});
+        if(existIdx>=0){cur.skinRoutines[existIdx]=newEntry;}
+        else{cur.skinRoutines.unshift(newEntry);}
+        // 依日期降冪排序
+        cur.skinRoutines.sort(function(a,b){return b.date<a.date?-1:b.date>a.date?1:0;});
         saveData();closeModal();
         if(curTab==='profile')renderProfile();
-        alert('✓ 保養順序已儲存（'+todayStr+'）');
+        alert('✓ 保養順序已儲存（'+srDate+'）');
       });
     });
   }
