@@ -1229,7 +1229,7 @@ function bindVMChips(modal){
   addChips('diet-chips',DIET_OPTS,sv('nv_diet',[]));
   addChips('course-chips',COURSE_OPTS,sv('nv_courses',[]));
   addChips('prodrec-chips',PROD_REC_OPTS,sv('nv_productRecs',[]));
-  var niniSelN=sv('niniUsed',[]);if(cur&&cur.nini)addChips('nini-used-chips',cur.nini,niniSelN,'nchip');
+  var niniSelN=sv('niniUsed',[]);addChips('nini-used-chips',NINI_PRODS.map(function(p){return p.name;}),niniSelN,'nchip');
   var purchSelN=sv('purchased',[]);addChips('purch-chips',NINI_PRODS.map(function(p){return p.name;}),purchSelN,'nchip');
   addSingleChips('next-interval-chips',['1週','2週','1個月','視狀況'],sv('nv_nextInterval',''));
   // Skin
