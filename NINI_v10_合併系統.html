@@ -633,7 +633,6 @@ function openAddProdForRoutine(callback){
     if(chipsWrap&&available.length){
       available.forEach(function(p){
         var c=makeChip(p.name,false,'nchip');
-        c.addEventListener('click',function(e){e.preventDefault();this.classList.toggle('on');});
         chipsWrap.appendChild(c);
       });
     }
