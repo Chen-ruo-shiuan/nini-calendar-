@@ -503,18 +503,26 @@ function homeCardClick(type){
 }
 function openSkincareRoutine(){
   if(!cur)return;
-  var sr=cur.skinRoutine||{am:[],pm:[],notes:'',updated:''};
-  // 相容舊格式（字串→陣列）
-  var srAM=Array.isArray(sr.am)?sr.am.slice():(sr.am?sr.am.split('\n').map(function(s){return s.trim();}).filter(Boolean):[]);
-  var srPM=Array.isArray(sr.pm)?sr.pm.slice():(sr.pm?sr.pm.split('\n').map(function(s){return s.trim();}).filter(Boolean):[]);
-  var srNotes=sr.notes||'';
+  // ── 舊格式自動遷移 skinRoutine → skinRoutines ──
+  if(cur.skinRoutine&&!cur.skinRoutines){
+    var old=cur.skinRoutine;
+    var mAM=Array.isArray(old.am)?old.am.slice():(old.am?old.am.split('\n').map(function(s){return s.trim();}).filter(Boolean):[]);
+    var mPM=Array.isArray(old.pm)?old.pm.slice():(old.pm?old.pm.split('\n').map(function(s){return s.trim();}).filter(Boolean):[]);
+    cur.skinRoutines=[{date:old.updated||today(),am:mAM,pm:mPM,notes:old.notes||''}];
+    delete cur.skinRoutine;saveData();
+  }
+  if(!cur.skinRoutines)cur.skinRoutines=[];
+  // ── 載入最新一筆作為初始編輯狀態 ──
+  var latest=cur.skinRoutines[0]||{am:[],pm:[],notes:''};
+  var srAM=latest.am?latest.am.slice():[];
+  var srPM=latest.pm?latest.pm.slice():[];
+  var srNotes=latest.notes||'';
 
   function getProds(){
     var list=(cur.nini||[]).slice();
     (cur.ext||[]).forEach(function(e){list.push(e.name+(e.brand?' ('+e.brand+')':''));});
     return list;
   }
-
   function stepItem(p,i,arr,pfx,bg,col){
     var html='<div style="display:flex;align-items:center;gap:7px;background:'+bg+';border-radius:var(--r);padding:8px 11px;margin-bottom:4px">';
     html+='<span style="font-size:11px;font-weight:700;color:'+col+';min-width:18px">'+(i+1)+'</span>';
@@ -525,12 +533,19 @@ function openSkincareRoutine(){
     html+='</div>';return html;
   }
 
-  function renderModal(){
+  function renderModal(scrollTop){
     var prods=getProds();
+    var histCount=cur.skinRoutines.length;
     var html='<div class="modal-hd"><span class="modal-title">💧 '+esc(cur.name)+' · 保養步驟</span><button id="sr-close" class="modal-close">×</button></div>';
     html+='<div class="modal-body">';
-
-    // 手邊品項清單
+    // 版本資訊列
+    if(histCount>0){
+      html+='<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:var(--bg2);border:0.5px solid var(--bd);border-radius:var(--r);margin-bottom:12px">';
+      html+='<div style="font-size:12px;color:var(--tx2)">目前版本：<strong>'+esc(cur.skinRoutines[0].date)+'</strong></div>';
+      if(histCount>1)html+='<button id="sr-hist-btn" class="ab" style="font-size:11px">📅 歷史版本（'+histCount+'筆）</button>';
+      html+='</div>';
+    }
+    // 手邊品項
     html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
     html+='<div class="sec-lb" style="margin:0">手邊品項</div>';
     html+='<button class="ab" id="sr-add-prod" style="font-size:11px">+ 新增帶回品項</button></div>';
@@ -548,71 +563,97 @@ function openSkincareRoutine(){
     } else {
       html+='<div style="font-size:12px;color:var(--tx3);padding:6px 0">尚無手邊品項，請點右上角新增</div>';
     }
-
     // AM 步驟
     html+='<div class="sec-lb" style="margin-top:16px;margin-bottom:8px">☀ AM 早上步驟順序</div>';
-    if(srAM.length){
-      srAM.forEach(function(p,i){html+=stepItem(p,i,srAM,'am','var(--goldb)','var(--gold)');});
-    } else {
-      html+='<div style="font-size:12px;color:var(--tx3);padding:4px 0">點選品項旁的「☀ AM」加入早上步驟</div>';
-    }
-
+    if(srAM.length){srAM.forEach(function(p,i){html+=stepItem(p,i,srAM,'am','var(--goldb)','var(--gold)');});}
+    else{html+='<div style="font-size:12px;color:var(--tx3);padding:4px 0">點選品項旁的「☀ AM」加入早上步驟</div>';}
     // PM 步驟
     html+='<div class="sec-lb" style="margin-top:16px;margin-bottom:8px">🌙 PM 晚上步驟順序</div>';
-    if(srPM.length){
-      srPM.forEach(function(p,i){html+=stepItem(p,i,srPM,'pm','var(--healb)','var(--heal)');});
-    } else {
-      html+='<div style="font-size:12px;color:var(--tx3);padding:4px 0">點選品項旁的「🌙 PM」加入晚上步驟</div>';
-    }
-
+    if(srPM.length){srPM.forEach(function(p,i){html+=stepItem(p,i,srPM,'pm','var(--healb)','var(--heal)');});}
+    else{html+='<div style="font-size:12px;color:var(--tx3);padding:4px 0">點選品項旁的「🌙 PM」加入晚上步驟</div>';}
     // 備註
     html+='<div class="fg" style="margin-top:16px"><label>💡 Ni 的備註</label>';
     html+='<textarea id="sr-notes" style="min-height:55px;line-height:1.8">'+esc(srNotes)+'</textarea></div>';
-    if(sr.updated&&typeof sr.updated==='string')html+='<div style="font-size:11px;color:var(--tx3);text-align:right;margin-top:4px">上次更新：'+esc(sr.updated)+'</div>';
     html+='</div>';
-    html+='<div class="modal-ft"><button id="sr-cancel" class="btn-cn">取消</button><button id="sr-save" class="btn-sv">💾 儲存順序</button></div>';
+    html+='<div class="modal-ft"><button id="sr-cancel" class="btn-cn">取消</button><button id="sr-save" class="btn-sv">💾 儲存為新版本</button></div>';
 
     openModal(html,function(modal){
-      var prods2=getProds();
-      // 儲存備註前先抓目前值
-      function saveNoteState(){var n=modal.querySelector('#sr-notes');if(n)srNotes=n.value;}
+      // ── 恢復滾動位置（解決↑↓按完跳頂問題）──
+      var mb=modal.querySelector('.modal-body');
+      if(mb&&scrollTop)mb.scrollTop=scrollTop;
 
+      var prods2=getProds();
+      function saveNoteState(){var n=modal.querySelector('#sr-notes');if(n)srNotes=n.value;}
+      function getScroll(){var b=modal.querySelector('.modal-body');return b?b.scrollTop:0;}
+
+      // 歷史版本
+      var hb=modal.querySelector('#sr-hist-btn');
+      if(hb)hb.addEventListener('click',function(){saveNoteState();openRoutineHistory();});
       // AM/PM toggle
       modal.querySelectorAll('.sr-tog').forEach(function(btn){
-        btn.addEventListener('click',function(){
-          saveNoteState();
-          var idx=parseInt(this.getAttribute('data-idx'));
-          var t=this.getAttribute('data-t');
-          var p=prods2[idx];if(!p)return;
-          if(t==='am'){var i=srAM.indexOf(p);if(i>=0)srAM.splice(i,1);else srAM.push(p);}
-          else{var i=srPM.indexOf(p);if(i>=0)srPM.splice(i,1);else srPM.push(p);}
-          renderModal();
+        btn.addEventListener('click',function(e){
+          e.preventDefault();saveNoteState();
+          var sc=getScroll(),idx=parseInt(this.getAttribute('data-idx')),t=this.getAttribute('data-t'),p=prods2[idx];
+          if(!p)return;
+          if(t==='am'){var j=srAM.indexOf(p);if(j>=0)srAM.splice(j,1);else srAM.push(p);}
+          else{var j=srPM.indexOf(p);if(j>=0)srPM.splice(j,1);else srPM.push(p);}
+          renderModal(sc);
         });
       });
       // AM ↑↓✕
-      modal.querySelectorAll('[data-amup]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();var i=parseInt(this.dataset.amup);var t=srAM[i-1];srAM[i-1]=srAM[i];srAM[i]=t;renderModal();});});
-      modal.querySelectorAll('[data-amdn]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();var i=parseInt(this.dataset.amdn);var t=srAM[i+1];srAM[i+1]=srAM[i];srAM[i]=t;renderModal();});});
-      modal.querySelectorAll('[data-amrm]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();srAM.splice(parseInt(this.dataset.amrm),1);renderModal();});});
+      modal.querySelectorAll('[data-amup]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();saveNoteState();var sc=getScroll(),i=parseInt(this.dataset.amup),t=srAM[i-1];srAM[i-1]=srAM[i];srAM[i]=t;renderModal(sc);});});
+      modal.querySelectorAll('[data-amdn]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();saveNoteState();var sc=getScroll(),i=parseInt(this.dataset.amdn),t=srAM[i+1];srAM[i+1]=srAM[i];srAM[i]=t;renderModal(sc);});});
+      modal.querySelectorAll('[data-amrm]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();saveNoteState();var sc=getScroll();srAM.splice(parseInt(this.dataset.amrm),1);renderModal(sc);});});
       // PM ↑↓✕
-      modal.querySelectorAll('[data-pmup]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();var i=parseInt(this.dataset.pmup);var t=srPM[i-1];srPM[i-1]=srPM[i];srPM[i]=t;renderModal();});});
-      modal.querySelectorAll('[data-pmdn]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();var i=parseInt(this.dataset.pmdn);var t=srPM[i+1];srPM[i+1]=srPM[i];srPM[i]=t;renderModal();});});
-      modal.querySelectorAll('[data-pmrm]').forEach(function(b){b.addEventListener('click',function(){saveNoteState();srPM.splice(parseInt(this.dataset.pmrm),1);renderModal();});});
+      modal.querySelectorAll('[data-pmup]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();saveNoteState();var sc=getScroll(),i=parseInt(this.dataset.pmup),t=srPM[i-1];srPM[i-1]=srPM[i];srPM[i]=t;renderModal(sc);});});
+      modal.querySelectorAll('[data-pmdn]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();saveNoteState();var sc=getScroll(),i=parseInt(this.dataset.pmdn),t=srPM[i+1];srPM[i+1]=srPM[i];srPM[i]=t;renderModal(sc);});});
+      modal.querySelectorAll('[data-pmrm]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();saveNoteState();var sc=getScroll();srPM.splice(parseInt(this.dataset.pmrm),1);renderModal(sc);});});
       // 新增帶回品項
-      modal.querySelector('#sr-add-prod').addEventListener('click',function(){saveNoteState();openAddProdForRoutine(function(){renderModal();});});
+      modal.querySelector('#sr-add-prod').addEventListener('click',function(){saveNoteState();openAddProdForRoutine(function(){renderModal(0);});});
       modal.querySelector('#sr-close').addEventListener('click',closeModal);
       modal.querySelector('#sr-cancel').addEventListener('click',closeModal);
       modal.querySelector('#sr-save').addEventListener('click',function(){
         saveNoteState();
-        var now=new Date();
-        var dateStr=now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
-        cur.skinRoutine={am:srAM,pm:srPM,notes:srNotes,updated:dateStr};
+        var todayStr=today();
+        var newEntry={date:todayStr,am:srAM.slice(),pm:srPM.slice(),notes:srNotes};
+        // 同一天更新就覆蓋今天那筆，不同天則新增
+        if(cur.skinRoutines.length&&cur.skinRoutines[0].date===todayStr){
+          cur.skinRoutines[0]=newEntry;
+        } else {
+          cur.skinRoutines.unshift(newEntry);
+        }
         saveData();closeModal();
-        if(document.getElementById('tab-profile')&&document.getElementById('tab-profile').classList.contains('active'))renderProfile();
-        alert('✓ 保養順序已儲存！');
+        if(curTab==='profile')renderProfile();
+        alert('✓ 保養順序已儲存（'+todayStr+'）');
       });
     });
   }
-  renderModal();
+  renderModal(0);
+
+  function openRoutineHistory(){
+    var html='<div class="modal-hd"><span class="modal-title">📅 保養步驟歷史版本</span><button id="rh-close" class="modal-close">×</button></div>';
+    html+='<div class="modal-body">';
+    cur.skinRoutines.forEach(function(entry,idx){
+      html+='<div style="padding:14px 0;border-bottom:0.5px solid var(--bd)">';
+      html+='<div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:8px">'+esc(entry.date)+(idx===0?' <span style="font-size:10px;background:var(--sage);color:#fff;border-radius:10px;padding:1px 7px;margin-left:5px">最新</span>':'')+'</div>';
+      if(entry.am&&entry.am.length){
+        html+='<div style="font-size:11px;font-weight:600;color:var(--gold);margin-bottom:4px">☀ AM</div>';
+        html+='<div style="font-size:12px;color:var(--tx2);margin-bottom:8px">'+entry.am.map(function(p,i){return (i+1)+'. '+esc(p);}).join('　')+'</div>';
+      }
+      if(entry.pm&&entry.pm.length){
+        html+='<div style="font-size:11px;font-weight:600;color:var(--heal);margin-bottom:4px">🌙 PM</div>';
+        html+='<div style="font-size:12px;color:var(--tx2);margin-bottom:8px">'+entry.pm.map(function(p,i){return (i+1)+'. '+esc(p);}).join('　')+'</div>';
+      }
+      if(entry.notes)html+='<div style="font-size:12px;color:var(--tx3)">💡 '+esc(entry.notes)+'</div>';
+      html+='</div>';
+    });
+    html+='</div>';
+    html+='<div class="modal-ft"><button id="rh-back" class="btn-cn">← 返回編輯</button></div>';
+    openModal(html,function(modal){
+      modal.querySelector('#rh-close').addEventListener('click',closeModal);
+      modal.querySelector('#rh-back').addEventListener('click',function(){renderModal(0);});
+    });
+  }
 }
 // ── 新增帶回品項（保養順序用）──
 function openAddProdForRoutine(callback){
@@ -704,16 +745,20 @@ function renderProfile(){
     if(lastV.skinStatus)html+='<div style="font-size:13px;color:var(--tx2);line-height:1.6">'+esc(lastV.skinStatus.slice(0,80))+(lastV.skinStatus.length>80?'…':'')+'</div>';
     html+='</div></div>';
   }
-  // Skincare routine card
-  var sr=cur.skinRoutine||null;
-  var srAMArr=sr?(Array.isArray(sr.am)?sr.am:(sr.am?[sr.am]:[])):[];
-  var srPMArr=sr?(Array.isArray(sr.pm)?sr.pm:(sr.pm?[sr.pm]:[])):[];
+  // Skincare routine card（從 skinRoutines 陣列讀最新版本）
+  var srList=cur.skinRoutines||(cur.skinRoutine?null:null);
+  // 舊格式相容：若有 skinRoutine 但尚未執行遷移，這裡先呈現舊資料
+  var srLatest=srList&&srList.length?srList[0]:(cur.skinRoutine||null);
+  var srAMArr=srLatest?(Array.isArray(srLatest.am)?srLatest.am:(srLatest.am?[srLatest.am]:[])):[];
+  var srPMArr=srLatest?(Array.isArray(srLatest.pm)?srLatest.pm:(srLatest.pm?[srLatest.pm]:[])):[];
   var hasRoutine=srAMArr.length>0||srPMArr.length>0;
+  var histCount=(srList&&srList.length)||0;
   html+='<div class="card"><div class="card-bd" style="padding-bottom:'+(hasRoutine?'6px':'14px')+'">';
   html+='<div style="display:flex;align-items:center;justify-content:space-between"><div class="sec-lb" style="margin:0">💧 保養品使用順序</div>';
   html+='<button class="ab" onclick="openSkincareRoutine()" style="font-size:11px">編輯</button></div>';
   if(hasRoutine){
     html+='</div>';
+    if(srLatest&&srLatest.date)html+='<div style="padding:6px 15px 0;font-size:11px;color:var(--tx3)">版本：'+esc(srLatest.date)+(histCount>1?' · 共 '+histCount+' 筆歷史':'')+'</div>';
     if(srAMArr.length){
       html+='<div style="padding:10px 15px;border-top:0.5px solid var(--bd)"><div style="font-size:10px;font-weight:600;color:var(--gold);letter-spacing:1px;margin-bottom:7px">☀ AM 早上</div>';
       srAMArr.forEach(function(p,i){html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:10px;font-weight:700;color:var(--gold);min-width:18px">'+(i+1)+'</span><span style="font-size:13px;color:var(--tx)">'+esc(p)+'</span></div>';});
@@ -724,8 +769,7 @@ function renderProfile(){
       srPMArr.forEach(function(p,i){html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:10px;font-weight:700;color:var(--heal);min-width:18px">'+(i+1)+'</span><span style="font-size:13px;color:var(--tx)">'+esc(p)+'</span></div>';});
       html+='</div>';
     }
-    if(sr&&sr.notes)html+='<div class="int-wrap" style="margin:0 15px 12px"><div class="int-lbl">💡 Ni 的備註</div><div class="int-txt">'+esc(sr.notes)+'</div></div>';
-    if(sr&&sr.updated&&typeof sr.updated==='string')html+='<div style="padding:0 15px 10px;font-size:11px;color:var(--tx3)">更新：'+esc(sr.updated)+'</div>';
+    if(srLatest&&srLatest.notes)html+='<div class="int-wrap" style="margin:0 15px 12px"><div class="int-lbl">💡 Ni 的備註</div><div class="int-txt">'+esc(srLatest.notes)+'</div></div>';
   } else {
     html+='<div style="font-size:12px;color:var(--tx3);margin-top:8px">尚未設定保養順序</div></div>';
   }
