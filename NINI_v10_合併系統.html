@@ -546,6 +546,7 @@ function openSkincareRoutine(){
   var srPM=latest.pm?latest.pm.slice():[];
   var srNotes=latest.notes||'';
   var srDate=latest.date||today();
+  var srNextVisit=latest.nextVisit||'';
 
   function getProds(){
     var list=['純露濕敷'];  // 固定技法，永遠顯示
@@ -636,6 +637,8 @@ function openSkincareRoutine(){
     html+='</div>';
     html+='<div class="fg" style="margin-top:16px"><label>💡 Ni 的備註</label>';
     html+='<textarea id="sr-notes" style="min-height:55px;line-height:1.8">'+esc(srNotes)+'</textarea></div>';
+    html+='<div class="fg" style="margin-top:12px"><label>📅 下次回訪日期</label>';
+    html+='<input type="date" id="sr-next-visit" value="'+(srNextVisit?toISO(srNextVisit):'')+'" style="width:100%;box-sizing:border-box"></div>';
     html+='</div>';
     html+='<div class="modal-ft" style="flex-wrap:wrap;gap:8px"><button id="sr-cancel" class="btn-cn" style="flex:0 0 auto">取消</button><button id="sr-img" class="btn-ol" style="flex:1;min-width:0">↓ 儲存圖片</button><button id="sr-save" class="btn-sv" style="flex:1;min-width:0">💾 儲存版本</button></div>';
 
@@ -644,6 +647,9 @@ function openSkincareRoutine(){
         var n=modal.querySelector('#sr-notes');if(n)srNotes=n.value;
         var d=modal.querySelector('#sr-date-inp');
         if(d&&d.value){try{var dt=new Date(d.value+'T00:00:00');srDate=dt.toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'});}catch(e){}}
+        var nv=modal.querySelector('#sr-next-visit');
+        if(nv&&nv.value){try{var dt2=new Date(nv.value+'T00:00:00');srNextVisit=dt2.toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'});}catch(e){}}
+        else if(nv&&!nv.value){srNextVisit='';}
       }
       // 歷史版本
       var hb=modal.querySelector('#sr-hist-btn');
@@ -670,11 +676,11 @@ function openSkincareRoutine(){
       modal.querySelector('#sr-cancel').addEventListener('click',closeModal);
       modal.querySelector('#sr-img').addEventListener('click',function(){
         saveNoteState();
-        saveRoutineImg(cur.name,srDate,srAM,srPM,srNotes);
+        saveRoutineImg(cur.name,srDate,srAM,srPM,srNotes,srNextVisit);
       });
       modal.querySelector('#sr-save').addEventListener('click',function(){
         saveNoteState();
-        var newEntry={date:srDate,am:srAM.slice(),pm:srPM.slice(),notes:srNotes};
+        var newEntry={date:srDate,am:srAM.slice(),pm:srPM.slice(),notes:srNotes,nextVisit:srNextVisit};
         var existIdx=cur.skinRoutines.findIndex(function(e){return e.date===srDate;});
         if(existIdx>=0){cur.skinRoutines[existIdx]=newEntry;}else{cur.skinRoutines.unshift(newEntry);}
         cur.skinRoutines.sort(function(a,b){return b.date<a.date?-1:b.date>a.date?1:0;});
@@ -1042,7 +1048,7 @@ var GUIDE_STEPS=[
   {num:'04',title:'濕敷 3～5 分鐘',desc:'平躺放鬆，靜待 3～5 分鐘，讓純露在原液基底上進一步補充水分。'}
 ];
 var GUIDE_NOTE='取下化妝棉後，以掌心輕壓臉部讓剩餘純露充分吸收，再接續使用鎖水型原液（如油溶性 B5、神經醯胺）加強鎖水。最後完成乳液或乳霜步驟。建議每週 2～3 次，服務前後加強使用效果更佳。';
-function buildRoutineCard(name,date,am,pm,notes){
+function buildRoutineCard(name,date,am,pm,notes,nextVisit){
   var hasGuide=(am&&am.indexOf('純露濕敷')>=0)||(pm&&pm.indexOf('純露濕敷')>=0);
   var html='<div class="rc-card">';
   html+='<div class="rc-top"><div>';
@@ -1063,6 +1069,7 @@ function buildRoutineCard(name,date,am,pm,notes){
     html+='</div>';
   }
   if(notes)html+='<div class="rc-notes">💡 '+esc(notes)+'</div>';
+  if(nextVisit)html+='<div class="ac-next" style="margin-bottom:14px"><span class="ac-next-lbl">📅 下次回訪日期</span><span class="ac-next-date">'+esc(nextVisit)+'</span></div>';
   html+='<div class="rc-footer"><span class="rc-footer-brand">NINI BEAUTY</span><span class="rc-footer-note">為你量身設計的保養步驟 ✦</span></div>';
   if(hasGuide){
     html+='<div class="rc-guide">';
@@ -1079,11 +1086,11 @@ function buildRoutineCard(name,date,am,pm,notes){
   html+='</div>';
   return html;
 }
-function saveRoutineImg(name,date,am,pm,notes){
+function saveRoutineImg(name,date,am,pm,notes,nextVisit){
   if(!am.length&&!pm.length){alert('請先設定 AM 或 PM 的保養步驟');return;}
   var tmp=document.createElement('div');
   tmp.style.cssText='position:fixed;left:-9999px;top:0;width:408px;z-index:-1;background:#fff';
-  tmp.innerHTML=buildRoutineCard(name,date,am,pm,notes);
+  tmp.innerHTML=buildRoutineCard(name,date,am,pm,notes,nextVisit);
   document.body.appendChild(tmp);
   html2canvas(tmp,{backgroundColor:'#ffffff',scale:2,logging:false,useCORS:true}).then(function(canvas){
     var link=document.createElement('a');
