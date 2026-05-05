@@ -150,6 +150,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;font
 .rc-footer{margin-top:16px;padding-top:13px;border-top:1px solid #e4ede4;display:flex;justify-content:space-between;align-items:center}
 .rc-footer-brand{font-size:10px;letter-spacing:2px;color:#7aaa7a}
 .rc-footer-note{font-size:10px;color:#b0c0b0}
+/* Routine guide (濕敷教學) section in card */
+.rc-guide{margin-top:20px;padding-top:18px;border-top:1.5px solid #e0dbd2}
+.rc-guide-title{font-size:15px;font-weight:500;color:#3a3530;margin-bottom:3px}
+.rc-guide-sub{font-size:9.5px;color:#9a9088;margin-bottom:14px;letter-spacing:.2px}
+.rc-guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#d8d3cb;border:1px solid #d8d3cb;border-radius:8px;overflow:hidden;margin-bottom:13px}
+.rc-gstep{background:#f5f2ec;padding:13px 12px}
+.rc-gstep-num{font-size:17px;font-weight:300;color:#c09a60;margin-bottom:5px;letter-spacing:1px}
+.rc-gstep-title{font-size:12px;font-weight:600;color:#3a3530;margin-bottom:5px}
+.rc-gstep-desc{font-size:10.5px;color:#6a6058;line-height:1.7}
+.rc-guide-note{font-size:10.5px;color:#5a5048;line-height:1.9;padding:10px 12px;border-left:3px solid #c09a60;background:#f9f6f0;border-radius:0 6px 6px 0}
 /* Aftercare card (for image export) */
 .ac-card{background:#faf8f4;border-radius:12px;padding:22px;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
 .ac-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #e8e3da}
@@ -538,7 +548,8 @@ function openSkincareRoutine(){
   var srDate=latest.date||today();
 
   function getProds(){
-    var list=(cur.nini||[]).slice();
+    var list=['純露濕敷'];  // 固定技法，永遠顯示
+    list=list.concat((cur.nini||[]).slice());
     (cur.ext||[]).forEach(function(e){list.push(e.name+(e.brand?' ('+e.brand+')':''));});
     return list;
   }
@@ -1024,36 +1035,47 @@ function saveACImg(i){
 }
 
 // ── Skincare Routine card (image export) ──
+var GUIDE_STEPS=[
+  {num:'01',title:'潔顏',desc:'以溫和潔顏品清洗，確保臉部乾淨，輕輕吸乾水分，不要過度摩擦。'},
+  {num:'02',title:'先使用保濕原液',desc:'選擇 1～2 款保濕型原液（如水溶性 B5、積雪草、神經醯胺），取 5～6 滴輕壓在臉上，待臉部完全吸收。'},
+  {num:'03',title:'純露浸濕化妝棉',desc:'選擇適合膚況的純露（可混合 2 款），充分浸入濕敷化妝棉，輕擰至不滴水。'},
+  {num:'04',title:'濕敷 3～5 分鐘',desc:'平躺放鬆，靜待 3～5 分鐘，讓純露在原液基底上進一步補充水分。'}
+];
+var GUIDE_NOTE='取下化妝棉後，以掌心輕壓臉部讓剩餘純露充分吸收，再接續使用鎖水型原液（如油溶性 B5、神經醯胺）加強鎖水。最後完成乳液或乳霜步驟。建議每週 2～3 次，服務前後加強使用效果更佳。';
 function buildRoutineCard(name,date,am,pm,notes){
+  var hasGuide=(am&&am.indexOf('純露濕敷')>=0)||(pm&&pm.indexOf('純露濕敷')>=0);
   var html='<div class="rc-card">';
-  // 頂部
   html+='<div class="rc-top"><div>';
   html+='<div class="rc-brand">NINI · 保養步驟</div>';
   html+='<div class="rc-name">'+esc(name)+'</div>';
   html+='<div class="rc-date">'+esc(date)+'</div>';
   html+='</div><div style="font-size:32px;opacity:.7">💧</div></div>';
-  // AM
   if(am&&am.length){
     html+='<div class="rc-sec">';
     html+='<div class="rc-sec-hd"><span style="font-size:15px">☀</span><span class="rc-sec-lbl-am">AM 早上保養</span></div>';
-    am.forEach(function(p,i){
-      html+='<div class="rc-step rc-step-am"><span class="rc-num-am">'+(i+1)+'</span><span class="rc-step-name">'+esc(p)+'</span></div>';
-    });
+    am.forEach(function(p,i){html+='<div class="rc-step rc-step-am"><span class="rc-num-am">'+(i+1)+'</span><span class="rc-step-name">'+esc(p)+'</span></div>';});
     html+='</div>';
   }
-  // PM
   if(pm&&pm.length){
     html+='<div class="rc-sec">';
     html+='<div class="rc-sec-hd"><span style="font-size:15px">🌙</span><span class="rc-sec-lbl-pm">PM 晚上保養</span></div>';
-    pm.forEach(function(p,i){
-      html+='<div class="rc-step rc-step-pm"><span class="rc-num-pm">'+(i+1)+'</span><span class="rc-step-name">'+esc(p)+'</span></div>';
-    });
+    pm.forEach(function(p,i){html+='<div class="rc-step rc-step-pm"><span class="rc-num-pm">'+(i+1)+'</span><span class="rc-step-name">'+esc(p)+'</span></div>';});
     html+='</div>';
   }
-  // 備註
   if(notes)html+='<div class="rc-notes">💡 '+esc(notes)+'</div>';
-  // 頁尾
   html+='<div class="rc-footer"><span class="rc-footer-brand">NINI BEAUTY</span><span class="rc-footer-note">為你量身設計的保養步驟 ✦</span></div>';
+  if(hasGuide){
+    html+='<div class="rc-guide">';
+    html+='<div class="rc-guide-title">純露濕敷教學</div>';
+    html+='<div class="rc-guide-sub">Hydrosol Compress Guide — 讓肌膚在保養品底層建立好水合基底</div>';
+    html+='<div class="rc-guide-grid">';
+    GUIDE_STEPS.forEach(function(s){
+      html+='<div class="rc-gstep"><div class="rc-gstep-num">'+s.num+'</div><div class="rc-gstep-title">'+esc(s.title)+'</div><div class="rc-gstep-desc">'+esc(s.desc)+'</div></div>';
+    });
+    html+='</div>';
+    html+='<div class="rc-guide-note">'+esc(GUIDE_NOTE)+'</div>';
+    html+='</div>';
+  }
   html+='</div>';
   return html;
 }
